@@ -481,12 +481,145 @@ body {
   justify-content: center;
 }
 
+.youtube-subscribers {
+  position: absolute;
+  bottom: 5%;
+  right: 8%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: fit-content;
+  z-index: 10;
+}
+
+.youtube-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.subscribers-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subscribers-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.subscribers-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.twitter-followers {
+  position: absolute;
+  top: 8%;
+  left: -12%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: fit-content;
+  z-index: 10;
+}
+
+.twitter-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.followers-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.followers-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.followers-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tiktok-followers {
+  position: absolute;
+  top: -8%;
+  right: 5%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: fit-content;
+  z-index: 10;
+}
+
+.tiktok-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.instagram-followers {
+  position: absolute;
+  bottom: 35%;
+  left: -15%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: fit-content;
+  z-index: 10;
+}
+
+.instagram-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .hero-right {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 0;
   overflow: visible;
+  position: relative;
 }
 
 .hero-image-wrapper {
@@ -499,10 +632,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   background: var(--bg-primary);
   margin-left: auto;
   transform: translateX(10%);
+  position: relative;
 }
 
 .hero-image {
@@ -530,5 +664,69 @@ body {
 
   .hero-image {
     max-width: 100%;
+  }
+
+  .youtube-subscribers {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    padding: 1rem 1.5rem;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  .youtube-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .subscribers-count {
+    font-size: 1.5rem;
+  }
+
+  .twitter-followers {
+    position: relative;
+    top: auto;
+    left: auto;
+    padding: 1rem 1.5rem;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  .twitter-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .followers-count {
+    font-size: 1.5rem;
+  }
+
+  .tiktok-followers {
+    position: relative;
+    top: auto;
+    right: auto;
+    padding: 1rem 1.5rem;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  .tiktok-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .instagram-followers {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    padding: 1rem 1.5rem;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  .instagram-icon {
+    width: 40px;
+    height: 40px;
   }
 }
