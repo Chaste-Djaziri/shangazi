@@ -479,10 +479,81 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 1.5rem;
+  padding-right: 2rem;
+}
+
+.hero-name {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hero-name-pink {
+  color: var(--color-accent);
+}
+
+.hero-name-green {
+  color: var(--color-primary);
+}
+
+.hero-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 500px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.hero-btn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border: 2px solid var(--color-primary);
+}
+
+.btn-primary:hover {
+  background: #164515;
+  border-color: #164515;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .youtube-subscribers,
-.twitter-followers,
+.facebook-followers,
 .tiktok-followers,
 .instagram-followers {
   text-decoration: none;
@@ -503,12 +574,12 @@ body {
 
 .youtube-subscribers {
   position: absolute;
-  bottom: 5%;
-  right: 8%;
+  bottom: 29%;
+  right: -8%;
 }
 
 .youtube-subscribers:hover,
-.twitter-followers:hover,
+.facebook-followers:hover,
 .tiktok-followers:hover,
 .instagram-followers:hover {
   transform: translateY(-5px) scale(1.05);
@@ -520,8 +591,8 @@ body {
   border-color: #ff0000;
 }
 
-.twitter-followers:hover {
-  border-color: #000000;
+.facebook-followers:hover {
+  border-color: #1877f2;
 }
 
 .tiktok-followers:hover {
@@ -559,13 +630,13 @@ body {
   letter-spacing: 0.5px;
 }
 
-.twitter-followers {
+.facebook-followers {
   position: absolute;
   top: 8%;
   left: -12%;
 }
 
-.twitter-icon {
+.facebook-icon {
   width: 48px;
   height: 48px;
   object-fit: contain;
@@ -607,7 +678,7 @@ body {
 
 .instagram-followers {
   position: absolute;
-  bottom: 35%;
+  bottom: 5%;
   left: -15%;
 }
 
@@ -663,6 +734,32 @@ body {
     padding: 0 1rem;
   }
 
+  .hero-left {
+    padding-right: 0;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero-name {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .hero-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-btn {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+  }
+
   .hero-right {
     order: -1;
   }
@@ -689,7 +786,7 @@ body {
     font-size: 1.5rem;
   }
 
-  .twitter-followers {
+  .facebook-followers {
     position: relative;
     top: auto;
     left: auto;
@@ -698,7 +795,7 @@ body {
     margin-top: 1rem;
   }
 
-  .twitter-icon {
+  .facebook-icon {
     width: 40px;
     height: 40px;
   }

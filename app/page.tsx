@@ -6,7 +6,21 @@ export default function Home() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-left">
-            {/* Left content will go here */}
+            <h1 className="hero-name">
+              <span className="hero-name-pink">Shangazi</span>
+              <span className="hero-name-green">Emma Claudine</span>
+            </h1>
+            <p className="hero-description">
+              Your trusted auntie providing guidance on reproductive health, relationships, and personal development.
+            </p>
+            <div className="hero-actions">
+              <a href="/ask-question" className="btn-primary hero-btn">
+                Ask a Question
+              </a>
+              <a href="/topics" className="btn-secondary hero-btn">
+                Explore Topics
+              </a>
+            </div>
           </div>
           <div className="hero-right">
             <div className="hero-image-wrapper">
@@ -37,20 +51,20 @@ export default function Home() {
                 </div>
               </a>
               <a
-                href="https://x.com/EmmaClaudine"
+                href="https://www.facebook.com/emmaclaudine1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="twitter-followers social-link"
+                className="facebook-followers social-link"
               >
                 <Image
-                  src="/socials/x-twitter.png"
-                  alt="Twitter/X"
+                  src="/socials/facebook.png"
+                  alt="Facebook"
                   width={40}
                   height={40}
-                  className="twitter-icon"
+                  className="facebook-icon"
                 />
                 <div className="followers-info">
-                  <span className="followers-count">12.8K</span>
+                  <span className="followers-count">244K</span>
                   <span className="followers-label">Followers</span>
                 </div>
               </a>
