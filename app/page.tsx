@@ -1,7 +1,9 @@
+import ThemeSettings from "./components/ThemeSettings";
+
 export default function Home() {
   return (
-    <main>
-      <h1>Welcome</h1>
+    <main style={{ minHeight: "100vh", padding: "2rem 0" }}>
+      <ThemeSettings />
     </main>
   );
 }
