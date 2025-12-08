@@ -18,7 +18,12 @@ export default function Home() {
                 priority
                 className="hero-image"
               />
-              <div className="youtube-subscribers">
+              <a
+                href="https://www.youtube.com/@emmaclaudine/videos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="youtube-subscribers social-link"
+              >
                 <Image
                   src="/socials/youtube.png"
                   alt="YouTube"
@@ -30,8 +35,13 @@ export default function Home() {
                   <span className="subscribers-count">482K</span>
                   <span className="subscribers-label">Subscribers</span>
                 </div>
-              </div>
-              <div className="twitter-followers">
+              </a>
+              <a
+                href="https://x.com/EmmaClaudine"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="twitter-followers social-link"
+              >
                 <Image
                   src="/socials/x-twitter.png"
                   alt="Twitter/X"
@@ -43,8 +53,13 @@ export default function Home() {
                   <span className="followers-count">12.8K</span>
                   <span className="followers-label">Followers</span>
                 </div>
-              </div>
-              <div className="tiktok-followers">
+              </a>
+              <a
+                href="https://www.tiktok.com/@emmaclaudine1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tiktok-followers social-link"
+              >
                 <Image
                   src="/socials/tiktok.png"
                   alt="TikTok"
@@ -56,8 +71,13 @@ export default function Home() {
                   <span className="followers-count">152.3K</span>
                   <span className="followers-label">Followers</span>
                 </div>
-              </div>
-              <div className="instagram-followers">
+              </a>
+              <a
+                href="https://www.instagram.com/emmaclaudine1/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="instagram-followers social-link"
+              >
                 <Image
                   src="/socials/instagram.png"
                   alt="Instagram"
@@ -69,7 +89,7 @@ export default function Home() {
                   <span className="followers-count">59.9K</span>
                   <span className="followers-label">Followers</span>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

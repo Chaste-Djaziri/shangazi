@@ -481,10 +481,14 @@ body {
   justify-content: center;
 }
 
-.youtube-subscribers {
-  position: absolute;
-  bottom: 5%;
-  right: 8%;
+.youtube-subscribers,
+.twitter-followers,
+.tiktok-followers,
+.instagram-followers {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -495,6 +499,37 @@ body {
   box-shadow: 0 2px 8px var(--shadow);
   max-width: fit-content;
   z-index: 10;
+}
+
+.youtube-subscribers {
+  position: absolute;
+  bottom: 5%;
+  right: 8%;
+}
+
+.youtube-subscribers:hover,
+.twitter-followers:hover,
+.tiktok-followers:hover,
+.instagram-followers:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 16px var(--shadow);
+  background: var(--bg-primary);
+}
+
+.youtube-subscribers:hover {
+  border-color: #ff0000;
+}
+
+.twitter-followers:hover {
+  border-color: #000000;
+}
+
+.tiktok-followers:hover {
+  border-color: #000000;
+}
+
+.instagram-followers:hover {
+  border-color: #e4405f;
 }
 
 .youtube-icon {
@@ -528,16 +563,6 @@ body {
   position: absolute;
   top: 8%;
   left: -12%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px var(--shadow);
-  max-width: fit-content;
-  z-index: 10;
 }
 
 .twitter-icon {
@@ -571,16 +596,6 @@ body {
   position: absolute;
   top: -8%;
   right: 5%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px var(--shadow);
-  max-width: fit-content;
-  z-index: 10;
 }
 
 .tiktok-icon {
@@ -594,16 +609,6 @@ body {
   position: absolute;
   bottom: 35%;
   left: -15%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px var(--shadow);
-  max-width: fit-content;
-  z-index: 10;
 }
 
 .instagram-icon {
