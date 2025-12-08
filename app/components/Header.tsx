@@ -1,10 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const aboutLinks = [
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
@@ -34,7 +45,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="header">
+    <header className={`header ${isScrolled ? "scrolled" : ""}`}>
       <div className="header-container">
         <Link href="/" className="logo-link">
           <Image
