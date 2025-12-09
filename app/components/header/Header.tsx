@@ -8,6 +8,7 @@ import Dropdown from "./Dropdown";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,6 +65,11 @@ export default function Header() {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+    setOpenDropdown(null); // Close any open dropdowns when sidebar closes
+  };
+
+  const toggleDropdown = (label: string) => {
+    setOpenDropdown(openDropdown === label ? null : label);
   };
 
   return (
@@ -161,8 +167,22 @@ export default function Header() {
             Home
           </Link>
           <div className="sidebar-dropdown">
-            <div className="sidebar-dropdown-label">About</div>
-            <div className="sidebar-dropdown-links">
+            <button
+              type="button"
+              className="sidebar-dropdown-label"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown("About");
+              }}
+              aria-expanded={openDropdown === "About"}
+            >
+              About
+              <span className="sidebar-dropdown-arrow">
+                {openDropdown === "About" ? "−" : "+"}
+              </span>
+            </button>
+            <div className={`sidebar-dropdown-links ${openDropdown === "About" ? "open" : ""}`}>
               {aboutLinks.map((link, index) => (
                 <Link
                   key={index}
@@ -176,8 +196,22 @@ export default function Header() {
             </div>
           </div>
           <div className="sidebar-dropdown">
-            <div className="sidebar-dropdown-label">Content</div>
-            <div className="sidebar-dropdown-links">
+            <button
+              type="button"
+              className="sidebar-dropdown-label"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown("Content");
+              }}
+              aria-expanded={openDropdown === "Content"}
+            >
+              Content
+              <span className="sidebar-dropdown-arrow">
+                {openDropdown === "Content" ? "−" : "+"}
+              </span>
+            </button>
+            <div className={`sidebar-dropdown-links ${openDropdown === "Content" ? "open" : ""}`}>
               {contentLinks.map((link, index) => (
                 <Link
                   key={index}
@@ -191,8 +225,22 @@ export default function Header() {
             </div>
           </div>
           <div className="sidebar-dropdown">
-            <div className="sidebar-dropdown-label">Impact</div>
-            <div className="sidebar-dropdown-links">
+            <button
+              type="button"
+              className="sidebar-dropdown-label"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown("Impact");
+              }}
+              aria-expanded={openDropdown === "Impact"}
+            >
+              Impact
+              <span className="sidebar-dropdown-arrow">
+                {openDropdown === "Impact" ? "−" : "+"}
+              </span>
+            </button>
+            <div className={`sidebar-dropdown-links ${openDropdown === "Impact" ? "open" : ""}`}>
               {impactLinks.map((link, index) => (
                 <Link
                   key={index}
@@ -206,8 +254,22 @@ export default function Header() {
             </div>
           </div>
           <div className="sidebar-dropdown">
-            <div className="sidebar-dropdown-label">Get Involved</div>
-            <div className="sidebar-dropdown-links">
+            <button
+              type="button"
+              className="sidebar-dropdown-label"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown("Get Involved");
+              }}
+              aria-expanded={openDropdown === "Get Involved"}
+            >
+              Get Involved
+              <span className="sidebar-dropdown-arrow">
+                {openDropdown === "Get Involved" ? "−" : "+"}
+              </span>
+            </button>
+            <div className={`sidebar-dropdown-links ${openDropdown === "Get Involved" ? "open" : ""}`}>
               {getInvolvedLinks.map((link, index) => (
                 <Link
                   key={index}
@@ -221,8 +283,22 @@ export default function Header() {
             </div>
           </div>
           <div className="sidebar-dropdown">
-            <div className="sidebar-dropdown-label">Help</div>
-            <div className="sidebar-dropdown-links">
+            <button
+              type="button"
+              className="sidebar-dropdown-label"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDropdown("Help");
+              }}
+              aria-expanded={openDropdown === "Help"}
+            >
+              Help
+              <span className="sidebar-dropdown-arrow">
+                {openDropdown === "Help" ? "−" : "+"}
+              </span>
+            </button>
+            <div className={`sidebar-dropdown-links ${openDropdown === "Help" ? "open" : ""}`}>
               {helpLinks.map((link, index) => (
                 <Link
                   key={index}
