@@ -13,54 +13,91 @@ export default function Contact() {
   const contactInfoRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Set initial states
+    gsap.set([titleRef.current, subtitleRef.current], { opacity: 0, y: 30 })
+    if (formRef.current) {
+      gsap.set(formRef.current.querySelectorAll(".form-group"), { opacity: 0, y: 20 })
+    }
+    if (imageRef.current) {
+      gsap.set(imageRef.current, { opacity: 0, x: 50, scale: 0.95 })
+    }
+    if (contactInfoRef.current) {
+      gsap.set(contactInfoRef.current.querySelectorAll(".contact-info-item"), { opacity: 0, y: 20 })
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const tl = gsap.timeline()
 
+            // Animate title
             if (titleRef.current) {
-              tl.fromTo(
-                titleRef.current,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-              )
+              tl.to(titleRef.current, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power3.out",
+              })
             }
 
+            // Animate subtitle
             if (subtitleRef.current) {
-              tl.fromTo(
+              tl.to(
                 subtitleRef.current,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.8,
+                  ease: "power3.out",
+                },
                 "-=0.5",
               )
             }
 
+            // Animate form groups (including labels and inputs)
             if (formRef.current) {
-              const formElements = formRef.current.querySelectorAll("input, textarea, button")
-              tl.fromTo(
-                formElements,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+              const formGroups = formRef.current.querySelectorAll(".form-group")
+              tl.to(
+                formGroups,
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.6,
+                  stagger: 0.1,
+                  ease: "power3.out",
+                },
                 "-=0.4",
               )
             }
 
+            // Animate image container
             if (imageRef.current) {
-              tl.fromTo(
+              tl.to(
                 imageRef.current,
-                { opacity: 0, x: 50, scale: 0.95 },
-                { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: "power3.out" },
+                {
+                  opacity: 1,
+                  x: 0,
+                  scale: 1,
+                  duration: 0.8,
+                  ease: "power3.out",
+                },
                 "-=0.6",
               )
             }
 
+            // Animate contact info items
             if (contactInfoRef.current) {
               const infoItems = contactInfoRef.current.querySelectorAll(".contact-info-item")
-              tl.fromTo(
+              tl.to(
                 infoItems,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.6,
+                  stagger: 0.1,
+                  ease: "power3.out",
+                },
                 "-=0.4",
               )
             }
