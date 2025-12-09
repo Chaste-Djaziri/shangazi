@@ -5,6 +5,7 @@ import Topics from "./components/topics/Topics";
 import Featured from "./components/featured/Featured";
 import Contact from "./components/contact/Contact";
 import Footer from "./components/footer/Footer";
+import ScrollToTop from "./components/scroll-to-top/ScrollToTop";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Featured />
       <Contact />
       <Footer />
+      <ScrollToTop />
     </main>
   );
 }
