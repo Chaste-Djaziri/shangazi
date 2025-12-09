@@ -754,7 +754,7 @@ body {
   box-shadow: 0 2px 8px var(--shadow);
   max-width: fit-content;
   z-index: 10;
-  }
+}
 
 .youtube-subscribers {
   position: absolute;
@@ -886,17 +886,30 @@ body {
   position: relative;
 }
 
+.hero-social-links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.hero-social-links > * {
+  pointer-events: auto;
+}
+
 .hero-image-wrapper {
   width: 100%;
   max-width: 1000px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 16px solid var(--color-accent);
-  padding: 1rem;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
   background: var(--bg-primary);
   margin-left: auto;
   transform: translateX(10%);
@@ -908,116 +921,338 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  display: block;
 }
 
+/* Tablet and Medium Screens */
+@media (max-width: 1024px) {
+  .hero {
+    padding: 5rem 0;
+  }
+
+  .hero-container {
+    gap: 3rem;
+    padding: 0 1.5rem;
+  }
+
+  .hero-left {
+    padding-right: 1.5rem;
+  }
+
+  .hero-name {
+    font-size: 2.5rem;
+  }
+
+  .hero-image-wrapper {
+    transform: translateX(5%);
+    border-width: 12px;
+    padding: 0;
+  }
+}
+
+/* Mobile and Small Tablets */
 @media (max-width: 768px) {
   .hero {
     min-height: auto;
-    padding: 4rem 0;
+    padding: 3rem 0;
   }
 
   .hero-container {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0 1rem;
+    gap: 2.5rem;
+    padding: 0 1.5rem;
   }
 
   .hero-left {
     padding-right: 0;
     text-align: center;
     align-items: center;
+    gap: 1.25rem;
   }
 
   .hero-name {
     font-size: 2rem;
+    gap: 0.375rem;
   }
 
   .hero-description {
     font-size: 1rem;
     max-width: 100%;
+    line-height: 1.5;
   }
 
   .hero-actions {
     justify-content: center;
     width: 100%;
+    gap: 0.875rem;
+    margin-top: 0.75rem;
   }
 
   .hero-btn {
     flex: 1;
-    min-width: 150px;
+    min-width: 140px;
+    max-width: 200px;
     text-align: center;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
   }
 
   .hero-right {
     order: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-image-wrapper {
+    max-width: 100%;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    transform: translateX(0);
+    border-width: 12px;
+    padding: 0;
+    position: relative;
+    overflow: visible;
   }
 
   .hero-image {
     max-width: 100%;
   }
 
+  .hero-social-links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .hero-social-links > * {
+    pointer-events: auto;
+  }
+
+  .youtube-subscribers,
+  .facebook-followers,
+  .tiktok-followers,
+  .instagram-followers {
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+  }
+
   .youtube-subscribers {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    padding: 1rem 1.5rem;
-    max-width: 100%;
-    margin-top: 1rem;
-  }
-
-  .youtube-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .subscribers-count {
-    font-size: 1.5rem;
+    position: absolute;
+    bottom: 25%;
+    right: -10%;
   }
 
   .facebook-followers {
-    position: relative;
-    top: auto;
-    left: auto;
-    padding: 1rem 1.5rem;
-    max-width: 100%;
-    margin-top: 1rem;
-  }
-
-  .facebook-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .followers-count {
-    font-size: 1.5rem;
+    position: absolute;
+    top: 5%;
+    left: -15%;
   }
 
   .tiktok-followers {
-    position: relative;
-    top: auto;
-    right: auto;
-    padding: 1rem 1.5rem;
-    max-width: 100%;
-    margin-top: 1rem;
-  }
-
-  .tiktok-icon {
-    width: 40px;
-    height: 40px;
+    position: absolute;
+    top: -10%;
+    right: 5%;
   }
 
   .instagram-followers {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    padding: 1rem 1.5rem;
-    max-width: 100%;
-    margin-top: 1rem;
+    position: absolute;
+    bottom: 3%;
+    left: -18%;
   }
 
+  .youtube-icon,
+  .facebook-icon,
+  .tiktok-icon,
   .instagram-icon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .subscribers-count,
+  .followers-count {
+    font-size: 1.25rem;
+  }
+
+  .subscribers-label,
+  .followers-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+  .hero {
+    padding: 2rem 0;
+    min-height: auto;
+  }
+
+  .hero-container {
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  .hero-left {
+    gap: 1rem;
+  }
+
+  .hero-name {
+    font-size: 1.75rem;
+    gap: 0.25rem;
+  }
+
+  .hero-description {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-btn {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .hero-image-wrapper {
+    max-width: 320px;
+    border-width: 10px;
+    padding: 0;
+  }
+
+  .youtube-subscribers,
+  .facebook-followers,
+  .tiktok-followers,
+  .instagram-followers {
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+  }
+
+  .youtube-subscribers {
+    bottom: 20%;
+    right: -12%;
+  }
+
+  .facebook-followers {
+    top: 3%;
+    left: -20%;
+  }
+
+  .tiktok-followers {
+    top: -12%;
+    right: 3%;
+  }
+
+  .instagram-followers {
+    bottom: 0%;
+    left: -22%;
+  }
+
+  .youtube-icon,
+  .facebook-icon,
+  .tiktok-icon,
+  .instagram-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .subscribers-count,
+  .followers-count {
+    font-size: 1.125rem;
+  }
+
+  .subscribers-label,
+  .followers-label {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Extra Small Mobile Devices */
+@media (max-width: 360px) {
+  .hero {
+    padding: 1.5rem 0;
+  }
+
+  .hero-container {
+    padding: 0 0.75rem;
+    gap: 1.5rem;
+  }
+
+  .hero-name {
+    font-size: 1.5rem;
+  }
+
+  .hero-description {
+    font-size: 0.875rem;
+  }
+
+  .hero-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .hero-image-wrapper {
+    max-width: 280px;
+    border-width: 8px;
+    padding: 0;
+  }
+
+  .youtube-subscribers,
+  .facebook-followers,
+  .tiktok-followers,
+  .instagram-followers {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .youtube-subscribers {
+    bottom: 18%;
+    right: -15%;
+  }
+
+  .facebook-followers {
+    top: 2%;
+    left: -25%;
+  }
+
+  .tiktok-followers {
+    top: -15%;
+    right: 2%;
+  }
+
+  .instagram-followers {
+    bottom: -2%;
+    left: -28%;
+  }
+
+  .youtube-icon,
+  .facebook-icon,
+  .tiktok-icon,
+  .instagram-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .subscribers-count,
+  .followers-count {
+    font-size: 1rem;
+  }
+
+  .subscribers-label,
+  .followers-label {
+    font-size: 0.625rem;
   }
 }
 

@@ -253,17 +253,19 @@ export default function Hero() {
         <div className="hero-right">
           <div className="hero-image-wrapper" ref={imageWrapperRef}>
             <Image src="/shangazi.png" alt="Shangazi" width={800} height={600} priority className="hero-image" />
-            {socialStats.map((stat, index) => (
-              <SocialLink
-                key={index}
-                stat={stat}
-                isVisible={isVisible}
-                index={index}
-                refCallback={(el) => {
-                  socialLinksRef.current[index] = el
-                }}
-              />
-            ))}
+            <div className="hero-social-links">
+              {socialStats.map((stat, index) => (
+                <SocialLink
+                  key={index}
+                  stat={stat}
+                  isVisible={isVisible}
+                  index={index}
+                  refCallback={(el) => {
+                    socialLinksRef.current[index] = el
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
