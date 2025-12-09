@@ -9,14 +9,16 @@ interface StatData {
 }
 
 const statsData: StatData[] = [
-  { value: 410, suffix: "K+", label: "YouTube Subscribers" },
+  { value: 482, suffix: "K", label: "YouTube Subscribers" },
   { value: 30, suffix: "M+", label: "Video Views" },
   { value: 20, suffix: "+", label: "Years Experience" },
   { value: 1000, suffix: "s", label: "Lives Impacted" },
 ];
 
 function formatNumber(value: number, suffix: string): string {
-  if (suffix === "K+") {
+  if (suffix === "K") {
+    return `${Math.floor(value)}K`;
+  } else if (suffix === "K+") {
     return `${Math.floor(value)}K+`;
   } else if (suffix === "M+") {
     return `${Math.floor(value)}M+`;
