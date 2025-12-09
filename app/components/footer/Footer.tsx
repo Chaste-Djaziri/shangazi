@@ -135,56 +135,58 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="footer-section footer-links">
-            <h3 className="footer-heading">About</h3>
-            <ul className="footer-link-list">
-              {aboutLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="footer-link">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="footer-links-grid">
+            <div className="footer-section footer-links">
+              <h3 className="footer-heading">About</h3>
+              <ul className="footer-link-list">
+                {aboutLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="footer-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="footer-section footer-links">
-            <h3 className="footer-heading">Content</h3>
-            <ul className="footer-link-list">
-              {contentLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="footer-link">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="footer-section footer-links">
+              <h3 className="footer-heading">Content</h3>
+              <ul className="footer-link-list">
+                {contentLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="footer-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="footer-section footer-links">
-            <h3 className="footer-heading">Impact</h3>
-            <ul className="footer-link-list">
-              {impactLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="footer-link">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="footer-section footer-links">
+              <h3 className="footer-heading">Impact</h3>
+              <ul className="footer-link-list">
+                {impactLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="footer-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="footer-section footer-links">
-            <h3 className="footer-heading">Get Involved</h3>
-            <ul className="footer-link-list">
-              {getInvolvedLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="footer-link">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="footer-section footer-links">
+              <h3 className="footer-heading">Get Involved</h3>
+              <ul className="footer-link-list">
+                {getInvolvedLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="footer-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="footer-section footer-contact">
