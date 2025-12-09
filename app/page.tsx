@@ -4,6 +4,7 @@ import About from "./components/about/About";
 import Topics from "./components/topics/Topics";
 import Featured from "./components/featured/Featured";
 import Contact from "./components/contact/Contact";
+import Footer from "./components/footer/Footer";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Topics />
       <Featured />
       <Contact />
+      <Footer />
     </main>
   );
 }
