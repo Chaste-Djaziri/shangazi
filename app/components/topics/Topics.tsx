@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 
 interface Topic {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }
 
 const topics: Topic[] = [
