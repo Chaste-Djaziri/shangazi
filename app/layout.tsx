@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+import ScrollToTop from "./components/scroll-to-top/ScrollToTop";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shangazi.rw"),
@@ -156,7 +158,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <Header />
-        {children}
+          {children}
+          <Footer />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>
