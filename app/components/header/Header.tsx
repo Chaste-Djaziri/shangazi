@@ -145,6 +145,16 @@ export default function Header() {
       {/* Sidebar */}
       <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
+          <Link href="/" className="sidebar-logo-link" onClick={closeSidebar}>
+            <Image
+              src="/logo.png"
+              alt="Shangazi Logo"
+              width={150}
+              height={54}
+              priority
+              className="sidebar-logo"
+            />
+          </Link>
           <button className="sidebar-close" onClick={closeSidebar} aria-label="Close menu">
             <svg
               width="24"
