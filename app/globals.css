@@ -1019,3 +1019,156 @@ body {
     font-size: 0.9375rem;
   }
 }
+
+/* Topics Section Styles */
+.topics {
+  padding: 4rem 2rem;
+  background: var(--bg-secondary);
+  width: 100%;
+}
+
+.topics-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.topics-content {
+  text-align: center;
+  width: 100%;
+}
+
+.topics-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.topics-title-accent {
+  color: var(--color-accent);
+}
+
+.topics-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  font-weight: 500;
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.topic-card {
+  background: var(--bg-primary);
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topic-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-primary);
+}
+
+.topic-icon {
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.topic-card:hover .topic-icon {
+  color: var(--color-accent);
+  transform: scale(1.1);
+}
+
+.topic-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.topic-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 968px) {
+  .topics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .topics {
+    padding: 3rem 1.5rem;
+  }
+
+  .topics-title {
+    font-size: 2rem;
+  }
+
+  .topics-subtitle {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+
+  .topics-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .topic-card {
+    padding: 1.5rem;
+  }
+
+  .topic-title {
+    font-size: 1.25rem;
+  }
+
+  .topic-description {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topics {
+    padding: 2rem 1rem;
+  }
+
+  .topics-title {
+    font-size: 1.75rem;
+  }
+
+  .topics-subtitle {
+    font-size: 1rem;
+  }
+
+  .topic-card {
+    padding: 1.25rem;
+  }
+}
