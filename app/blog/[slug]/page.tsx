@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { marked } from "marked"
+import type { Tokens } from "marked"
 import type { Metadata } from "next"
 
 type StrapiImageAttributes = {
@@ -112,28 +113,27 @@ const isVideoFile = (href?: string | unknown) => {
 
 const renderer = new marked.Renderer()
 
-renderer.image = (href, title, text) => {
-  const url = resolveAssetUrl(href ?? "")
-  const alt = text ?? ""
+renderer.image = ({ href = "", title, text = "" }: Tokens.Image) => {
+  const url = resolveAssetUrl(href)
   const titleAttr = title ? ` title="${title}"` : ""
-  return `<figure class="md-image"><img src="${url}" alt="${alt}"${titleAttr} /></figure>`
+  return `<figure class="md-image"><img src="${url}" alt="${text}"${titleAttr} /></figure>`
 }
 
-renderer.link = (href, title, text) => {
+renderer.link = ({ href = "", title, text = "" }: Tokens.Link) => {
   if (isVideoFile(href)) {
-    const src = resolveAssetUrl(href ?? "")
+    const src = resolveAssetUrl(href)
     const titleAttr = title ? ` title="${title}"` : ""
     return `<div class="md-embed-video md-embed-video-file"><video src="${src}" controls preload="metadata" playsinline${titleAttr ? ` aria-label="${title}"` : ""}>Your browser does not support the video tag.</video></div>`
   }
-  if (isVideoUrl(href ?? "")) {
-    const embed = href ? toEmbedUrl(href) : null
+  if (isVideoUrl(href)) {
+    const embed = toEmbedUrl(href)
     if (embed) {
       return `<div class="md-embed-video"><iframe src="${embed}" title="Video" allowfullscreen frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div>`
     }
   }
   const titleAttr = title ? ` title="${title}"` : ""
-  const hrefSafe = href ?? "#"
-  return `<a href="${hrefSafe}"${titleAttr}>${text ?? hrefSafe}</a>`
+  const hrefSafe = href || "#"
+  return `<a href="${hrefSafe}"${titleAttr}>${text || hrefSafe}</a>`
 }
 
 const parseMarkdown = (content?: string) => {
