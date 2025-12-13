@@ -37,7 +37,6 @@ export default function Header() {
   ];
 
   const contentLinks = [
-    { href: "/content", label: "Content Page" },
     { href: "/blog", label: "Blog / Articles" },
     { href: "/media", label: "Media" },
   ];
@@ -345,5 +344,4 @@ export default function Header() {
     </>
   );
 }
-
 
