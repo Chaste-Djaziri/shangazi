@@ -203,7 +203,6 @@ async function fetchBlog(slug: string): Promise<BlogPost | null> {
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
     next: { revalidate: 300 },
-    cache: "no-store",
   })
 
   if (!res.ok) {

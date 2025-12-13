@@ -195,7 +195,7 @@ export default async function BlogPage() {
                       <p className="blog-row-description">{post.description}</p>
                       <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
                       {post.slug ? (
-                        <Link className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>
+                        <Link prefetch className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>
                           Read More
                         </Link>
                       ) : null}
@@ -215,7 +215,12 @@ export default async function BlogPage() {
                     const imageUrl = post.thumbnailUrl
                     const altText = post.thumbnailAlt ?? post.title
                     return (
-                      <Link key={`trend-${post.id}`} className="blog-trending-item" href={post.slug ? `/blog/${post.slug}` : "#"}>
+                      <Link
+                        key={`trend-${post.id}`}
+                        prefetch
+                        className="blog-trending-item"
+                        href={post.slug ? `/blog/${post.slug}` : "#`}
+                      >
                         <div className="blog-trending-thumb">
                           {imageUrl ? (
                             <Image
