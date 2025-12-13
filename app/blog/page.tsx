@@ -181,18 +181,18 @@ export default async function BlogPage() {
                         </div>
                         <div className="blog-row-content">
                           <h3 className="blog-row-title">{post.title}</h3>
-                          <p className="blog-row-description">{post.description}</p>
-                          <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
-                          {post.slug ? (
-                            <Link className="blog-card-link" href={`/blog/${post.slug}`}>
-                              Read More
-                            </Link>
-                          ) : null}
-                        </div>
-                      </article>
-                    )
-                  })}
-                </div>
+                      <p className="blog-row-description">{post.description}</p>
+                      <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
+                      {post.slug ? (
+                        <Link className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>
+                          Read More
+                        </Link>
+                      ) : null}
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
               </div>
 
               <div className="blog-divider" aria-hidden="true" />
@@ -204,7 +204,7 @@ export default async function BlogPage() {
                     const imageUrl = post.thumbnailUrl
                     const altText = post.thumbnailAlt ?? post.title
                     return (
-                      <div key={`trend-${post.id}`} className="blog-trending-item">
+                      <Link key={`trend-${post.id}`} className="blog-trending-item" href={post.slug ? `/blog/${post.slug}` : "#"}>
                         <div className="blog-trending-thumb">
                           {imageUrl ? (
                             <Image
@@ -222,7 +222,7 @@ export default async function BlogPage() {
                         <div className="blog-trending-text">
                           <p className="blog-trending-title">{post.title}</p>
                         </div>
-                      </div>
+                      </Link>
                     )
                   })}
                 </div>
