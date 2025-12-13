@@ -2899,13 +2899,6 @@ body {
   font-size: 0.975rem;
 }
 
-.blog-trending-description {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
 @media (max-width: 768px) {
   .blog-hero {
     padding: 3.75rem 1.25rem;

@@ -221,7 +221,6 @@ export default async function BlogPage() {
                         </div>
                         <div className="blog-trending-text">
                           <p className="blog-trending-title">{post.title}</p>
-                          <p className="blog-trending-description">{post.description}</p>
                         </div>
                       </div>
                     )
