@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { marked } from "marked"
+import type { Metadata } from "next"
 
 type StrapiImageAttributes = {
   url?: string
@@ -60,6 +61,85 @@ type BlogPost = {
 const STRAPI_BASE =
   process.env.NEXT_PUBLIC_STRAPI_URL ?? process.env.STRAPI_API_URL ?? process.env.STRAPI_URL
 const STRAPI_TOKEN = process.env.STRAPI_ACCESS_TOKEN
+
+const resolveAssetUrl = (src?: string | unknown) => {
+  if (!src || typeof src !== "string") return ""
+  const trimmed = src.trim()
+  if (!trimmed) return ""
+  if (trimmed.startsWith("http")) return trimmed
+  const base = (STRAPI_BASE ?? "http://localhost:1337").replace(/\/$/, "")
+  return `${base}${trimmed}`
+}
+
+const isVideoUrl = (href?: string) => {
+  if (!href) return false
+  try {
+    const url = new URL(href)
+    const host = url.hostname.toLowerCase()
+    return host.includes("youtube.com") || host === "youtu.be" || host.includes("vimeo.com")
+  } catch {
+    return false
+  }
+}
+
+const toEmbedUrl = (href: string) => {
+  try {
+    const url = new URL(href)
+    const host = url.hostname.toLowerCase()
+    if (host.includes("youtube.com")) {
+      const videoId = url.searchParams.get("v")
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null
+    }
+    if (host === "youtu.be") {
+      const videoId = url.pathname.replace("/", "")
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null
+    }
+    if (host.includes("vimeo.com")) {
+      const parts = url.pathname.split("/").filter(Boolean)
+      const videoId = parts.pop()
+      return videoId ? `https://player.vimeo.com/video/${videoId}` : null
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+const isVideoFile = (href?: string | unknown) => {
+  if (!href || typeof href !== "string") return false
+  return /\.(mp4|webm|mov|m4v|ogg)$/i.test(href.split("?")[0])
+}
+
+const renderer = new marked.Renderer()
+
+renderer.image = (href, title, text) => {
+  const url = resolveAssetUrl(href ?? "")
+  const alt = text ?? ""
+  const titleAttr = title ? ` title="${title}"` : ""
+  return `<figure class="md-image"><img src="${url}" alt="${alt}"${titleAttr} /></figure>`
+}
+
+renderer.link = (href, title, text) => {
+  if (isVideoFile(href)) {
+    const src = resolveAssetUrl(href ?? "")
+    const titleAttr = title ? ` title="${title}"` : ""
+    return `<div class="md-embed-video md-embed-video-file"><video src="${src}" controls preload="metadata" playsinline${titleAttr ? ` aria-label="${title}"` : ""}>Your browser does not support the video tag.</video></div>`
+  }
+  if (isVideoUrl(href ?? "")) {
+    const embed = href ? toEmbedUrl(href) : null
+    if (embed) {
+      return `<div class="md-embed-video"><iframe src="${embed}" title="Video" allowfullscreen frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div>`
+    }
+  }
+  const titleAttr = title ? ` title="${title}"` : ""
+  const hrefSafe = href ?? "#"
+  return `<a href="${hrefSafe}"${titleAttr}>${text ?? hrefSafe}</a>`
+}
+
+const parseMarkdown = (content?: string) => {
+  if (!content) return ""
+  return marked.parse(content, { renderer })
+}
 
 const buildStrapiUrl = (path?: string) => {
   if (!path) return undefined
@@ -159,12 +239,42 @@ function formatDate(value?: string) {
   })
 }
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
-  const slug = decodeURIComponent(params.slug)
-  const blog = await fetchBlog(slug)
+function buildEmbed(videoEmbed?: string): { embedHtml?: string; externalUrl?: string } {
+  if (!videoEmbed) return {}
+  if (videoEmbed.toLowerCase().includes("<iframe")) {
+    return { embedHtml: videoEmbed }
+  }
+
+  try {
+    const url = new URL(videoEmbed)
+    const host = url.hostname.toLowerCase()
+    let videoId: string | undefined
+    if (host.includes("youtube.com")) {
+      videoId = url.searchParams.get("v") ?? undefined
+    } else if (host === "youtu.be") {
+      videoId = url.pathname.replace("/", "")
+    }
+
+    if (videoId) {
+      const embedUrl = `https://www.youtube.com/embed/${videoId}`
+      const iframe = `<iframe src="${embedUrl}" title="Video" allowfullscreen frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>`
+      return { embedHtml: iframe }
+    }
+
+    return { externalUrl: videoEmbed }
+  } catch {
+    return {}
+  }
+}
+
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
+  const blog = await fetchBlog(decodedSlug)
   if (!blog) return notFound()
 
-  const related = await fetchRelated(slug)
+  const related = await fetchRelated(decodedSlug)
+  const embedData = buildEmbed(blog.videoEmbed)
 
   return (
     <main className="blog-detail-page">
@@ -194,13 +304,19 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
               {blog.content ? (
                 <div
                   className="blog-detail-content-html"
-                  dangerouslySetInnerHTML={{ __html: marked.parse(blog.content) }}
+                  dangerouslySetInnerHTML={{ __html: parseMarkdown(blog.content) }}
                 />
               ) : null}
             </div>
 
-            {blog.videoEmbed ? (
-              <div className="blog-detail-video" dangerouslySetInnerHTML={{ __html: blog.videoEmbed }} />
+            {embedData.embedHtml ? (
+              <div className="blog-detail-video" dangerouslySetInnerHTML={{ __html: embedData.embedHtml }} />
+            ) : embedData.externalUrl ? (
+              <div className="blog-detail-video-link">
+                <a href={embedData.externalUrl} target="_blank" rel="noreferrer">
+                  Watch video
+                </a>
+              </div>
             ) : null}
 
             {blog.externalLinks && blog.externalLinks.length > 0 ? (
@@ -268,4 +384,35 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
       </section>
     </main>
   )
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
+  const blog = await fetchBlog(decodedSlug)
+
+  const title = blog?.title ? `${blog.title} | Shangazi` : "Blog | Shangazi"
+  const description = blog?.content ? blog.content.slice(0, 150) : "Read the latest story from Shangazi."
+  const image = blog?.thumbnailUrl ?? "/profile/about.png"
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
+  const url = `${baseUrl}/blog/${decodedSlug}`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      images: [{ url: image }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  }
 }
