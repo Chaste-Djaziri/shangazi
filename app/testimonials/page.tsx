@@ -34,8 +34,15 @@ const testimonials = [
 ]
 
 export const metadata: Metadata = {
-  title: "Testimonials",
-  description: "What people are saying about Shangazi Emma Claudine.",
+  title: "Testimonials | Shangazi Emma Claudine",
+  description: "What people are saying about Shangazi Emma Claudine and her impact on youth and communities.",
+  keywords: [
+    "Shangazi Emma Claudine testimonials",
+    "Emma Claudine feedback",
+    "Shangazi impact",
+    "Rwanda testimonials",
+    "Shangazi community stories",
+  ],
 }
 
 export default function TestimonialsPage() {

@@ -1,8 +1,15 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Discover upcoming services from Shangazi Emma Claudine.",
+  title: "Services | Shangazi Emma Claudine",
+  description: "Discover upcoming services from Shangazi Emma Claudine, including workshops, talks, and collaborations.",
+  keywords: [
+    "Shangazi Emma Claudine services",
+    "Emma Claudine workshops",
+    "Shangazi collaborations",
+    "Rwanda speaker",
+    "Shangazi booking",
+  ],
 }
 
 export default function ServicesPage() {

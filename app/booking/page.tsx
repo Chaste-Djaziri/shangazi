@@ -2,8 +2,15 @@ import type { Metadata } from "next"
 import BookingForm from "../components/booking/BookingForm"
 
 export const metadata: Metadata = {
-  title: "Booking",
-  description: "Book engagements with Shangazi Emma Claudine.",
+  title: "Booking | Shangazi Emma Claudine",
+  description: "Book engagements with Shangazi Emma Claudine for keynotes, workshops, panels, or consultations.",
+  keywords: [
+    "Book Shangazi Emma Claudine",
+    "Emma Claudine booking",
+    "Shangazi speaking",
+    "Rwanda keynote",
+    "Shangazi workshop",
+  ],
 }
 
 export default function BookingPage() {

@@ -3,8 +3,16 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Blogs",
-  description: "Latest blogs and articles from Shangazi Emma Claudine.",
+  title: "Blogs | Shangazi Emma Claudine",
+  description: "Latest blogs and articles from Shangazi Emma Claudine, focusing on reproductive health, relationships, and youth empowerment.",
+  keywords: [
+    "Shangazi Emma Claudine blog",
+    "Emma Claudine articles",
+    "Rwanda blogs",
+    "reproductive health blog",
+    "youth counseling articles",
+    "Shangazi content",
+  ],
 }
 
 type StrapiImageAttributes = {

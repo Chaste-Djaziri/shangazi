@@ -419,8 +419,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const decodedSlug = decodeURIComponent(slug)
   const blog = await fetchBlog(decodedSlug)
 
-  const title = blog?.title ? `${blog.title} | Shangazi` : "Blog | Shangazi"
-  const description = blog?.content ? blog.content.slice(0, 150) : "Read the latest story from Shangazi."
+  const title = blog?.title ? `${blog.title} | Shangazi Emma Claudine` : "Blog | Shangazi Emma Claudine"
+  const description = blog?.content
+    ? `${blog.content.slice(0, 150)}`
+    : "Read the latest story from Shangazi Emma Claudine."
   const image = blog?.thumbnailUrl ?? "/profile/about.png"
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
@@ -429,6 +431,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
+    keywords: [
+      blog?.title ?? "Shangazi Emma Claudine blog",
+      "Shangazi Emma Claudine",
+      "Emma Claudine",
+      "Rwanda blog",
+      "reproductive health",
+      "youth counseling",
+      "relationships",
+    ],
     openGraph: {
       title,
       description,

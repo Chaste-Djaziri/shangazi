@@ -2,8 +2,15 @@ import type { Metadata } from "next"
 import Contact from "../components/contact/Contact"
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Get in touch with Shangazi Emma Claudine for inquiries, guidance, or collaborations.",
+  title: "Contact | Shangazi Emma Claudine",
+  description: "Get in touch with Shangazi Emma Claudine for inquiries, guidance, collaborations, or media requests.",
+  keywords: [
+    "contact Shangazi Emma Claudine",
+    "contact Emma Claudine",
+    "Shangazi inquiries",
+    "Emma Claudine collaboration",
+    "Shangazi contact",
+  ],
 }
 
 export default function ContactPage() {

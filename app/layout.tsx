@@ -8,14 +8,17 @@ import ScrollToTop from "./components/scroll-to-top/ScrollToTop";
 export const metadata: Metadata = {
   metadataBase: new URL("https://shangazi.rw"),
   title: {
-    default: "Shangazi - Emma Claudine | Rwandan Journalist & Content Creator",
-    template: "%s | Shangazi",
+    default: "Shangazi Emma Claudine | Rwandan Journalist & Content Creator",
+    template: "%s | Shangazi Emma Claudine",
   },
   description:
-    "Shangazi Emma-Claudine is a prominent Rwandan journalist and content creator with over 20 years of experience. Empowering Rwandan youth through education, reproductive health counseling, and open dialogue. 482K+ YouTube subscribers, 30M+ views.",
+    "Shangazi Emma Claudine is a prominent Rwandan journalist and content creator empowering youth through education, reproductive health counseling, and open dialogue. 482K+ YouTube subscribers, 30M+ views.",
   keywords: [
-    "Shangazi",
+    "Shangazi Emma Claudine",
     "Emma Claudine",
+    "Shangazi",
+    "Shangazi Rwanda",
+    "Emma Claudine Shangazi",
     "Rwandan journalist",
     "content creator",
     "reproductive health",
@@ -42,8 +45,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://shangazi.rw",
-    siteName: "Shangazi",
-    title: "Shangazi - Emma Claudine | Rwandan Journalist & Content Creator",
+    siteName: "Shangazi Emma Claudine",
+    title: "Shangazi Emma Claudine | Rwandan Journalist & Content Creator",
     description:
       "Empowering Rwandan youth through education, reproductive health counseling, and open dialogue. 482K+ YouTube subscribers, 30M+ views.",
     images: [
@@ -57,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shangazi - Emma Claudine | Rwandan Journalist & Content Creator",
+    title: "Shangazi Emma Claudine | Rwandan Journalist & Content Creator",
     description:
       "Empowering Rwandan youth through education, reproductive health counseling, and open dialogue.",
     images: ["/profile/about.png"],

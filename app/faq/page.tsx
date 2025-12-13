@@ -32,8 +32,15 @@ const faqs = [
 ]
 
 export const metadata: Metadata = {
-  title: "FAQ",
-  description: "Frequently asked questions about Shangazi Emma Claudine and her work.",
+  title: "FAQ | Shangazi Emma Claudine",
+  description: "Frequently asked questions about Shangazi Emma Claudine, her content, and how to collaborate or get support.",
+  keywords: [
+    "Shangazi Emma Claudine FAQ",
+    "Emma Claudine questions",
+    "Shangazi support",
+    "Shangazi information",
+    "Shangazi Emma Claudine help",
+  ],
 }
 
 export default function FAQPage() {

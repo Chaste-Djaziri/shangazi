@@ -2,8 +2,15 @@ import type { Metadata } from "next"
 import NewsletterForm from "../components/newsletter/NewsletterForm"
 
 export const metadata: Metadata = {
-  title: "Newsletter",
-  description: "Sign up to receive updates from Shangazi Emma Claudine.",
+  title: "Newsletter | Shangazi Emma Claudine",
+  description: "Sign up to receive updates from Shangazi Emma Claudine on reproductive health, relationships, and youth empowerment.",
+  keywords: [
+    "Shangazi Emma Claudine newsletter",
+    "Emma Claudine updates",
+    "Shangazi email list",
+    "Rwanda newsletter",
+    "Shangazi latest news",
+  ],
 }
 
 export default function NewsletterPage() {

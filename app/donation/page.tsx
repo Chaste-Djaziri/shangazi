@@ -2,8 +2,15 @@ import type { Metadata } from "next"
 import DonationDetails from "../components/donation/DonationDetails"
 
 export const metadata: Metadata = {
-  title: "Donation",
-  description: "Support Shangazi Emma Claudine's mission.",
+  title: "Donation | Shangazi Emma Claudine",
+  description: "Support Shangazi Emma Claudine's mission to empower youth through education and open dialogue.",
+  keywords: [
+    "Donate to Shangazi Emma Claudine",
+    "Shangazi donation",
+    "Emma Claudine support",
+    "Rwanda youth donation",
+    "Shangazi contribution",
+  ],
 }
 
 export default function DonationPage() {
