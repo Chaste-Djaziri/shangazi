@@ -1,0 +1,59 @@
+- .gitignore
+- README.md
+- app
+  - components
+    - about
+      - About.tsx
+    - contact
+      - Contact.tsx
+    - featured
+      - Featured.tsx
+    - footer
+      - Footer.tsx
+    - header
+      - Dropdown.tsx
+      - Header.tsx
+    - hero
+      - Hero.tsx
+    - scroll-to-top
+      - ScrollToTop.tsx
+    - settings
+      - ThemeSettings.tsx
+    - stats
+      - Stats.tsx
+    - topics
+      - Topics.tsx
+  - contexts
+    - ThemeContext.tsx
+  - favicon.ico
+  - globals.css
+  - layout.tsx
+  - not-found.tsx
+  - page.tsx
+- eslint.config.mjs
+- next.config.ts
+- package-lock.json
+- package.json
+- postcss.config.mjs
+- public
+  - file.svg
+  - globe.svg
+  - logo.png
+  - next.svg
+  - profile
+    - about.png
+    - emma-claudine-1.jpeg
+    - emma-claudine-2.jpeg
+    - emma-claudine-4.jpeg
+  - shangazi.png
+  - socials
+    - facebook.png
+    - gmail.png
+    - instagram.png
+    - tiktok.png
+    - x-twitter.png
+    - youtube.png
+  - tv-logo.png
+  - vercel.svg
+  - window.svg
+- tsconfig.json
