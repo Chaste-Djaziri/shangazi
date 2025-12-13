@@ -219,7 +219,7 @@ export default async function BlogPage() {
                         key={`trend-${post.id}`}
                         prefetch
                         className="blog-trending-item"
-                        href={post.slug ? `/blog/${post.slug}` : "#`}
+                        href={post.slug ? `/blog/${post.slug}` : "#"}
                       >
                         <div className="blog-trending-thumb">
                           {imageUrl ? (
