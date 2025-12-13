@@ -108,8 +108,12 @@ const normalizeBlog = (raw: StrapiBlogRaw): BlogPost => {
 async function getBlogs(): Promise<{ blogs: BlogPost[]; error?: string }> {
   const base = (STRAPI_BASE ?? "http://localhost:1337").replace(/\/$/, "")
   const params = new URLSearchParams()
-  params.set("populate", "*")
+  params.set("fields[0]", "title")
+  params.set("fields[1]", "description")
+  params.set("fields[2]", "slug")
+  params.set("fields[3]", "publishedAt")
   params.set("sort", "publishedAt:desc")
+  params.set("populate[thumbnail]", "*")
   if (STRAPI_TOKEN) {
     params.set("publicationState", "preview")
   } else {
@@ -124,7 +128,8 @@ async function getBlogs(): Promise<{ blogs: BlogPost[]; error?: string }> {
   try {
     const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
       headers,
-      next: { revalidate: 300 },
+      next: { revalidate: 600 },
+      cache: "force-cache",
     })
 
     if (!res.ok) {

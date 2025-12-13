@@ -197,12 +197,21 @@ async function fetchBlog(slug: string): Promise<BlogPost | null> {
   const base = (STRAPI_BASE ?? "http://localhost:1337").replace(/\/$/, "")
   const params = new URLSearchParams()
   params.set("filters[slug][$eq]", slug)
-  params.set("populate", "*")
+  params.set("fields[0]", "title")
+  params.set("fields[1]", "description")
+  params.set("fields[2]", "slug")
+  params.set("fields[3]", "publishedAt")
+  params.set("fields[4]", "content")
+  params.set("fields[5]", "video_embed")
+  params.set("fields[6]", "external_links")
+  params.set("populate[thumbnail]", "*")
+  params.set("populate[images]", "*")
   if (STRAPI_TOKEN) params.set("publicationState", "preview")
 
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
-    next: { revalidate: 300 },
+    next: { revalidate: 600 },
+    cache: "force-cache",
   })
 
   if (!res.ok) {
@@ -218,6 +227,9 @@ async function fetchBlog(slug: string): Promise<BlogPost | null> {
 async function fetchRelated(slug?: string): Promise<BlogPost[]> {
   const base = (STRAPI_BASE ?? "http://localhost:1337").replace(/\/$/, "")
   const params = new URLSearchParams()
+  params.set("fields[0]", "title")
+  params.set("fields[1]", "slug")
+  params.set("fields[2]", "publishedAt")
   params.set("populate", "thumbnail")
   params.set("pagination[pageSize]", "5")
   params.set("sort", "publishedAt:desc")
@@ -226,7 +238,8 @@ async function fetchRelated(slug?: string): Promise<BlogPost[]> {
 
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
-    next: { revalidate: 300 },
+    next: { revalidate: 600 },
+    cache: "force-cache",
   })
   if (!res.ok) return []
   const json = (await res.json()) as StrapiResponse
