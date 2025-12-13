@@ -56,16 +56,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/`, changefreq: "weekly", priority: 1 },
-    { url: `${baseUrl}/about`, changefreq: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/services`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/contact`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/faq`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/newsletter`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/booking`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/donation`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/testimonials`, changefreq: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/blog`, changefreq: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/`, changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/about`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/services`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/contact`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/faq`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/newsletter`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/booking`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/donation`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/testimonials`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/blog`, changeFrequency: "weekly", priority: 0.8 },
   ]
 
   const posts = await fetchBlogSlugs()
@@ -74,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((item) => ({
       url: `${baseUrl}/blog/${item.slug}`,
       lastmod: item.updatedAt,
-      changefreq: "weekly",
+      changeFrequency: "weekly",
       priority: 0.7,
     }))
 
