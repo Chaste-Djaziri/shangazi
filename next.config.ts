@@ -9,7 +9,7 @@ const remotePatterns = [
     protocol: "https",
     hostname: "localhost",
   },
-]
+];
 
 const strapiEnvUrl =
   process.env.NEXT_PUBLIC_STRAPI_URL ?? process.env.STRAPI_API_URL ?? process.env.STRAPI_URL
@@ -18,9 +18,9 @@ if (strapiEnvUrl) {
     const { hostname, protocol } = new URL(strapiEnvUrl)
     if (hostname) {
       remotePatterns.push({
-        protocol: protocol.replace(":", "") as "http" | "https",
+        protocol: protocol.replace(":", ""),
         hostname,
-      })
+      });
     }
   } catch (e) {
     console.warn("Invalid STRAPI URL in env; falling back to localhost for images.")
@@ -30,7 +30,8 @@ if (strapiEnvUrl) {
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    remotePatterns,
+    // Cast for compatibility with differing Next.js versions/types in CI
+    remotePatterns: remotePatterns as any,
   },
 };
 
