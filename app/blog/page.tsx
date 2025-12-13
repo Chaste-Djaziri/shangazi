@@ -143,7 +143,7 @@ export default async function BlogPage() {
     <main className="blog-page">
       <section className="blog-hero">
         <div className="blog-hero-content">
-          <h1 className="blog-title">Blog</h1>
+          <h1 className="blog-title">Blogs</h1>
           <p className="blog-subtitle">Latest stories, insights, and updates from Shangazi</p>
         </div>
       </section>
@@ -153,40 +153,81 @@ export default async function BlogPage() {
           {error ? <div className="blog-error">{error}</div> : null}
           {blogs.length === 0 && !error ? <div className="blog-empty">No posts available right now.</div> : null}
           {blogs.length > 0 ? (
-            <div className="blog-grid">
-              {blogs.map((post) => {
-                const imageUrl = post.thumbnailUrl
-                const altText = post.thumbnailAlt ?? post.title
+            <div className="blog-layout">
+              <div className="blog-main">
+                <h2 className="blog-section-heading">
+                  Blogs / <span className="blog-section-accent">Articles</span>
+                </h2>
+                <div className="blog-list">
+                  {blogs.map((post) => {
+                    const imageUrl = post.thumbnailUrl
+                    const altText = post.thumbnailAlt ?? post.title
 
-                return (
-                  <article key={post.id} className="blog-card">
-                    <div className="blog-card-media">
-                      {imageUrl ? (
-                        <Image
-                          src={imageUrl}
-                          alt={altText}
-                          fill
-                          unoptimized
-                          sizes="(max-width: 768px) 100vw, 400px"
-                          className="blog-card-image"
-                        />
-                      ) : (
-                        <div className="blog-card-placeholder">No Image</div>
-                      )}
-                    </div>
-                    <div className="blog-card-content">
-                      <div className="blog-card-meta">{formatDate(post.publishedAt)}</div>
-                      <h3 className="blog-card-title">{post.title}</h3>
-                      <p className="blog-card-description">{post.description}</p>
-                      {post.slug ? (
-                        <Link className="blog-card-link" href={`/blog/${post.slug}`}>
-                          Read More
-                        </Link>
-                      ) : null}
-                    </div>
-                  </article>
-                )
-              })}
+                    return (
+                      <article key={post.id} className="blog-row-card">
+                        <div className="blog-row-media">
+                          {imageUrl ? (
+                            <Image
+                              src={imageUrl}
+                              alt={altText}
+                              fill
+                              unoptimized
+                              sizes="(max-width: 768px) 100vw, 300px"
+                              className="blog-row-image"
+                            />
+                          ) : (
+                            <div className="blog-row-placeholder" aria-hidden="true" />
+                          )}
+                        </div>
+                        <div className="blog-row-content">
+                          <h3 className="blog-row-title">{post.title}</h3>
+                          <p className="blog-row-description">{post.description}</p>
+                          <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
+                          {post.slug ? (
+                            <Link className="blog-card-link" href={`/blog/${post.slug}`}>
+                              Read More
+                            </Link>
+                          ) : null}
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="blog-divider" aria-hidden="true" />
+
+              <aside className="blog-trending">
+                <h2 className="blog-trending-heading">Trending</h2>
+                <div className="blog-trending-list">
+                  {blogs.slice(0, 4).map((post) => {
+                    const imageUrl = post.thumbnailUrl
+                    const altText = post.thumbnailAlt ?? post.title
+                    return (
+                      <div key={`trend-${post.id}`} className="blog-trending-item">
+                        <div className="blog-trending-thumb">
+                          {imageUrl ? (
+                            <Image
+                              src={imageUrl}
+                              alt={altText}
+                              fill
+                              unoptimized
+                              sizes="80px"
+                              className="blog-trending-image"
+                            />
+                          ) : (
+                            <div className="blog-trending-placeholder" aria-hidden="true" />
+                          )}
+                        </div>
+                        <div className="blog-trending-text">
+                          <p className="blog-trending-title">{post.title}</p>
+                          <p className="blog-trending-description">{post.description}</p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </aside>
             </div>
           ) : null}
         </div>
