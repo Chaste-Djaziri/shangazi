@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
+import { marked } from "marked"
 
 type StrapiImageAttributes = {
   url?: string
@@ -46,7 +47,6 @@ type StrapiResponse = { data?: StrapiBlogRaw[] }
 type BlogPost = {
   id: number | string
   title: string
-  description: string
   slug?: string
   publishedAt?: string
   content?: string
@@ -90,7 +90,6 @@ const normalizeBlog = (raw: StrapiBlogRaw): BlogPost => {
   return {
     id: raw.id ?? raw.documentId ?? crypto.randomUUID(),
     title: attrs?.title ?? "Untitled",
-    description: attrs?.description ?? "No description available.",
     slug: attrs?.slug,
     publishedAt: attrs?.publishedAt,
     content: attrs?.content,
@@ -160,16 +159,6 @@ function formatDate(value?: string) {
   })
 }
 
-function renderContent(content?: string) {
-  if (!content) return null
-  const blocks = content.split(/\n\n+/).filter(Boolean)
-  return blocks.map((block, idx) => (
-    <p key={idx} className="blog-detail-paragraph">
-      {block}
-    </p>
-  ))
-}
-
 export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
   const slug = decodeURIComponent(params.slug)
   const blog = await fetchBlog(slug)
@@ -181,11 +170,6 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
     <main className="blog-detail-page">
       <section className="blog-detail-hero" style={{ backgroundImage: `url(${blog.thumbnailUrl ?? "/backgrounds/page-hero-background.png"})` }}>
         <div className="blog-detail-overlay" />
-        <div className="blog-detail-hero-content">
-          <p className="blog-detail-meta">{formatDate(blog.publishedAt)}</p>
-          <h1 className="blog-detail-title">{blog.title}</h1>
-          <p className="blog-detail-description">{blog.description}</p>
-        </div>
       </section>
 
       <section className="blog-detail-section">
@@ -204,7 +188,16 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
               </div>
             ) : null}
 
-            <div className="blog-detail-body">{renderContent(blog.content)}</div>
+            <div className="blog-detail-body">
+              <p className="blog-detail-meta">{formatDate(blog.publishedAt)}</p>
+              <h1 className="blog-detail-title">{blog.title}</h1>
+              {blog.content ? (
+                <div
+                  className="blog-detail-content-html"
+                  dangerouslySetInnerHTML={{ __html: marked.parse(blog.content) }}
+                />
+              ) : null}
+            </div>
 
             {blog.videoEmbed ? (
               <div className="blog-detail-video" dangerouslySetInnerHTML={{ __html: blog.videoEmbed }} />
