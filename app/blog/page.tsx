@@ -57,6 +57,11 @@ const STRAPI_BASE =
 
 const STRAPI_TOKEN = process.env.STRAPI_ACCESS_TOKEN
 
+const isLocalImage = (src?: string) => {
+  if (!src) return true
+  return src.includes("localhost") || src.includes("127.0.0.1") || src.includes("::1")
+}
+
 const buildStrapiUrl = (path?: string) => {
   if (!path) return undefined
   if (path.startsWith("http")) return path
@@ -177,7 +182,7 @@ export default async function BlogPage() {
                               src={imageUrl}
                               alt={altText}
                               fill
-                              unoptimized
+                              unoptimized={isLocalImage(imageUrl)}
                               sizes="(max-width: 768px) 100vw, 300px"
                               className="blog-row-image"
                             />
@@ -217,7 +222,7 @@ export default async function BlogPage() {
                               src={imageUrl}
                               alt={altText}
                               fill
-                              unoptimized
+                              unoptimized={isLocalImage(imageUrl)}
                               sizes="80px"
                               className="blog-trending-image"
                             />

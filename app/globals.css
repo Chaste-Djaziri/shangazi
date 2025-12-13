@@ -3207,6 +3207,19 @@ body {
   object-fit: cover;
 }
 
+.blog-detail-empty {
+  display: flex;
+  justify-content: center;
+}
+
+.blog-detail-empty-message {
+  border: 1px dashed var(--border-color);
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
 .blog-detail-sidebar {
   display: flex;
   flex-direction: column;

@@ -62,6 +62,10 @@ type BlogPost = {
 const STRAPI_BASE =
   process.env.NEXT_PUBLIC_STRAPI_URL ?? process.env.STRAPI_API_URL ?? process.env.STRAPI_URL
 const STRAPI_TOKEN = process.env.STRAPI_ACCESS_TOKEN
+const isLocalImage = (src?: string) => {
+  if (!src) return true
+  return src.includes("localhost") || src.includes("127.0.0.1") || src.includes("::1")
+}
 
 const resolveAssetUrl = (src?: string | unknown) => {
   if (!src || typeof src !== "string") return ""
@@ -199,6 +203,7 @@ async function fetchBlog(slug: string): Promise<BlogPost | null> {
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
     next: { revalidate: 300 },
+    cache: "no-store",
   })
 
   if (!res.ok) {
@@ -271,7 +276,31 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
   const blog = await fetchBlog(decodedSlug)
-  if (!blog) return notFound()
+  if (!blog) {
+    return (
+      <main className="blog-detail-page">
+        <section className="blog-detail-hero" style={{ backgroundImage: 'url("/backgrounds/page-hero-background.png")' }}>
+          <div className="blog-detail-overlay" />
+          <div className="blog-detail-hero-content">
+            <h1 className="blog-detail-title">Blog Not Available</h1>
+            <p className="blog-detail-meta">The blog you are looking for could not be found.</p>
+          </div>
+        </section>
+        <section className="blog-detail-section">
+          <div className="blog-detail-container blog-detail-empty">
+            <div className="blog-detail-main">
+              <div className="blog-detail-empty-message">
+                <p>We couldn&apos;t load this blog. It may have been removed or is unpublished.</p>
+                <Link className="blog-card-link" href="/blog">
+                  Back to Blogs
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
+  }
 
   const related = await fetchRelated(decodedSlug)
   const embedData = buildEmbed(blog.videoEmbed)
@@ -291,7 +320,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                   src={blog.thumbnailUrl}
                   alt={blog.thumbnailAlt ?? blog.title}
                   fill
-                  unoptimized
+                  unoptimized={isLocalImage(blog.thumbnailUrl)}
                   sizes="(max-width: 768px) 100vw, 800px"
                   className="blog-detail-thumb-img"
                 />
@@ -337,21 +366,21 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             ) : null}
 
             {blog.gallery && blog.gallery.length > 0 ? (
-              <div className="blog-detail-gallery">
-                {blog.gallery.map(
-                  (img, idx) =>
-                    img.url && (
-                      <div key={idx} className="blog-detail-gallery-item">
-                        <Image
-                          src={img.url}
-                          alt={img.alt ?? blog.title}
-                          fill
-                          unoptimized
-                          sizes="(max-width: 768px) 100vw, 400px"
-                          className="blog-detail-gallery-img"
-                        />
-                      </div>
-                    ),
+                <div className="blog-detail-gallery">
+                  {blog.gallery.map(
+                    (img, idx) =>
+                      img.url && (
+                        <div key={idx} className="blog-detail-gallery-item">
+                          <Image
+                            src={img.url}
+                            alt={img.alt ?? blog.title}
+                            fill
+                            unoptimized={isLocalImage(img.url)}
+                            sizes="(max-width: 768px) 100vw, 400px"
+                            className="blog-detail-gallery-img"
+                          />
+                        </div>
+                      ),
                 )}
               </div>
             ) : null}
