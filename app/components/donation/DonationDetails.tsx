@@ -3,7 +3,7 @@ export default function DonationDetails() {
     <div className="donation-methods">
       <div className="donation-card">
         <div className="donation-card-title">Mobile Money (MTN Rwanda)</div>
-        <div className="donation-card-value">+250 788 123 456</div>
+        <div className="donation-card-value">+250 788 597 423</div>
         <div className="donation-card-note">Reference: SHANGAZI SUPPORT</div>
       </div>
       <div className="donation-card">

@@ -202,14 +202,14 @@ export default function Footer() {
             <div className="footer-contact-info">
               <p className="footer-contact-item">
                 <span className="footer-contact-label">Email:</span>
-                <a href="mailto:info@shangazi.rw" className="footer-contact-link">
-                  info@shangazi.rw
+                <a href="mailto:comms@shangazi.rw" className="footer-contact-link">
+                  comms@shangazi.rw
                 </a>
               </p>
               <p className="footer-contact-item">
                 <span className="footer-contact-label">Phone:</span>
-                <a href="tel:+250788123456" className="footer-contact-link">
-                  +250 788 123 456
+                <a href="tel:+250788597423" className="footer-contact-link">
+                  +250 788 597 423
                 </a>
               </p>
               <p className="footer-contact-item">

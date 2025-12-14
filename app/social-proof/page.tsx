@@ -17,7 +17,7 @@ export default function SocialProofPage() {
 
       <section className="static-content">
         <div className="static-card">
-          <p>More stories and case studies are on the way. For collaborations, contact info@shangazi.rw.</p>
+          <p>More stories and case studies are on the way. For collaborations, contact comms@shangazi.rw.</p>
         </div>
       </section>
     </main>

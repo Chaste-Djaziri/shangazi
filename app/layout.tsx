@@ -83,8 +83,8 @@ export const metadata: Metadata = {
   category: "Media & Journalism",
   classification: "Journalism, Education, Youth Counseling",
   other: {
-    "contact:email": "info@shangazi.rw",
-    "contact:phone_number": "+250788123456",
+    "contact:email": "comms@shangazi.rw",
+    "contact:phone_number": "+250788597423",
     "contact:locality": "Kigali",
     "contact:country_name": "Rwanda",
   },
@@ -105,8 +105,8 @@ export default function RootLayout({
       "Prominent Rwandan journalist and content creator with over 20 years of experience. Empowering Rwandan youth through education, reproductive health counseling, and open dialogue.",
     url: "https://shangazi.rw",
     image: "https://shangazi.rw/profile/about.png",
-    email: "info@shangazi.rw",
-    telephone: "+250788123456",
+    email: "comms@shangazi.rw",
+    telephone: "+250788597423",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Kigali",

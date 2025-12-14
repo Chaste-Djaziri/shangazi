@@ -243,7 +243,7 @@ export default function Contact() {
                     </div>
                     <div className="contact-info-content">
                       <h3 className="contact-info-label">Email</h3>
-                      <a href="mailto:info@shangazi.rw" className="contact-info-text">info@shangazi.rw</a>
+                      <a href="mailto:comms@shangazi.rw" className="contact-info-text">comms@shangazi.rw</a>
                     </div>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default function Contact() {
                     </div>
                     <div className="contact-info-content">
                       <h3 className="contact-info-label">Phone</h3>
-                      <a href="tel:+250788123456" className="contact-info-text">+250 788 123 456</a>
+                      <a href="tel:+250788597423" className="contact-info-text">+250 788 597 423</a>
                     </div>
                   </div>
                   <div className="contact-info-item">
@@ -328,4 +328,3 @@ export default function Contact() {
     </section>
   )
 }
-

@@ -33,7 +33,7 @@ export default function DonationPage() {
               counseling, and community outreach.
             </p>
             <p className="donation-subtext">
-              Prefer a different channel? Email finance@shangazi.rw and we&apos;ll share tailored instructions.
+              Prefer a different channel? Email comms@shangazi.rw and we&apos;ll share tailored instructions.
             </p>
           </div>
 
