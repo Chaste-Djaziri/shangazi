@@ -1,4 +1,5 @@
-import imageUrlBuilder from "@sanity/image-url"
+import { createImageUrlBuilder } from "@sanity/image-url"
+import { marked } from "marked"
 import type { SanityImageSource } from "@sanity/image-url"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -27,7 +28,8 @@ type BlogPost = {
   publishedAt?: string
   author?: string
   image?: SanityImageSource
-  body?: PortableTextBlock[]
+  body?: PortableTextBlock[] | string
+  content?: string
 }
 
 const POSTS_QUERY = `*[
@@ -39,19 +41,25 @@ const POSTS_QUERY = `*[
   publishedAt,
   author,
   image,
-  body
+  body,
+  content
 }`
 
 const options = { next: { revalidate: 600 } }
 
 const { projectId, dataset } = client.config()
 const urlFor = (source: SanityImageSource) =>
-  projectId && dataset ? imageUrlBuilder({ projectId, dataset }).image(source) : null
+  projectId && dataset ? createImageUrlBuilder({ projectId, dataset }).image(source) : null
 
 type PortableTextChild = { _type?: string; text?: string }
 
-const toPlainText = (blocks?: PortableTextBlock[]) =>
-  (blocks ?? [])
+const toPlainText = (blocks?: PortableTextBlock[] | string) => {
+  if (typeof blocks === "string") {
+    const html = marked.parse(blocks, { async: false }) as string
+    return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
+  }
+
+  return (blocks ?? [])
     .map((block) => {
       if (block._type !== "block" || !Array.isArray(block.children)) return ""
       return block.children
@@ -62,9 +70,10 @@ const toPlainText = (blocks?: PortableTextBlock[]) =>
     })
     .join(" ")
     .trim()
+}
 
-const buildExcerpt = (body?: PortableTextBlock[]) => {
-  const text = toPlainText(body)
+const buildExcerpt = (body?: PortableTextBlock[] | string, content?: string) => {
+  const text = toPlainText(body ?? content)
   if (!text) return "No description available."
   return text.length > 180 ? `${text.slice(0, 180)}...` : text
 }
@@ -127,7 +136,7 @@ export default async function BlogPage() {
                         </div>
                         <div className="blog-row-content">
                           <h3 className="blog-row-title">{post.title}</h3>
-                          <p className="blog-row-description">{buildExcerpt(post.body)}</p>
+                          <p className="blog-row-description">{buildExcerpt(post.body, post.content)}</p>
                           <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
                           {post.slug ? (
                             <Link prefetch className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>

@@ -1,5 +1,6 @@
-import imageUrlBuilder from "@sanity/image-url"
+import { createImageUrlBuilder } from "@sanity/image-url"
 import type { SanityImageSource } from "@sanity/image-url"
+import { marked } from "marked"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
@@ -18,7 +19,8 @@ type BlogPost = {
   gallery?: SanityImageSource[]
   videoUrl?: string
   externalLinks?: { label?: string; url?: string }[]
-  body?: PortableTextBlock[]
+  body?: PortableTextBlock[] | string
+  content?: string
 }
 
 type PortableTextChild = { _type?: string; text?: string }
@@ -33,7 +35,8 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
   gallery,
   videoUrl,
   externalLinks,
-  body
+  body,
+  content
 }`
 
 const RELATED_QUERY = `*[
@@ -50,10 +53,15 @@ const options = { next: { revalidate: 600 } }
 
 const { projectId, dataset } = client.config()
 const urlFor = (source: SanityImageSource) =>
-  projectId && dataset ? imageUrlBuilder({ projectId, dataset }).image(source) : null
+  projectId && dataset ? createImageUrlBuilder({ projectId, dataset }).image(source) : null
 
-const toPlainText = (blocks?: PortableTextBlock[]) =>
-  (blocks ?? [])
+const toPlainText = (blocks?: PortableTextBlock[] | string) => {
+  if (typeof blocks === "string") {
+    const html = marked.parse(blocks, { async: false }) as string
+    return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
+  }
+
+  return (blocks ?? [])
     .map((block) => {
       if (block._type !== "block" || !Array.isArray(block.children)) return ""
       return block.children
@@ -64,6 +72,11 @@ const toPlainText = (blocks?: PortableTextBlock[]) =>
     })
     .join(" ")
     .trim()
+}
+const renderMarkdown = (value?: string) => {
+  if (!value) return ""
+  return marked.parse(value, { async: false }) as string
+}
 
 const buildEmbed = (videoUrl?: string): { embedUrl?: string; externalUrl?: string } => {
   if (!videoUrl) return {}
@@ -98,8 +111,9 @@ const formatDate = (value?: string) => {
   })
 }
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
-  const decodedSlug = decodeURIComponent(params.slug)
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const [blog, related] = await Promise.all([
     client.fetch<BlogPost | null>(POST_QUERY, { slug: decodedSlug }, options),
     client.fetch<BlogPost[]>(RELATED_QUERY, { slug: decodedSlug }, options),
@@ -150,6 +164,16 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
                 <div className="blog-detail-content-html prose max-w-none">
                   <PortableText value={blog.body} />
                 </div>
+              ) : typeof blog.body === "string" ? (
+                <div
+                  className="blog-detail-content-html prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(blog.body) }}
+                />
+              ) : blog.content ? (
+                <div
+                  className="blog-detail-content-html prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(blog.content) }}
+                />
               ) : null}
             </div>
 
@@ -241,15 +265,16 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
   )
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const decodedSlug = decodeURIComponent(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const blog = await client.fetch<BlogPost | null>(POST_QUERY, { slug: decodedSlug }, options)
   if (!blog) {
     notFound()
   }
 
   const title = blog?.title ? `${blog.title} | Shangazi Emma Claudine` : "Blog | Shangazi Emma Claudine"
-  const descriptionText = toPlainText(blog?.body)
+  const descriptionText = toPlainText(blog?.body ?? blog?.content)
   const description = descriptionText
     ? descriptionText.slice(0, 150)
     : "Read the latest story from Shangazi Emma Claudine."
