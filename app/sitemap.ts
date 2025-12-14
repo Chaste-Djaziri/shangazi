@@ -1,52 +1,24 @@
 import type { MetadataRoute } from "next"
 
-type StrapiBlogRaw = {
-  id?: number
-  documentId?: string
-  attributes?: {
-    slug?: string
-    updatedAt?: string
-    publishedAt?: string
-  }
+import { client } from "@/sanity/client"
+
+type PostSlug = {
   slug?: string
   updatedAt?: string
-  publishedAt?: string
 }
 
-type StrapiResponse = { data?: StrapiBlogRaw[] }
+const SLUGS_QUERY = `*[
+  _type == "post" && defined(slug.current)
+]{
+  "slug": slug.current,
+  "updatedAt": coalesce(_updatedAt, publishedAt)
+}`
 
-const STRAPI_BASE =
-  process.env.NEXT_PUBLIC_STRAPI_URL ?? process.env.STRAPI_API_URL ?? process.env.STRAPI_URL
-const STRAPI_TOKEN = process.env.STRAPI_ACCESS_TOKEN
+const options = { next: { revalidate: 3600 } }
 
-const buildHeaders = () => {
-  const headers: Record<string, string> = { "Content-Type": "application/json" }
-  if (STRAPI_TOKEN) headers.Authorization = `Bearer ${STRAPI_TOKEN}`
-  return headers
-}
-
-async function fetchBlogSlugs(): Promise<{ slug?: string; updatedAt?: string }[]> {
-  const base = (STRAPI_BASE ?? "http://localhost:1337").replace(/\/$/, "")
-  const params = new URLSearchParams()
-  params.set("fields[0]", "slug")
-  params.set("fields[1]", "updatedAt")
-  params.set("fields[2]", "publishedAt")
-  params.set("pagination[pageSize]", "200")
-  if (STRAPI_TOKEN) params.set("publicationState", "preview")
-
+async function fetchBlogSlugs(): Promise<PostSlug[]> {
   try {
-    const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
-      headers: buildHeaders(),
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) return []
-    const json = (await res.json()) as StrapiResponse
-    return (
-      json.data?.map((item) => {
-        const attrs = item.attributes ?? item
-        return { slug: attrs?.slug, updatedAt: attrs?.updatedAt ?? attrs?.publishedAt }
-      }) ?? []
-    )
+    return await client.fetch<PostSlug[]>(SLUGS_QUERY, {}, options)
   } catch {
     return []
   }
