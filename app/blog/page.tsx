@@ -25,6 +25,7 @@ type BlogPost = {
   title: string
   slug: string
   publishedAt?: string
+  author?: string
   image?: SanityImageSource
   body?: PortableTextBlock[]
 }
@@ -36,6 +37,7 @@ const POSTS_QUERY = `*[
   title,
   "slug": slug.current,
   publishedAt,
+  author,
   image,
   body
 }`

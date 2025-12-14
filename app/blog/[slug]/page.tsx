@@ -13,7 +13,11 @@ type BlogPost = {
   title: string
   slug: string
   publishedAt?: string
+  author?: string
   image?: SanityImageSource
+  gallery?: SanityImageSource[]
+  videoUrl?: string
+  externalLinks?: { label?: string; url?: string }[]
   body?: PortableTextBlock[]
 }
 
@@ -24,7 +28,11 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
   title,
   "slug": slug.current,
   publishedAt,
+  author,
   image,
+  gallery,
+  videoUrl,
+  externalLinks,
   body
 }`
 
@@ -57,6 +65,29 @@ const toPlainText = (blocks?: PortableTextBlock[]) =>
     .join(" ")
     .trim()
 
+const buildEmbed = (videoUrl?: string): { embedUrl?: string; externalUrl?: string } => {
+  if (!videoUrl) return {}
+  try {
+    const url = new URL(videoUrl)
+    const host = url.hostname.toLowerCase()
+    const path = url.pathname.replace("/", "")
+
+    if (host.includes("youtube.com")) {
+      const id = url.searchParams.get("v")
+      if (id) return { embedUrl: `https://www.youtube.com/embed/${id}` }
+    }
+    if (host === "youtu.be") {
+      if (path) return { embedUrl: `https://www.youtube.com/embed/${path}` }
+    }
+    if (host.includes("vimeo.com") && path) {
+      return { embedUrl: `https://player.vimeo.com/video/${path}` }
+    }
+  } catch {
+    return { externalUrl: videoUrl }
+  }
+  return { externalUrl: videoUrl }
+}
+
 const formatDate = (value?: string) => {
   if (!value) return ""
   const date = new Date(value)
@@ -79,7 +110,13 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
   }
 
   const heroUrl = blog.image ? urlFor(blog.image)?.width(1600).height(900).url() : undefined
+  const galleryUrls =
+    blog.gallery?.map((img) => ({
+      url: urlFor(img)?.width(800).height(600).url(),
+      alt: blog.title,
+    })) ?? []
   const relatedPosts = (related ?? []).filter((post) => post.slug && post._id !== blog._id)
+  const embed = buildEmbed(blog.videoUrl)
 
   return (
     <main className="blog-detail-page">
@@ -108,12 +145,67 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
             <div className="blog-detail-body">
               <p className="blog-detail-meta">{formatDate(blog.publishedAt)}</p>
               <h1 className="blog-detail-title">{blog.title}</h1>
+              {blog.author ? <p className="blog-detail-meta">By {blog.author}</p> : null}
               {Array.isArray(blog.body) ? (
                 <div className="blog-detail-content-html prose max-w-none">
                   <PortableText value={blog.body} />
                 </div>
               ) : null}
             </div>
+
+            {embed.embedUrl ? (
+              <div className="blog-detail-video">
+                <iframe
+                  src={embed.embedUrl}
+                  title={blog.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            ) : embed.externalUrl ? (
+              <div className="blog-detail-video-link">
+                <a href={embed.externalUrl} target="_blank" rel="noreferrer">
+                  Watch video
+                </a>
+              </div>
+            ) : null}
+
+            {blog.externalLinks && blog.externalLinks.length > 0 ? (
+              <div className="blog-detail-links">
+                <h3>External Links</h3>
+                <ul>
+                  {blog.externalLinks.map(
+                    (link, idx) =>
+                      link?.url && (
+                        <li key={idx}>
+                          <a href={link.url} target="_blank" rel="noreferrer">
+                            {link.label ?? link.url}
+                          </a>
+                        </li>
+                      ),
+                  )}
+                </ul>
+              </div>
+            ) : null}
+
+            {galleryUrls.length > 0 ? (
+              <div className="blog-detail-gallery">
+                {galleryUrls.map(
+                  (img, idx) =>
+                    img.url && (
+                      <div key={idx} className="blog-detail-gallery-item">
+                        <Image
+                          src={img.url}
+                          alt={img.alt ?? blog.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 400px"
+                          className="blog-detail-gallery-img"
+                        />
+                      </div>
+                    ),
+                )}
+              </div>
+            ) : null}
           </article>
 
           <aside className="blog-detail-sidebar">
