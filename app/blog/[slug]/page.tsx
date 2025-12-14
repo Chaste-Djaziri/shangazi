@@ -254,7 +254,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     ? descriptionText.slice(0, 150)
     : "Read the latest story from Shangazi Emma Claudine."
 
-  const image = blog?.image ? urlFor(blog.image)?.width(1200).height(630).url() : "/profile/about.png"
+  const image =
+    blog?.image ? urlFor(blog.image)?.width(1200).height(630).url() ?? "/profile/about.png" : "/profile/about.png"
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
   const url = `${baseUrl}/blog/${decodedSlug}`
