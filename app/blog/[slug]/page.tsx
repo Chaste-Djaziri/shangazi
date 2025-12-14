@@ -206,7 +206,11 @@ async function fetchBlog(slug: string): Promise<BlogPost | null> {
   params.set("fields[6]", "external_links")
   params.set("populate[thumbnail]", "*")
   params.set("populate[images]", "*")
-  if (STRAPI_TOKEN) params.set("publicationState", "preview")
+  if (STRAPI_TOKEN) {
+    params.set("publicationState", "preview")
+  } else {
+    params.set("publicationState", "live")
+  }
 
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
@@ -234,7 +238,11 @@ async function fetchRelated(slug?: string): Promise<BlogPost[]> {
   params.set("pagination[pageSize]", "5")
   params.set("sort", "publishedAt:desc")
   if (slug) params.set("filters[slug][$ne]", slug)
-  if (STRAPI_TOKEN) params.set("publicationState", "preview")
+  if (STRAPI_TOKEN) {
+    params.set("publicationState", "preview")
+  } else {
+    params.set("publicationState", "live")
+  }
 
   const res = await fetch(`${base}/api/blogs?${params.toString()}`, {
     headers: buildHeaders(),
@@ -284,37 +292,14 @@ function buildEmbed(videoEmbed?: string): { embedHtml?: string; externalUrl?: st
   }
 }
 
-export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const decodedSlug = decodeURIComponent(slug)
+export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+  const decodedSlug = decodeURIComponent(params.slug)
   const blog = await fetchBlog(decodedSlug)
   if (!blog) {
-    return (
-      <main className="blog-detail-page">
-        <section className="blog-detail-hero" style={{ backgroundImage: 'url("/backgrounds/page-hero-background.png")' }}>
-          <div className="blog-detail-overlay" />
-          <div className="blog-detail-hero-content">
-            <h1 className="blog-detail-title">Blog Not Available</h1>
-            <p className="blog-detail-meta">The blog you are looking for could not be found.</p>
-          </div>
-        </section>
-        <section className="blog-detail-section">
-          <div className="blog-detail-container blog-detail-empty">
-            <div className="blog-detail-main">
-              <div className="blog-detail-empty-message">
-                <p>We couldn&apos;t load this blog. It may have been removed or is unpublished.</p>
-                <Link className="blog-card-link" href="/blog">
-                  Back to Blogs
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    )
+    notFound()
   }
 
-  const related = await fetchRelated(decodedSlug)
+  const related = (await fetchRelated(decodedSlug)).filter((post) => post.slug !== decodedSlug)
   const embedData = buildEmbed(blog.videoEmbed)
 
   return (
@@ -427,10 +412,12 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   )
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const decodedSlug = decodeURIComponent(slug)
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const decodedSlug = decodeURIComponent(params.slug)
   const blog = await fetchBlog(decodedSlug)
+  if (!blog) {
+    notFound()
+  }
 
   const title = blog?.title ? `${blog.title} | Shangazi Emma Claudine` : "Blog | Shangazi Emma Claudine"
   const description = blog?.content

@@ -35,12 +35,14 @@ type StrapiBlogRaw = {
   attributes?: {
     title?: string
     description?: string
+    content?: string
     slug?: string
     publishedAt?: string
     thumbnail?: StrapiImage
   }
   title?: string
   description?: string
+  content?: string
   slug?: string
   publishedAt?: string
   thumbnail?: StrapiImage
@@ -54,6 +56,7 @@ type BlogPost = {
   id: number | string
   title: string
   description: string
+  content?: string
   slug?: string
   publishedAt?: string
   thumbnailUrl?: string
@@ -93,11 +96,14 @@ const extractImageUrl = (image?: StrapiImage): { url?: string; alt?: string } =>
 const normalizeBlog = (raw: StrapiBlogRaw): BlogPost => {
   const attrs = raw.attributes ?? raw
   const { url, alt } = extractImageUrl(attrs?.thumbnail)
+  const description =
+    attrs?.description ?? (attrs?.content ? `${attrs.content.slice(0, 180)}...` : "No description available.")
 
   return {
     id: raw.id ?? raw.documentId ?? crypto.randomUUID(),
     title: attrs?.title ?? "Untitled",
-    description: attrs?.description ?? "No description available.",
+    description,
+    content: attrs?.content,
     slug: attrs?.slug,
     publishedAt: attrs?.publishedAt,
     thumbnailUrl: url,
@@ -110,8 +116,9 @@ async function getBlogs(): Promise<{ blogs: BlogPost[]; error?: string }> {
   const params = new URLSearchParams()
   params.set("fields[0]", "title")
   params.set("fields[1]", "description")
-  params.set("fields[2]", "slug")
-  params.set("fields[3]", "publishedAt")
+  params.set("fields[2]", "content")
+  params.set("fields[3]", "slug")
+  params.set("fields[4]", "publishedAt")
   params.set("sort", "publishedAt:desc")
   params.set("populate[thumbnail]", "*")
   if (STRAPI_TOKEN) {
