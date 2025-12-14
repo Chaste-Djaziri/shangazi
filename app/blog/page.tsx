@@ -4,7 +4,7 @@ import type { SanityImageSource } from "@sanity/image-url"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import type { PortableTextBlock } from "next-sanity"
+import { PortableText, type PortableTextBlock } from "next-sanity"
 
 import { client } from "@/sanity/client"
 
@@ -28,7 +28,7 @@ type BlogPost = {
   publishedAt?: string
   author?: string
   image?: SanityImageSource
-  body?: PortableTextBlock[] | string
+  body?: PortableTextBlock[]
   content?: string
 }
 
@@ -53,6 +53,22 @@ const urlFor = (source: SanityImageSource) =>
 
 type PortableTextChild = { _type?: string; text?: string }
 
+const portableTextComponents = {
+  block: {
+    normal: ({ children }: { children: React.ReactNode }) => <p className="mb-2">{children}</p>,
+    h2: ({ children }: { children: React.ReactNode }) => <h3 className="text-lg font-semibold">{children}</h3>,
+    h3: ({ children }: { children: React.ReactNode }) => <h4 className="text-base font-semibold">{children}</h4>,
+  },
+  list: {
+    bullet: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-5">{children}</ul>,
+    number: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal pl-5">{children}</ol>,
+  },
+  marks: {
+    strong: ({ children }: { children: React.ReactNode }) => <strong className="font-semibold">{children}</strong>,
+    em: ({ children }: { children: React.ReactNode }) => <em className="italic">{children}</em>,
+  },
+}
+
 const toPlainText = (blocks?: PortableTextBlock[] | string) => {
   if (typeof blocks === "string") {
     const html = marked.parse(blocks, { async: false }) as string
@@ -72,10 +88,27 @@ const toPlainText = (blocks?: PortableTextBlock[] | string) => {
     .trim()
 }
 
-const buildExcerpt = (body?: PortableTextBlock[] | string, content?: string) => {
-  const text = toPlainText(body ?? content)
-  if (!text) return "No description available."
-  return text.length > 180 ? `${text.slice(0, 180)}...` : text
+const renderExcerpt = (post: BlogPost) => {
+  if (Array.isArray(post.body) && post.body.length > 0) {
+    return (
+      <div className="blog-row-description prose prose-sm max-w-none line-clamp-4">
+        <PortableText value={post.body.slice(0, 2)} components={portableTextComponents} />
+      </div>
+    )
+  }
+
+  if (post.content) {
+    const html = marked.parse(post.content, { async: false }) as string
+    return (
+      <div
+        className="blog-row-description prose prose-sm max-w-none line-clamp-4"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    )
+  }
+
+  const text = toPlainText(post.body ?? post.content)
+  return <p className="blog-row-description">{text || "No description available."}</p>
 }
 
 const formatDate = (value?: string) => {
@@ -136,7 +169,7 @@ export default async function BlogPage() {
                         </div>
                         <div className="blog-row-content">
                           <h3 className="blog-row-title">{post.title}</h3>
-                          <p className="blog-row-description">{buildExcerpt(post.body, post.content)}</p>
+                          {renderExcerpt(post)}
                           <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
                           {post.slug ? (
                             <Link prefetch className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>
