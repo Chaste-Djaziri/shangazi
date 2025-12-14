@@ -22,8 +22,8 @@ export const POST = async (request: NextRequest) => {
   }
 
   if (webhookSecret) {
-    const signature = request.headers.get("x-resend-signature")
-    if (signature !== webhookSecret) {
+    const signature = request.headers.get("x-resend-signature") ?? request.headers.get("resend-signature")
+    if (!signature || signature !== webhookSecret) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
     }
   }
@@ -39,7 +39,21 @@ export const POST = async (request: NextRequest) => {
 
   const data = event.data ?? {}
   const subject = data.subject ?? "Email received"
-  const textContent = data.text ?? data.html ?? "No body provided."
+  const emailId = data.email_id as string | undefined
+
+  // Try fetching full email content via Resend Receiving API for reliability.
+  let textContent: string | undefined = data.text ?? data.html
+  let htmlContent: string | undefined = typeof data.html === "string" ? data.html : undefined
+
+  if (emailId) {
+    const { data: received } = await resend.emails.receiving.get(emailId)
+    if (received) {
+      textContent = received.text ?? textContent
+      htmlContent = received.html ?? htmlContent
+    }
+  }
+
+  const safeText = textContent ?? "No body provided."
 
   const htmlBody = `
     <h3>New email received</h3>
@@ -49,7 +63,11 @@ export const POST = async (request: NextRequest) => {
     <p><strong>BCC:</strong> ${escapeHtml(String((data.bcc ?? []).join?.(", ") ?? data.bcc ?? ""))}</p>
     <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
     <h4>Body</h4>
-    <pre style="white-space:pre-wrap;">${escapeHtml(String(textContent))}</pre>
+    ${
+      htmlContent
+        ? `<div style="border:1px solid #ddd;padding:12px;border-radius:6px;">${htmlContent}</div>`
+        : `<pre style="white-space:pre-wrap;">${escapeHtml(String(safeText))}</pre>`
+    }
     <h4>Raw Event</h4>
     <pre style="white-space:pre-wrap;">${escapeHtml(JSON.stringify(event, null, 2))}</pre>
   `
@@ -65,7 +83,7 @@ BCC: ${Array.isArray(data.bcc) ? data.bcc.join(", ") : data.bcc ?? ""}
 Subject: ${subject}
 
 Body:
-${textContent}
+${safeText}
 
 Raw Event:
 ${JSON.stringify(event, null, 2)}
