@@ -4,7 +4,8 @@ import type { SanityImageSource } from "@sanity/image-url"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { PortableText, type PortableTextBlock } from "next-sanity"
+import type { ReactNode } from "react"
+import { PortableText, type PortableTextBlock, type PortableTextComponents } from "next-sanity"
 
 import { client } from "@/sanity/client"
 
@@ -53,19 +54,19 @@ const urlFor = (source: SanityImageSource) =>
 
 type PortableTextChild = { _type?: string; text?: string }
 
-const portableTextComponents = {
+const portableTextComponentsList: PortableTextComponents = {
   block: {
-    normal: ({ children }: { children: React.ReactNode }) => <p className="mb-2">{children}</p>,
-    h2: ({ children }: { children: React.ReactNode }) => <h3 className="text-lg font-semibold">{children}</h3>,
-    h3: ({ children }: { children: React.ReactNode }) => <h4 className="text-base font-semibold">{children}</h4>,
+    normal: ({ children }: { children?: ReactNode }) => <p className="mb-2">{children}</p>,
+    h2: ({ children }: { children?: ReactNode }) => <h3 className="text-lg font-semibold">{children}</h3>,
+    h3: ({ children }: { children?: ReactNode }) => <h4 className="text-base font-semibold">{children}</h4>,
   },
   list: {
-    bullet: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-5">{children}</ul>,
-    number: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal pl-5">{children}</ol>,
+    bullet: ({ children }: { children?: ReactNode }) => <ul className="list-disc pl-5">{children}</ul>,
+    number: ({ children }: { children?: ReactNode }) => <ol className="list-decimal pl-5">{children}</ol>,
   },
   marks: {
-    strong: ({ children }: { children: React.ReactNode }) => <strong className="font-semibold">{children}</strong>,
-    em: ({ children }: { children: React.ReactNode }) => <em className="italic">{children}</em>,
+    strong: ({ children }: { children?: ReactNode }) => <strong className="font-semibold">{children}</strong>,
+    em: ({ children }: { children?: ReactNode }) => <em className="italic">{children}</em>,
   },
 }
 
@@ -92,7 +93,7 @@ const renderExcerpt = (post: BlogPost) => {
   if (Array.isArray(post.body) && post.body.length > 0) {
     return (
       <div className="blog-row-description prose prose-sm max-w-none line-clamp-4">
-        <PortableText value={post.body.slice(0, 2)} components={portableTextComponents} />
+        <PortableText value={post.body.slice(0, 2)} components={portableTextComponentsList} />
       </div>
     )
   }

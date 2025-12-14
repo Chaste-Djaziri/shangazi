@@ -5,7 +5,8 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { PortableText, type PortableTextBlock } from "next-sanity"
+import type { ReactNode } from "react"
+import { PortableText, type PortableTextBlock, type PortableTextComponents } from "next-sanity"
 
 import { client } from "@/sanity/client"
 
@@ -54,6 +55,26 @@ const options = { next: { revalidate: 600 } }
 const { projectId, dataset } = client.config()
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset ? createImageUrlBuilder({ projectId, dataset }).image(source) : null
+
+const portableTextComponentsDetail: PortableTextComponents = {
+  block: {
+    normal: ({ children }: { children?: ReactNode }) => <p className="mb-4">{children}</p>,
+    h2: ({ children }: { children?: ReactNode }) => (
+      <h2 className="text-2xl font-semibold mb-3 mt-6">{children}</h2>
+    ),
+    h3: ({ children }: { children?: ReactNode }) => (
+      <h3 className="text-xl font-semibold mb-2 mt-4">{children}</h3>
+    ),
+  },
+  list: {
+    bullet: ({ children }: { children?: ReactNode }) => <ul className="list-disc pl-6 mb-4">{children}</ul>,
+    number: ({ children }: { children?: ReactNode }) => <ol className="list-decimal pl-6 mb-4">{children}</ol>,
+  },
+  marks: {
+    strong: ({ children }: { children?: ReactNode }) => <strong className="font-semibold">{children}</strong>,
+    em: ({ children }: { children?: ReactNode }) => <em className="italic">{children}</em>,
+  },
+}
 
 const portableTextComponents = {
   block: {
@@ -182,7 +203,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               {blog.author ? <p className="blog-detail-meta">By {blog.author}</p> : null}
               {Array.isArray(blog.body) ? (
                 <div className="blog-detail-content-html prose max-w-none">
-                  <PortableText value={blog.body} components={portableTextComponents} />
+                  <PortableText value={blog.body} components={portableTextComponentsDetail} />
                 </div>
               ) : typeof blog.body === "string" ? (
                 <div
