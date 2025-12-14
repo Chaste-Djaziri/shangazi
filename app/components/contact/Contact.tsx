@@ -1,6 +1,7 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import type React from "react"
+import { useRef, useEffect, useState } from "react"
 import Image from "next/image"
 import gsap from "gsap"
 
@@ -11,6 +12,8 @@ export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null)
   const imageRef = useRef<HTMLDivElement>(null)
   const contactInfoRef = useRef<HTMLDivElement>(null)
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // Set initial states
@@ -133,10 +136,38 @@ export default function Contact() {
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted")
+    setStatus("loading")
+    setError(null)
+
+    const formData = new FormData(e.currentTarget)
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      subject: formData.get("subject"),
+      message: formData.get("message"),
+    }
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error ?? "Failed to send message.")
+      }
+
+      setStatus("success")
+      e.currentTarget.reset()
+    } catch (err) {
+      console.error(err)
+      setError(err instanceof Error ? err.message : "Failed to send message.")
+      setStatus("error")
+    }
   }
 
   return (
@@ -148,7 +179,7 @@ export default function Contact() {
               Ask <span className="contact-title-accent">Shangazi</span>
             </h2>
             <p className="contact-subtitle" ref={subtitleRef}>
-              Have a question? I'm here to help with confidential advice.
+              Have a question? I&apos;m here to help with confidential advice.
             </p>
             <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
               <div className="form-group">
@@ -203,9 +234,11 @@ export default function Contact() {
                   required
                 />
               </div>
-              <button type="submit" className="contact-submit">
-                Send Message
+              <button type="submit" className="contact-submit" disabled={status === "loading"}>
+                {status === "loading" ? "Sending..." : "Send Message"}
               </button>
+              {status === "success" ? <p className="contact-success">Message sent successfully.</p> : null}
+              {error ? <p className="contact-error">{error}</p> : null}
             </form>
           </div>
         </div>

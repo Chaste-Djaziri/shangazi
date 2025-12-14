@@ -76,26 +76,6 @@ const portableTextComponentsDetail: PortableTextComponents = {
   },
 }
 
-const portableTextComponents = {
-  block: {
-    normal: ({ children }: { children: React.ReactNode }) => <p className="mb-4">{children}</p>,
-    h2: ({ children }: { children: React.ReactNode }) => (
-      <h2 className="text-2xl font-semibold mb-3 mt-6">{children}</h2>
-    ),
-    h3: ({ children }: { children: React.ReactNode }) => (
-      <h3 className="text-xl font-semibold mb-2 mt-4">{children}</h3>
-    ),
-  },
-  list: {
-    bullet: ({ children }: { children: React.ReactNode }) => <ul className="list-disc pl-6 mb-4">{children}</ul>,
-    number: ({ children }: { children: React.ReactNode }) => <ol className="list-decimal pl-6 mb-4">{children}</ol>,
-  },
-  marks: {
-    strong: ({ children }: { children: React.ReactNode }) => <strong className="font-semibold">{children}</strong>,
-    em: ({ children }: { children: React.ReactNode }) => <em className="italic">{children}</em>,
-  },
-}
-
 const toPlainText = (blocks?: PortableTextBlock[] | string) => {
   if (typeof blocks === "string") {
     const html = marked.parse(blocks, { async: false }) as string
