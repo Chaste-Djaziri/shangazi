@@ -162,7 +162,7 @@ export default function Contact() {
       }
 
       setStatus("success")
-      e.currentTarget.reset()
+      formRef.current?.reset()
     } catch (err) {
       console.error(err)
       setError(err instanceof Error ? err.message : "Failed to send message.")
@@ -237,8 +237,18 @@ export default function Contact() {
               <button type="submit" className="contact-submit" disabled={status === "loading"}>
                 {status === "loading" ? "Sending..." : "Send Message"}
               </button>
-              {status === "success" ? <p className="contact-success">Message sent successfully.</p> : null}
-              {error ? <p className="contact-error">{error}</p> : null}
+              <div className="contact-status">
+                {status === "success" ? (
+                  <div className="contact-success">
+                    <p>Message sent successfully. We&apos;ll get back to you soon.</p>
+                  </div>
+                ) : null}
+                {status === "error" ? (
+                  <div className="contact-error">
+                    <p>{error ?? "Something went wrong. Please try again."}</p>
+                  </div>
+                ) : null}
+              </div>
             </form>
           </div>
         </div>
