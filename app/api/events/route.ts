@@ -39,20 +39,8 @@ export const POST = async (request: NextRequest) => {
 
   const data = event.data ?? {}
   const subject = data.subject ?? "Email received"
-  const emailId = data.email_id as string | undefined
-
-  // Try fetching full email content via Resend Receiving API for reliability.
-  let textContent: string | undefined = data.text ?? data.html
-  let htmlContent: string | undefined = typeof data.html === "string" ? data.html : undefined
-
-  if (emailId) {
-    const { data: received } = await resend.emails.receiving.get(emailId)
-    if (received) {
-      textContent = received.text ?? textContent
-      htmlContent = received.html ?? htmlContent
-    }
-  }
-
+  const textContent: string | undefined = data.text ?? data.html
+  const htmlContent: string | undefined = typeof data.html === "string" ? data.html : undefined
   const safeText = textContent ?? "No body provided."
 
   const htmlBody = `
