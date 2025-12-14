@@ -43,7 +43,7 @@ const featuredVideos = [
 ]
 
 function VideoPreview({ video, onOpenModal }: { video: (typeof featuredVideos)[0]; onOpenModal: () => void }) {
-  const [currentSrc, setCurrentSrc] = useState(`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`)
+  const [currentSrc, setCurrentSrc] = useState(`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`)
   const [isLoading, setIsLoading] = useState(true)
 
   const handleImageError = () => {

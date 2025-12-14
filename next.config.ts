@@ -27,6 +27,17 @@ if (strapiEnvUrl) {
   }
 }
 
+const strapiCdnHosts = [
+  "great-whisper-6e26941fa4.strapiapp.com",
+  "great-whisper-6e26941fa4.media.strapiapp.com",
+]
+
+strapiCdnHosts.forEach((hostname) => {
+  if (!remotePatterns.find((pattern) => pattern.hostname === hostname)) {
+    remotePatterns.push({ protocol: "https", hostname })
+  }
+})
+
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
