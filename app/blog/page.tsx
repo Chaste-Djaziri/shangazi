@@ -1,5 +1,5 @@
 import imageUrlBuilder from "@sanity/image-url"
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types"
+import type { SanityImageSource } from "@sanity/image-url"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
