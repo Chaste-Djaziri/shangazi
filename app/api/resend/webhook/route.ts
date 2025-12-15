@@ -15,6 +15,22 @@ const escapeHtml = (input: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;")
 
+const receivingEmailUrl = (id: string) => `https://api.resend.com/emails/receiving/${id}`
+const receivingAttachmentsUrl = (emailId: string) => `https://api.resend.com/attachments/receiving?emailId=${emailId}`
+
+const fetchJson = async <T,>(url: string, apiKey?: string): Promise<T | null> => {
+  if (!apiKey) return null
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    })
+    if (!res.ok) return null
+    return (await res.json()) as T
+  } catch {
+    return null
+  }
+}
+
 export async function POST(request: Request) {
   if (!resend) {
     return NextResponse.json({ error: "Email service not configured." }, { status: 500 })
@@ -30,14 +46,58 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
   }
 
-  if (event.type !== "email.received") {
+  const forwardableTypes = new Set(["email.received", "email.delivered", "email.sent"])
+  if (!forwardableTypes.has(event.type)) {
     return NextResponse.json({ ok: true })
   }
 
   const data = event.data ?? {}
-  const subject = data.subject ?? "Email received"
-  const textContent: string | undefined = data.text ?? data.html
-  const htmlContent: string | undefined = typeof data.html === "string" ? data.html : undefined
+  const emailId: string | undefined =
+    data.email_id ?? data.id ?? data.emailId ?? (typeof data === "object" ? data?.email?.id : undefined)
+
+  // Pull freshest body from Receiving API (and attachments) if possible.
+  let fetchedEmail: { html?: string; text?: string; subject?: string } | null = null
+  let fetchedAttachments: Array<{
+    id: string
+    filename?: string
+    content_type?: string
+    download_url?: string
+  }> = []
+
+  if (emailId && resendApiKey) {
+    fetchedEmail = await fetchJson(receivingEmailUrl(emailId), resendApiKey)
+    const attachmentList = await fetchJson<{ data?: typeof fetchedAttachments }>(
+      receivingAttachmentsUrl(emailId),
+      resendApiKey,
+    )
+    fetchedAttachments = attachmentList?.data ?? []
+  }
+
+  const attachments: Array<{
+    filename?: string
+    content?: string
+    contentType?: string
+  }> = []
+
+  for (const attachment of fetchedAttachments) {
+    if (!attachment?.download_url) continue
+    try {
+      const resp = await fetch(attachment.download_url)
+      const buffer = Buffer.from(await resp.arrayBuffer())
+      attachments.push({
+        filename: attachment.filename ?? "attachment",
+        content: buffer.toString("base64"),
+        contentType: attachment.content_type,
+      })
+    } catch (err) {
+      console.error("Failed to fetch attachment", err)
+    }
+  }
+
+  const subject = fetchedEmail?.subject ?? data.subject ?? "Email received"
+  const htmlContent: string | undefined =
+    fetchedEmail?.html ?? (typeof data.html === "string" ? data.html : undefined)
+  const textContent: string | undefined = fetchedEmail?.text ?? data.text ?? data.html
   const safeText = textContent ?? "No body provided."
 
   const htmlBody = `
@@ -110,6 +170,7 @@ Raw Event:
 ${JSON.stringify(event, null, 2)}
 `,
     html: htmlBody,
+    attachments: attachments.length > 0 ? attachments : undefined,
   })
 
   return NextResponse.json({ forwarded: true })
