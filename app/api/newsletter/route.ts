@@ -26,7 +26,7 @@ const addToSegment = async (email: string, segId: string) => {
   }
 
   // Fallback to REST call
-  const res = await fetch("https://api.resend.com/contacts/segments/add", {
+  const res = await fetch(`https://api.resend.com/segments/${segId}/contacts`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${resendApiKey}`,
