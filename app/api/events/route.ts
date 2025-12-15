@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
 
-const RESEND_TO = "habimanahirwa@gmail.com"
+const RESEND_TO = "entirenganya@yahoo.fr"
 const RESEND_FROM = "comms@shangazi.rw"
 const resendApiKey = process.env.RESEND_API_KEY
 const webhookSecret = process.env.RESEND_WEBHOOK_SECRET

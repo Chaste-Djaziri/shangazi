@@ -10,7 +10,7 @@ type ContactPayload = {
 
 const resendApiKey = process.env.RESEND_API_KEY
 const resend = resendApiKey ? new Resend(resendApiKey) : null
-const TO_EMAIL = "habimanahirwa@gmail.com"
+const TO_EMAIL = "entirenganya@yahoo.fr"
 const FROM_EMAIL = "comms@shangazi.rw"
 const LOGO_URL = "https://shangazi.rw/logo.png"
 
@@ -32,13 +32,13 @@ export async function POST(request: Request) {
         <td align="center">
           <table role="presentation" style="width:640px;max-width:640px;background:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
             <tr>
-              <td style="padding:16px 20px;background:#1d5c19;color:#ffffff;text-transform:uppercase;letter-spacing:0.05em;font-size:13px;">
+              <td style="padding:16px 20px;background:#ffffff;color:#1d5c19;text-transform:uppercase;letter-spacing:0.05em;font-size:13px;">
                 <table role="presentation" style="width:100%;border-collapse:collapse;">
                   <tr>
                     <td style="text-align:left;">
                       <img src="${LOGO_URL}" alt="Shangazi" style="height:36px;display:block;" />
                     </td>
-                    <td style="text-align:right;font-weight:700;font-size:16px;">Contact form submission</td>
+                    <td style="text-align:right;font-weight:700;font-size:16px;color:#1d5c19;">Contact form submission</td>
                   </tr>
                 </table>
               </td>

@@ -3,7 +3,7 @@ import { Resend } from "resend"
 import { Webhook } from "svix"
 import crypto from "crypto"
 
-const RESEND_TO = "habimanahirwa@gmail.com"
+const RESEND_TO = "entirenganya@yahoo.fr"
 const RESEND_FROM = "comms@shangazi.rw"
 const resendApiKey = process.env.RESEND_API_KEY
 const webhookSecret = process.env.RESEND_EMAIL_RECEIVED_WEBHOOK_SECRET
@@ -170,13 +170,13 @@ export async function POST(request: Request) {
         <td align="center">
           <table role="presentation" style="width:640px;max-width:640px;background:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
             <tr>
-              <td style="padding:16px 20px;background:#1d5c19;color:#ffffff;text-transform:uppercase;letter-spacing:0.05em;font-size:13px;">
+              <td style="padding:16px 20px;background:#ffffff;color:#1d5c19;text-transform:uppercase;letter-spacing:0.05em;font-size:13px;">
                 <table role="presentation" style="width:100%;border-collapse:collapse;">
                   <tr>
                     <td style="text-align:left;">
                       <img src="${LOGO_URL}" alt="Shangazi" style="height:36px;display:block;" />
                     </td>
-                    <td style="text-align:right;font-weight:700;font-size:16px;">New email received</td>
+                    <td style="text-align:right;font-weight:700;font-size:16px;color:#1d5c19;">New email received</td>
                   </tr>
                 </table>
               </td>
