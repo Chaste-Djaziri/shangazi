@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 export default function NewsletterForm() {
+  const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
 
@@ -30,7 +31,7 @@ export default function NewsletterForm() {
       }
 
       setStatus("success")
-      e.currentTarget.reset()
+      formRef.current?.reset()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to subscribe right now.")
       setStatus("error")
@@ -38,7 +39,7 @@ export default function NewsletterForm() {
   }
 
   return (
-    <form className="newsletter-form" onSubmit={handleSubmit}>
+    <form className="newsletter-form" onSubmit={handleSubmit} ref={formRef}>
       <label className="newsletter-input">
         <span className="sr-only">Name</span>
         <input type="text" name="name" placeholder="Names" aria-label="Names" required />

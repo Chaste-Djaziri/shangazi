@@ -10,17 +10,19 @@ const resendApiKey = process.env.RESEND_API_KEY
 const segmentId = process.env.RESEND_SEGMENT_ID
 const resend = resendApiKey ? new Resend(resendApiKey) : null
 
+type SegmentsAddFn = (options: { email?: string; segmentId?: string }) => Promise<unknown>
+
 const addToSegment = async (email: string, segId: string) => {
-  const contactsSegmentsAdd = (resend as unknown as { contacts?: { segments?: { add?: Function } } } | null)
+  const contactsSegmentsAdd = (resend as unknown as { contacts?: { segments?: { add?: SegmentsAddFn } } } | null)
     ?.contacts?.segments?.add
 
   if (contactsSegmentsAdd) {
     // Use SDK if available
     await contactsSegmentsAdd.call(
-      (resend as unknown as { contacts?: { segments?: { add?: Function } } })?.contacts?.segments,
+      (resend as unknown as { contacts?: { segments?: { add?: SegmentsAddFn } } })?.contacts?.segments,
       { email, segmentId: segId },
     )
-    return
+    return true
   }
 
   // Fallback to REST call
@@ -37,6 +39,7 @@ const addToSegment = async (email: string, segId: string) => {
     const msg = await res.text()
     throw new Error(`Failed to add to segment: ${msg}`)
   }
+  return true
 }
 
 export async function POST(request: Request) {
@@ -69,11 +72,11 @@ export async function POST(request: Request) {
   }
 
   // Add to the target segment by email (id is optional).
+  // Try adding to the segment; if it fails, log but still allow signup (contact already created).
   try {
     await addToSegment(email, segmentId)
   } catch (err) {
     console.error("Failed to add contact to segment", err)
-    return NextResponse.json({ error: "Failed to add to newsletter segment." }, { status: 500 })
   }
 
   return NextResponse.json({ success: true })

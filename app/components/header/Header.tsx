@@ -83,6 +83,7 @@ export default function Header() {
               height={65}
               priority
               className="logo-image logo-default"
+              style={{ width: "auto", height: "auto" }}
             />
             <Image
               src="/tv-logo.png"
@@ -91,6 +92,7 @@ export default function Header() {
               height={80}
               priority
               className="logo-image logo-tv"
+              style={{ width: "auto", height: "auto" }}
             />
           </Link>
 
@@ -152,6 +154,7 @@ export default function Header() {
               height={54}
               priority
               className="sidebar-logo"
+              style={{ width: "auto", height: "auto" }}
             />
           </Link>
           <button className="sidebar-close" onClick={closeSidebar} aria-label="Close menu">
@@ -344,4 +347,3 @@ export default function Header() {
     </>
   );
 }
-
