@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
+import { Webhook } from "svix"
+import crypto from "crypto"
 
 const RESEND_TO = "habimanahirwa@gmail.com"
 const RESEND_FROM = "comms@shangazi.rw"
@@ -36,12 +38,77 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email service not configured." }, { status: 500 })
   }
 
-  const provided = request.headers.get("x-resend-signature") ?? request.headers.get("resend-signature")
-  if (webhookSecret && (!provided || provided !== webhookSecret)) {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+  // Read raw body so we can verify signature before parsing JSON
+  const raw = await request.text().catch(() => null)
+  if (!raw) {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
   }
 
-  const event = await request.json().catch(() => null)
+  const svixId = request.headers.get("svix-id")
+  const svixTimestamp = request.headers.get("svix-timestamp")
+  const svixSignature = request.headers.get("svix-signature")
+  const legacySignature = request.headers.get("x-resend-signature") ?? request.headers.get("resend-signature")
+
+  const verifyLegacySignature = (signatureHeader: string) => {
+    let timestamp: string | null = null
+    let incomingSig: string | null = null
+    const parts = signatureHeader.split(",").map((p) => p.trim())
+    for (const part of parts) {
+      if (part.startsWith("t=")) timestamp = part.slice(2)
+      if (part.startsWith("v1=")) incomingSig = part.slice(3)
+    }
+
+    if (!incomingSig) incomingSig = signatureHeader
+
+    const payloadToSign = timestamp ? `${timestamp}.${raw}` : raw
+    const expectedBuf = crypto.createHmac("sha256", webhookSecret ?? "").update(payloadToSign).digest()
+
+    // Try hex then base64 decoding of incoming signature
+    let incomingBuf: Buffer | null = null
+    try {
+      incomingBuf = Buffer.from(incomingSig, "hex")
+    } catch {
+      incomingBuf = null
+    }
+
+    if (!incomingBuf) {
+      try {
+        incomingBuf = Buffer.from(incomingSig, "base64")
+      } catch {
+        incomingBuf = null
+      }
+    }
+
+    return Boolean(
+      incomingBuf && incomingBuf.length === expectedBuf.length && crypto.timingSafeEqual(incomingBuf, expectedBuf),
+    )
+  }
+
+  let event: any = null
+
+  if (webhookSecret) {
+    const hasSvixHeaders = Boolean(svixId && svixTimestamp && svixSignature)
+    if (hasSvixHeaders) {
+      try {
+        const wh = new Webhook(webhookSecret)
+        event = wh.verify(raw, {
+          "svix-id": svixId!,
+          "svix-timestamp": svixTimestamp!,
+          "svix-signature": svixSignature!,
+        })
+      } catch (err) {
+        console.error("Failed to verify Resend webhook (svix)", err)
+        return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+      }
+    } else if (legacySignature && verifyLegacySignature(legacySignature)) {
+      event = JSON.parse(raw)
+    } else {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+    }
+  } else {
+    event = JSON.parse(raw)
+  }
+
   if (!event) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
   }
