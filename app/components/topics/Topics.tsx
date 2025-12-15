@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import gsap from "gsap";
+import React from "react";
 
 interface Topic {
   title: string;
@@ -75,62 +74,10 @@ const topics: Topic[] = [
 ];
 
 export default function Topics() {
-  const topicsRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const tl = gsap.timeline();
-            
-            if (contentRef.current) {
-              const title = contentRef.current.querySelector(".topics-title");
-              const subtitle = contentRef.current.querySelector(".topics-subtitle");
-              const cards = contentRef.current.querySelectorAll(".topic-card");
-
-              tl.fromTo(
-                title,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-              )
-              .fromTo(
-                subtitle,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-                "-=0.4"
-              )
-              .fromTo(
-                cards,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
-                "-=0.4"
-              );
-
-              observer.disconnect();
-            }
-          }
-        });
-      },
-      {
-        threshold: 0.2,
-      }
-    );
-
-    if (topicsRef.current) {
-      observer.observe(topicsRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   return (
-    <section className="topics" ref={topicsRef}>
+    <section className="topics">
       <div className="topics-container">
-        <div className="topics-content" ref={contentRef}>
+        <div className="topics-content">
           <h2 className="topics-title">
             Topics I <span className="topics-title-accent">Cover</span>
           </h2>

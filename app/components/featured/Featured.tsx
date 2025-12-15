@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import gsap from "gsap"
 
 const featuredVideos = [
   {
@@ -102,14 +101,6 @@ function VideoModal({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden"
-      // Animate modal in
-      if (modalRef.current) {
-        gsap.fromTo(
-          modalRef.current,
-          { opacity: 0, scale: 0.9 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }
-        )
-      }
     } else {
       document.body.style.overflow = "unset"
     }
@@ -174,8 +165,6 @@ function VideoModal({
 export default function Featured() {
   const [selectedVideo, setSelectedVideo] = useState<(typeof featuredVideos)[0] | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const featuredRef = useRef<HTMLElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
 
   const openModal = (video: (typeof featuredVideos)[0]) => {
     setSelectedVideo(video)
@@ -187,54 +176,11 @@ export default function Featured() {
     setSelectedVideo(null)
   }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const tl = gsap.timeline()
-
-            if (contentRef.current) {
-              const title = contentRef.current.querySelector(".featured-title")
-              const subtitle = contentRef.current.querySelector(".featured-subtitle")
-              const videos = contentRef.current.querySelectorAll(".featured-video-preview")
-
-              tl.fromTo(title, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" })
-                .fromTo(
-                  subtitle,
-                  { opacity: 0, y: 20 },
-                  { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-                  "-=0.4",
-                )
-                .fromTo(
-                  videos,
-                  { opacity: 0, y: 30 },
-                  { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: "power3.out" },
-                  "-=0.4",
-                )
-
-              observer.disconnect()
-            }
-          }
-        })
-      },
-      { threshold: 0.2 },
-    )
-
-    if (featuredRef.current) {
-      observer.observe(featuredRef.current)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
   return (
     <>
-      <section className="featured" ref={featuredRef}>
+      <section className="featured">
         <div className="featured-container">
-          <div className="featured-content" ref={contentRef}>
+          <div className="featured-content">
             <div className="featured-header">
               <h2 className="featured-title">
                 Featured <span className="featured-title-accent">Content</span>

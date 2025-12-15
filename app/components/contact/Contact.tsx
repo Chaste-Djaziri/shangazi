@@ -1,140 +1,13 @@
 "use client"
 
 import type React from "react"
-import { useRef, useEffect, useState } from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
-import gsap from "gsap"
 
 export default function Contact() {
-  const contactRef = useRef<HTMLElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const subtitleRef = useRef<HTMLParagraphElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const contactInfoRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    // Set initial states
-    gsap.set([titleRef.current, subtitleRef.current], { opacity: 0, y: 30 })
-    if (formRef.current) {
-      gsap.set(formRef.current.querySelectorAll(".form-group"), { opacity: 0, y: 20 })
-    }
-    if (imageRef.current) {
-      gsap.set(imageRef.current, { opacity: 0, x: 50, scale: 0.95 })
-    }
-    if (contactInfoRef.current) {
-      gsap.set(contactInfoRef.current.querySelectorAll(".contact-info-column"), { opacity: 0, y: 20 })
-      gsap.set(contactInfoRef.current.querySelectorAll(".contact-info-item"), { opacity: 0, y: 10 })
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const tl = gsap.timeline()
-
-            // Animate title
-            if (titleRef.current) {
-              tl.to(titleRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: "power3.out",
-              })
-            }
-
-            // Animate subtitle
-            if (subtitleRef.current) {
-              tl.to(
-                subtitleRef.current,
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.8,
-                  ease: "power3.out",
-                },
-                "-=0.5",
-              )
-            }
-
-            // Animate form groups (including labels and inputs)
-            if (formRef.current) {
-              const formGroups = formRef.current.querySelectorAll(".form-group")
-              tl.to(
-                formGroups,
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.6,
-                  stagger: 0.1,
-                  ease: "power3.out",
-                },
-                "-=0.4",
-              )
-            }
-
-            // Animate image container
-            if (imageRef.current) {
-              tl.to(
-                imageRef.current,
-                {
-                  opacity: 1,
-                  x: 0,
-                  scale: 1,
-                  duration: 0.8,
-                  ease: "power3.out",
-                },
-                "-=0.6",
-              )
-            }
-
-            // Animate contact info items
-            if (contactInfoRef.current) {
-              const infoColumns = contactInfoRef.current.querySelectorAll(".contact-info-column")
-              const infoItems = contactInfoRef.current.querySelectorAll(".contact-info-item")
-              tl.to(
-                infoColumns,
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.6,
-                  stagger: 0.15,
-                  ease: "power3.out",
-                },
-                "-=0.4",
-              )
-              .to(
-                infoItems,
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.4,
-                  stagger: 0.08,
-                  ease: "power3.out",
-                },
-                "-=0.3",
-              )
-            }
-
-            observer.disconnect()
-          }
-        })
-      },
-      {
-        threshold: 0.2,
-      },
-    )
-
-    if (contactRef.current) {
-      observer.observe(contactRef.current)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -171,14 +44,14 @@ export default function Contact() {
   }
 
   return (
-    <section className="contact" ref={contactRef}>
+    <section className="contact">
       <div className="contact-container">
         <div className="contact-left">
           <div className="contact-content">
-            <h2 className="contact-title" ref={titleRef}>
+            <h2 className="contact-title">
               Ask <span className="contact-title-accent">Shangazi</span>
             </h2>
-            <p className="contact-subtitle" ref={subtitleRef}>
+            <p className="contact-subtitle">
               Have a question? I&apos;m here to help with confidential advice.
             </p>
             <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
@@ -252,7 +125,7 @@ export default function Contact() {
             </form>
           </div>
         </div>
-        <div className="contact-right" ref={imageRef}>
+        <div className="contact-right">
           <div className="contact-image-wrapper">
             <Image
               src="/profile/emma-claudine-4.jpeg"
@@ -262,7 +135,7 @@ export default function Contact() {
               priority
             />
             <div className="contact-image-overlay"></div>
-            <div className="contact-info" ref={contactInfoRef}>
+            <div className="contact-info">
               <div className="contact-info-grid">
                 <div className="contact-info-column">
                   <div className="contact-info-item">

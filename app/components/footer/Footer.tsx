@@ -1,43 +1,11 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import gsap from "gsap"
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const footerElements = footerRef.current?.querySelectorAll(".footer-section, .footer-link, .footer-social-link")
-            if (footerElements) {
-              gsap.fromTo(
-                footerElements,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" }
-              )
-            }
-            observer.disconnect()
-          }
-        })
-      },
-      {
-        threshold: 0.1,
-      }
-    )
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
 
   const currentYear = new Date().getFullYear()
 
