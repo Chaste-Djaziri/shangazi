@@ -7,6 +7,7 @@ const RESEND_TO = "habimanahirwa@gmail.com"
 const RESEND_FROM = "comms@shangazi.rw"
 const resendApiKey = process.env.RESEND_API_KEY
 const webhookSecret = process.env.RESEND_EMAIL_RECEIVED_WEBHOOK_SECRET
+const LOGO_URL = "https://shangazi.rw/logo.png"
 const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 const escapeHtml = (input: string) =>
@@ -164,47 +165,61 @@ export async function POST(request: Request) {
   const safeText = textContent ?? "No body provided."
 
   const htmlBody = `
-    <div style="font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#f6f8fb; padding:24px;">
-      <div style="max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 10px 30px rgba(17,24,39,0.08);overflow:hidden;">
-        <div style="background:linear-gradient(135deg,#1f7a39,#164515);padding:16px 20px;color:#fff;">
-          <div style="font-size:14px;letter-spacing:0.03em;text-transform:uppercase;opacity:0.8;">Shangazi Inbox</div>
-          <div style="font-size:18px;font-weight:700;margin-top:4px;">New email received</div>
-        </div>
-        <div style="padding:20px 24px;">
-          <table style="width:100%;border-collapse:collapse;font-size:14px;color:#111827;">
+    <table role="presentation" style="width:100%;background:#f5f5f5;padding:24px 0;margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+      <tr>
+        <td align="center">
+          <table role="presentation" style="width:640px;max-width:640px;background:#ffffff;border:1px solid #e0e0e0;border-collapse:collapse;">
             <tr>
-              <td style="padding:6px 0;font-weight:600;width:120px;">From</td>
-              <td style="padding:6px 0;">${escapeHtml(String(data.from ?? ""))}</td>
+              <td style="padding:16px 20px;background:#1d5c19;color:#ffffff;text-transform:uppercase;letter-spacing:0.05em;font-size:13px;">
+                <table role="presentation" style="width:100%;border-collapse:collapse;">
+                  <tr>
+                    <td style="text-align:left;">
+                      <img src="${LOGO_URL}" alt="Shangazi" style="height:36px;display:block;" />
+                    </td>
+                    <td style="text-align:right;font-weight:700;font-size:16px;">New email received</td>
+                  </tr>
+                </table>
+              </td>
             </tr>
             <tr>
-              <td style="padding:6px 0;font-weight:600;">To</td>
-              <td style="padding:6px 0;">${escapeHtml(String((data.to ?? []).join?.(", ") ?? data.to ?? ""))}</td>
+              <td style="height:4px;background:#be1d51;padding:0;"></td>
             </tr>
             <tr>
-              <td style="padding:6px 0;font-weight:600;">Subject</td>
-              <td style="padding:6px 0;">${escapeHtml(subject)}</td>
+              <td style="padding:24px 20px;color:#1a1a1a;font-size:14px;line-height:1.5;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;">
+                <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;">
+                  <tr>
+                    <td style="padding:6px 0;font-weight:700;width:120px;">From</td>
+                    <td style="padding:6px 0;">${escapeHtml(String(data.from ?? ""))}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;font-weight:700;">To</td>
+                    <td style="padding:6px 0;">${escapeHtml(String((data.to ?? []).join?.(", ") ?? data.to ?? ""))}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 0;font-weight:700;">Subject</td>
+                    <td style="padding:6px 0;">${escapeHtml(subject)}</td>
+                  </tr>
+                </table>
+
+                <div style="margin-top:18px;">
+                  <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:#1a1a1a;">Message</div>
+                  ${
+                    htmlContent
+                      ? `<div style="border:1px solid #e0e0e0;padding:14px;background:#f9fafb;color:#1a1a1a;">${htmlContent}</div>`
+                      : `<pre style="border:1px solid #e0e0e0;padding:14px;background:#f9fafb;color:#1a1a1a;white-space:pre-wrap;margin:0;">${escapeHtml(String(safeText))}</pre>`
+                  }
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;font-size:12px;color:#666666;background:#ffffff;">
+                Forwarded automatically from comms@shangazi.rw
+              </td>
             </tr>
           </table>
-
-          <div style="margin-top:18px;">
-            <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:#0f172a;">Body</div>
-            ${
-              htmlContent
-                ? `<div style="border:1px solid #e5e7eb;border-radius:10px;padding:14px;background:#f9fafb;color:#111827;">${htmlContent}</div>`
-                : `<pre style="border:1px solid #e5e7eb;border-radius:10px;padding:14px;background:#f9fafb;color:#111827;white-space:pre-wrap;">${escapeHtml(String(safeText))}</pre>`
-            }
-          </div>
-
-          <div style="margin-top:18px;">
-            <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:#0f172a;">Raw Event</div>
-            <pre style="border:1px solid #e5e7eb;border-radius:10px;padding:14px;background:#0f172a;color:#e5e7eb;font-size:12px;white-space:pre-wrap;overflow-x:auto;">${escapeHtml(JSON.stringify(event, null, 2))}</pre>
-          </div>
-        </div>
-        <div style="background:#f3f4f6;padding:12px 20px;color:#6b7280;font-size:12px;text-align:center;">
-          Forwarded automatically from comms@shangazi.rw
-        </div>
-      </div>
-    </div>
+        </td>
+      </tr>
+    </table>
   `
 
   await resend.emails.send({
@@ -218,9 +233,6 @@ Subject: ${subject}
 
 Body:
 ${safeText}
-
-Raw Event:
-${JSON.stringify(event, null, 2)}
 `,
     html: htmlBody,
     attachments: attachments.length > 0 ? attachments : undefined,
