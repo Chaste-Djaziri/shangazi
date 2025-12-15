@@ -122,6 +122,50 @@ const buildEmbed = (videoUrl?: string): { embedUrl?: string; externalUrl?: strin
   return { externalUrl: videoUrl }
 }
 
+const extractYouTubeId = (videoUrl?: string) => {
+  if (!videoUrl) return undefined
+  try {
+    const url = new URL(videoUrl)
+    const host = url.hostname.toLowerCase()
+    const segments = url.pathname.split("/").filter(Boolean)
+    const lastSegment = segments[segments.length - 1]
+
+    if (host.includes("youtube.com")) {
+      return url.searchParams.get("v") ?? (segments.includes("embed") ? lastSegment : undefined)
+    }
+    if (host === "youtu.be") {
+      return lastSegment
+    }
+  } catch {
+    return undefined
+  }
+  return undefined
+}
+
+const buildVideoSchema = (
+  blog: BlogPost,
+  embed: { embedUrl?: string; externalUrl?: string },
+  pageUrl: string,
+) => {
+  const videoId = extractYouTubeId(blog.videoUrl)
+  const thumbnail = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined
+  const description = toPlainText(blog.body ?? blog.content) || blog.title
+
+  if (!embed.embedUrl && !embed.externalUrl) return null
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: blog.title ?? "Video",
+    description,
+    thumbnailUrl: thumbnail ? [thumbnail] : undefined,
+    uploadDate: blog.publishedAt ? new Date(blog.publishedAt).toISOString() : undefined,
+    embedUrl: embed.embedUrl,
+    contentUrl: embed.externalUrl ?? (videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined),
+    url: pageUrl,
+  }
+}
+
 const formatDate = (value?: string) => {
   if (!value) return ""
   const date = new Date(value)
@@ -135,6 +179,7 @@ const formatDate = (value?: string) => {
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
   const [blog, related] = await Promise.all([
     client.fetch<BlogPost | null>(POST_QUERY, { slug: decodedSlug }, options),
     client.fetch<BlogPost[]>(RELATED_QUERY, { slug: decodedSlug }, options),
@@ -152,6 +197,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     })) ?? []
   const relatedPosts = (related ?? []).filter((post) => post.slug && post._id !== blog._id)
   const embed = buildEmbed(blog.videoUrl)
+  const pageUrl = `${baseUrl}/blog/${decodedSlug}`
+  const videoSchema = buildVideoSchema(blog, embed, pageUrl)
 
   return (
     <main className="blog-detail-page">
@@ -213,6 +260,13 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                   Watch video
                 </a>
               </div>
+            ) : null}
+
+            {videoSchema ? (
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }}
+              />
             ) : null}
 
             {blog.externalLinks && blog.externalLinks.length > 0 ? (
