@@ -10,6 +10,35 @@ const resendApiKey = process.env.RESEND_API_KEY
 const segmentId = process.env.RESEND_SEGMENT_ID
 const resend = resendApiKey ? new Resend(resendApiKey) : null
 
+const addToSegment = async (email: string, segId: string) => {
+  const contactsSegmentsAdd = (resend as unknown as { contacts?: { segments?: { add?: Function } } } | null)
+    ?.contacts?.segments?.add
+
+  if (contactsSegmentsAdd) {
+    // Use SDK if available
+    await contactsSegmentsAdd.call(
+      (resend as unknown as { contacts?: { segments?: { add?: Function } } })?.contacts?.segments,
+      { email, segmentId: segId },
+    )
+    return
+  }
+
+  // Fallback to REST call
+  const res = await fetch("https://api.resend.com/contacts/segments/add", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, segmentId: segId }),
+  })
+
+  if (!res.ok) {
+    const msg = await res.text()
+    throw new Error(`Failed to add to segment: ${msg}`)
+  }
+}
+
 export async function POST(request: Request) {
   if (!resend || !segmentId) {
     return NextResponse.json({ error: "Newsletter not configured." }, { status: 500 })
@@ -24,8 +53,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Create contact (ignore "already exists" errors)
+    // Create or upsert contact; audienceId is required by current Resend SDK.
     await resend.contacts.create({
+      audienceId: segmentId,
       email,
       firstName: name,
       unsubscribed: false,
@@ -38,11 +68,9 @@ export async function POST(request: Request) {
     }
   }
 
+  // Add to the target segment by email (id is optional).
   try {
-    await resend.contacts.segments.add({
-      email,
-      segmentId,
-    })
+    await addToSegment(email, segmentId)
   } catch (err) {
     console.error("Failed to add contact to segment", err)
     return NextResponse.json({ error: "Failed to add to newsletter segment." }, { status: 500 })
