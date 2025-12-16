@@ -130,6 +130,35 @@ async function getBlogs(): Promise<BlogPost[]> {
 export default async function BlogPage() {
   const blogs = await getBlogs()
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+
+  // Fetch view counts for all posts in the list (bulk)
+  let counts: Record<string, number> = {}
+  try {
+    const bulkRes = await fetch(new URL(`/api/blog-views/bulk`, baseUrl).toString(), {
+      method: "POST",
+      body: JSON.stringify({ postIds: blogs.map((b) => b._id) }),
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    })
+    const bulkJson = await bulkRes.json()
+    counts = bulkJson?.counts ?? {}
+  } catch {
+    counts = {}
+  }
+
+  // Fetch global trending by views (returns post ids)
+  let trendingIds: string[] = []
+  try {
+    const trendRes = await fetch(new URL(`/api/blog-views/trending?limit=4`, baseUrl).toString(), {
+      cache: "no-store",
+    })
+    const trendJson = await trendRes.json()
+    trendingIds = (trendJson?.items ?? []).map((i: any) => i.post_id)
+  } catch {
+    trendingIds = []
+  }
+
   return (
     <main className="blog-page">
       <section className="blog-hero">
@@ -171,7 +200,9 @@ export default async function BlogPage() {
                         <div className="blog-row-content">
                           <h3 className="blog-row-title">{post.title}</h3>
                           {renderExcerpt(post)}
-                          <div className="blog-row-meta">{formatDate(post.publishedAt)}</div>
+                          <div className="blog-row-meta">
+                            {formatDate(post.publishedAt)} • {counts[post._id] ?? 0} views
+                          </div>
                           {post.slug ? (
                             <Link prefetch className="blog-card-link blog-card-link-inline" href={`/blog/${post.slug}`}>
                               Read More
@@ -189,7 +220,10 @@ export default async function BlogPage() {
               <aside className="blog-trending">
                 <h2 className="blog-trending-heading">Trending</h2>
                 <div className="blog-trending-list">
-                  {blogs.slice(0, 4).map((post) => {
+                  {(
+                    // build trending posts from trendingIds, fallback to recent posts
+                    trendingIds.map((id) => blogs.find((b) => b._id === id)).filter(Boolean) as BlogPost[]
+                  ).slice(0, 4).map((post) => {
                     const imageUrl = post.image ? urlFor(post.image)?.width(200).height(200).url() : undefined
                     const altText = post.title
                     return (
@@ -208,6 +242,7 @@ export default async function BlogPage() {
                         </div>
                         <div className="blog-trending-text">
                           <p className="blog-trending-title">{post.title}</p>
+                          <p className="text-sm text-gray-600">{counts[post._id] ?? 0} views</p>
                         </div>
                       </Link>
                     )

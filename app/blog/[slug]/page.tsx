@@ -179,7 +179,8 @@ const formatDate = (value?: string) => {
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug)
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
   const [blog, related] = await Promise.all([
     client.fetch<BlogPost | null>(POST_QUERY, { slug: decodedSlug }, options),
     client.fetch<BlogPost[]>(RELATED_QUERY, { slug: decodedSlug }, options),
@@ -189,13 +190,44 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     notFound()
   }
 
+  // Increment view count for this post and fetch updated views
+  let viewsCount = 0
+  try {
+    const incRes = await fetch(new URL(`/api/blog-views`, baseUrl).toString(), {
+      method: "POST",
+      body: JSON.stringify({ postId: blog._id }),
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    })
+    const incJson = await incRes.json()
+    viewsCount = incJson?.views ?? 0
+  } catch (e) {
+    viewsCount = 0
+  }
+
+  // Fetch view counts for related posts in bulk
+  const relatedPosts = (related ?? []).filter((post) => post.slug && post._id !== blog._id)
+  let relatedCounts: Record<string, number> = {}
+  try {
+    const bulkRes = await fetch(new URL(`/api/blog-views/bulk`, baseUrl).toString(), {
+      method: "POST",
+      body: JSON.stringify({ postIds: relatedPosts.map((p) => p._id) }),
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    })
+    const bulkJson = await bulkRes.json()
+    relatedCounts = bulkJson?.counts ?? {}
+  } catch {
+    relatedCounts = {}
+  }
+
   const heroUrl = blog.image ? urlFor(blog.image)?.width(1600).height(900).url() : undefined
   const galleryUrls =
     blog.gallery?.map((img) => ({
       url: urlFor(img)?.width(800).height(600).url(),
       alt: blog.title,
     })) ?? []
-  const relatedPosts = (related ?? []).filter((post) => post.slug && post._id !== blog._id)
+  
   const embed = buildEmbed(blog.videoUrl)
   const pageUrl = `${baseUrl}/blog/${decodedSlug}`
   const videoSchema = buildVideoSchema(blog, embed, pageUrl)
@@ -225,9 +257,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             ) : null}
 
             <div className="blog-detail-body">
-              <p className="blog-detail-meta">{formatDate(blog.publishedAt)}</p>
+              <p className="blog-detail-meta">
+                {formatDate(blog.publishedAt)} {blog.author ? "•" : null} {blog.author ? `By ${blog.author}` : null}
+                <span className="ml-2 text-sm text-gray-600">{viewsCount} views</span>
+              </p>
               <h1 className="blog-detail-title">{blog.title}</h1>
-              {blog.author ? <p className="blog-detail-meta">By {blog.author}</p> : null}
               {Array.isArray(blog.body) ? (
                 <div className="blog-detail-content-html prose max-w-none">
                   <PortableText value={blog.body} components={portableTextComponentsDetail} />
@@ -310,7 +344,10 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           <aside className="blog-detail-sidebar">
             <h2 className="blog-trending-heading">Trending</h2>
             <div className="blog-trending-list">
-              {relatedPosts.slice(0, 4).map((post) => {
+              {relatedPosts
+                .sort((a, b) => (relatedCounts[b._id] ?? 0) - (relatedCounts[a._id] ?? 0))
+                .slice(0, 4)
+                .map((post) => {
                 const imageUrl = post.image ? urlFor(post.image)?.width(200).height(200).url() : undefined
                 const altText = post.title
                 return (
@@ -328,6 +365,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                     </div>
                     <div className="blog-trending-text">
                       <p className="blog-trending-title">{post.title}</p>
+                      <p className="text-sm text-gray-600">{relatedCounts[post._id] ?? 0} views</p>
                     </div>
                   </Link>
                 )
