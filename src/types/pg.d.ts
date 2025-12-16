@@ -6,6 +6,9 @@ declare module 'pg' {
   export const types: any;
   export const native: any;
 
+  // Types used in the codebase (aliases to `any` to keep build simple)
+  export type Pool = any;
+  export type Client = any;
   export type PoolConfig = any;
 
   // Default export (commonjs/interop)
