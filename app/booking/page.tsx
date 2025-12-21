@@ -3,8 +3,12 @@ import BookingForm from "../components/booking/BookingForm"
 
 export const metadata: Metadata = {
   title: "Booking | Shangazi Emma Claudine",
-  description: "Book engagements with Shangazi Emma Claudine for keynotes, workshops, panels, or consultations.",
+  description:
+    "Book engagements with Emma Claudine (Shangazi) and Shangazi Emma Claudine for keynotes, workshops, panels, or consultations.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Book Shangazi Emma Claudine",
     "Emma Claudine booking",
     "Shangazi speaking",

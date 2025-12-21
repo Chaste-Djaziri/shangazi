@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Shangazi",
-  description: "Learn how Shangazi Emma Claudine collects, uses, and protects your information.",
+  title: "Privacy Policy | Shangazi Emma Claudine",
+  description:
+    "Learn how Emma Claudine (Shangazi) and Shangazi Emma Claudine collect, use, and protect your information.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "privacy", "data protection"],
 }
 
 export default function PrivacyPage() {

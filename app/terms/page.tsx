@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Shangazi",
-  description: "Review the terms for using Shangazi Emma Claudine’s digital platforms.",
+  title: "Terms of Service | Shangazi Emma Claudine",
+  description: "Review the terms for using Emma Claudine (Shangazi) and Shangazi Emma Claudine’s digital platforms.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "terms", "policies"],
 }
 
 export default function TermsPage() {

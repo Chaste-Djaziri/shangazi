@@ -35,8 +35,12 @@ const testimonials = [
 
 export const metadata: Metadata = {
   title: "Testimonials | Shangazi Emma Claudine",
-  description: "What people are saying about Shangazi Emma Claudine and her impact on youth and communities.",
+  description:
+    "What people are saying about Emma Claudine (Shangazi) and Shangazi Emma Claudine's impact on youth and communities.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Shangazi Emma Claudine testimonials",
     "Emma Claudine feedback",
     "Shangazi impact",

@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Impact | Shangazi",
-  description: "Explore the impact of Shangazi Emma Claudine across communities and youth programs.",
+  title: "Impact | Shangazi Emma Claudine",
+  description:
+    "Explore the impact of Emma Claudine (Shangazi) and Shangazi Emma Claudine across communities and youth programs.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "impact", "youth programs"],
 }
 
 export default function ImpactPage() {

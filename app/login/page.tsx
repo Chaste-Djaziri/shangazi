@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Login | Shangazi",
-  description: "Sign in to manage your bookings, newsletter preferences, and profile.",
+  title: "Login | Shangazi Emma Claudine",
+  description:
+    "Sign in to manage your bookings, newsletter preferences, and profile with Emma Claudine (Shangazi).",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "login", "account"],
 }
 
 export default function LoginPage() {

@@ -3,8 +3,12 @@ import Contact from "../components/contact/Contact"
 
 export const metadata: Metadata = {
   title: "Contact | Shangazi Emma Claudine",
-  description: "Get in touch with Shangazi Emma Claudine for inquiries, guidance, collaborations, or media requests.",
+  description:
+    "Get in touch with Emma Claudine (Shangazi) and Shangazi Emma Claudine for inquiries, guidance, collaborations, or media requests.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "contact Shangazi Emma Claudine",
     "contact Emma Claudine",
     "Shangazi inquiries",

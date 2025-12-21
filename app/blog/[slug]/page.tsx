@@ -403,8 +403,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description,
     keywords: [
       blog?.title ?? "Shangazi Emma Claudine blog",
-      "Shangazi Emma Claudine",
       "Emma Claudine",
+      "Shangazi",
+      "Shangazi Emma Claudine",
       "Rwanda blog",
       "reproductive health",
       "youth counseling",

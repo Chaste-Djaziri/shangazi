@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Media | Shangazi",
-  description: "Press appearances, interviews, and media resources featuring Shangazi Emma Claudine.",
+  title: "Media | Shangazi Emma Claudine",
+  description:
+    "Press appearances, interviews, and media resources featuring Emma Claudine (Shangazi) and Shangazi Emma Claudine.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "media", "press"],
 }
 
 export default function MediaPage() {

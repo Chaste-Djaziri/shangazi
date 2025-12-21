@@ -10,10 +10,13 @@ import { PortableText, type PortableTextBlock, type PortableTextComponents } fro
 import { client } from "@/sanity/client"
 
 export const metadata: Metadata = {
-  title: "Blogs | Shangazi Emma Claudine",
-  description: "Latest blogs and articles from Shangazi Emma Claudine, focusing on reproductive health, relationships, and youth empowerment.",
+  title: "Blog | Shangazi Emma Claudine",
+  description:
+    "Latest blogs and articles from Emma Claudine (Shangazi) and Shangazi Emma Claudine on reproductive health, relationships, and youth empowerment.",
   keywords: [
-    "Shangazi Emma Claudine blog",
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Emma Claudine articles",
     "Rwanda blogs",
     "reproductive health blog",

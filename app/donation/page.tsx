@@ -3,8 +3,12 @@ import DonationDetails from "../components/donation/DonationDetails"
 
 export const metadata: Metadata = {
   title: "Donation | Shangazi Emma Claudine",
-  description: "Support Shangazi Emma Claudine's mission to empower youth through education and open dialogue.",
+  description:
+    "Support Emma Claudine (Shangazi) and Shangazi Emma Claudine's mission to empower youth through education and open dialogue.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Donate to Shangazi Emma Claudine",
     "Shangazi donation",
     "Emma Claudine support",

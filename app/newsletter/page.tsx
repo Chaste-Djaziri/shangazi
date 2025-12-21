@@ -3,8 +3,12 @@ import NewsletterForm from "../components/newsletter/NewsletterForm"
 
 export const metadata: Metadata = {
   title: "Newsletter | Shangazi Emma Claudine",
-  description: "Sign up to receive updates from Shangazi Emma Claudine on reproductive health, relationships, and youth empowerment.",
+  description:
+    "Sign up to receive updates from Emma Claudine (Shangazi) and Shangazi Emma Claudine on reproductive health, relationships, and youth empowerment.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Shangazi Emma Claudine newsletter",
     "Emma Claudine updates",
     "Shangazi email list",

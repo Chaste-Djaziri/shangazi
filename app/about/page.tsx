@@ -2,9 +2,10 @@ import type { Metadata } from "next"
 import Image from "next/image"
 
 export const metadata: Metadata = {
-  title: "About Shangazi",
+  title: "About | Shangazi Emma Claudine",
   description:
-    "Learn about Shangazi Emma Claudine, a leading Rwandan journalist and content creator empowering youth through education and open dialogue.",
+    "Learn about Emma Claudine (Shangazi), a Rwandan journalist and content creator empowering youth through education and open dialogue.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "Rwandan journalist", "content creator"],
 }
 
 export default function AboutPage() {

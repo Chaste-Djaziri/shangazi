@@ -33,8 +33,12 @@ const faqs = [
 
 export const metadata: Metadata = {
   title: "FAQ | Shangazi Emma Claudine",
-  description: "Frequently asked questions about Shangazi Emma Claudine, her content, and how to collaborate or get support.",
+  description:
+    "Frequently asked questions about Emma Claudine (Shangazi), Shangazi Emma Claudine, her content, and how to collaborate or get support.",
   keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
     "Shangazi Emma Claudine FAQ",
     "Emma Claudine questions",
     "Shangazi support",

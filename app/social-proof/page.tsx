@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Social Proof | Shangazi",
-  description: "Community stories, testimonials, and proof of Shangazi Emma Claudine’s impact.",
+  title: "Social Proof | Shangazi Emma Claudine",
+  description:
+    "Community stories, testimonials, and proof of impact from Emma Claudine (Shangazi) and Shangazi Emma Claudine.",
+  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "social proof", "impact"],
 }
 
 export default function SocialProofPage() {
