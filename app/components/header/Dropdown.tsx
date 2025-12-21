@@ -48,6 +48,7 @@ export default function Dropdown({ label, links }: DropdownProps) {
             <Link
               key={index}
               href={link.href}
+              prefetch={false}
               className="dropdown-link"
               onClick={() => setIsOpen(false)}
             >
@@ -59,5 +60,4 @@ export default function Dropdown({ label, links }: DropdownProps) {
     </div>
   );
 }
-
 

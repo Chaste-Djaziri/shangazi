@@ -41,7 +41,7 @@ export default function Footer() {
       <div className="footer-container">
         <div className="footer-top">
           <div className="footer-section footer-brand">
-            <Link href="/" className="footer-logo-link">
+            <Link href="/" prefetch={false} className="footer-logo-link">
               <Image
                 src="/logo.png"
                 alt="Shangazi Logo"
@@ -108,7 +108,7 @@ export default function Footer() {
               <ul className="footer-link-list">
                 {aboutLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="footer-link">
+                    <Link href={link.href} prefetch={false} className="footer-link">
                       {link.label}
                     </Link>
                   </li>
@@ -121,7 +121,7 @@ export default function Footer() {
               <ul className="footer-link-list">
                 {contentLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="footer-link">
+                    <Link href={link.href} prefetch={false} className="footer-link">
                       {link.label}
                     </Link>
                   </li>
@@ -134,7 +134,7 @@ export default function Footer() {
               <ul className="footer-link-list">
                 {impactLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="footer-link">
+                    <Link href={link.href} prefetch={false} className="footer-link">
                       {link.label}
                     </Link>
                   </li>
@@ -147,7 +147,7 @@ export default function Footer() {
               <ul className="footer-link-list">
                 {getInvolvedLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="footer-link">
+                    <Link href={link.href} prefetch={false} className="footer-link">
                       {link.label}
                     </Link>
                   </li>
@@ -161,7 +161,7 @@ export default function Footer() {
             <ul className="footer-link-list">
               {helpLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="footer-link">
+                  <Link href={link.href} prefetch={false} className="footer-link">
                     {link.label}
                   </Link>
                 </li>
@@ -205,11 +205,11 @@ export default function Footer() {
               </a>
             </div>
             <div className="footer-legal">
-              <Link href="/privacy" className="footer-legal-link">
+              <Link href="/privacy" prefetch={false} className="footer-legal-link">
                 Privacy Policy
               </Link>
               <span className="footer-legal-separator">|</span>
-              <Link href="/terms" className="footer-legal-link">
+              <Link href="/terms" prefetch={false} className="footer-legal-link">
                 Terms of Service
               </Link>
             </div>

@@ -75,7 +75,7 @@ export default function Header() {
     <>
       <header className={`header ${isScrolled ? "scrolled" : ""}`}>
         <div className="header-container">
-          <Link href="/" className="logo-link" onClick={closeSidebar}>
+          <Link href="/" prefetch={false} className="logo-link" onClick={closeSidebar}>
             <Image
               src="/logo.png"
               alt="Shangazi Logo"
@@ -97,7 +97,7 @@ export default function Header() {
           </Link>
 
           <nav className="nav desktop-nav">
-            <Link href="/" className="nav-link">
+            <Link href="/" prefetch={false} className="nav-link">
               Home
             </Link>
             <Dropdown label="About" links={aboutLinks} />
@@ -108,7 +108,7 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
-            <Link href="/login" className="profile-icon desktop-profile" aria-label="Profile">
+            <Link href="/login" prefetch={false} className="profile-icon desktop-profile" aria-label="Profile">
               <svg
                 width="24"
                 height="24"
@@ -146,7 +146,7 @@ export default function Header() {
       {/* Sidebar */}
       <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <Link href="/" className="sidebar-logo-link" onClick={closeSidebar}>
+          <Link href="/" prefetch={false} className="sidebar-logo-link" onClick={closeSidebar}>
             <Image
               src="/logo.png"
               alt="Shangazi Logo"
@@ -175,7 +175,7 @@ export default function Header() {
         </div>
 
         <nav className="sidebar-nav">
-          <Link href="/" className="sidebar-link" onClick={closeSidebar}>
+          <Link href="/" prefetch={false} className="sidebar-link" onClick={closeSidebar}>
             Home
           </Link>
           <div className="sidebar-dropdown">
@@ -199,6 +199,7 @@ export default function Header() {
                 <Link
                   key={index}
                   href={link.href}
+                  prefetch={false}
                   className="sidebar-dropdown-link"
                   onClick={closeSidebar}
                 >
@@ -228,6 +229,7 @@ export default function Header() {
                 <Link
                   key={index}
                   href={link.href}
+                  prefetch={false}
                   className="sidebar-dropdown-link"
                   onClick={closeSidebar}
                 >
@@ -257,6 +259,7 @@ export default function Header() {
                 <Link
                   key={index}
                   href={link.href}
+                  prefetch={false}
                   className="sidebar-dropdown-link"
                   onClick={closeSidebar}
                 >
@@ -286,6 +289,7 @@ export default function Header() {
                 <Link
                   key={index}
                   href={link.href}
+                  prefetch={false}
                   className="sidebar-dropdown-link"
                   onClick={closeSidebar}
                 >
@@ -315,6 +319,7 @@ export default function Header() {
                 <Link
                   key={index}
                   href={link.href}
+                  prefetch={false}
                   className="sidebar-dropdown-link"
                   onClick={closeSidebar}
                 >
@@ -326,7 +331,13 @@ export default function Header() {
         </nav>
 
         <div className="sidebar-footer">
-          <Link href="/login" className="sidebar-profile" onClick={closeSidebar} aria-label="Profile">
+          <Link
+            href="/login"
+            prefetch={false}
+            className="sidebar-profile"
+            onClick={closeSidebar}
+            aria-label="Profile"
+          >
             <svg
               width="24"
               height="24"

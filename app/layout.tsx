@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
-import ScrollToTop from "./components/scroll-to-top/ScrollToTop";
+import ClientChrome from "./components/chrome/ClientChrome";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shangazi.rw"),
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   title: {
     default: "Shangazi Emma Claudine | Rwandan Journalist & Content Creator",
     template: "%s | Shangazi Emma Claudine",
@@ -160,10 +163,7 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <Header />
-          {children}
-          <Footer />
-          <ScrollToTop />
+          <ClientChrome>{children}</ClientChrome>
         </ThemeProvider>
       </body>
     </html>
