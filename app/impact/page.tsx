@@ -19,7 +19,7 @@ export default function ImpactPage() {
 
       <section className="static-content">
         <div className="static-card">
-          <p>Impact highlights and program results will be published here. Stay tuned.</p>
+          <p>Coming soon.</p>
         </div>
       </section>
     </main>

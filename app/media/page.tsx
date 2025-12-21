@@ -19,7 +19,7 @@ export default function MediaPage() {
 
       <section className="static-content">
         <div className="static-card">
-          <p>Media assets and press kits are coming soon. For urgent requests, please email comms@shangazi.rw.</p>
+          <p>Coming soon. For urgent requests, please email comms@shangazi.rw.</p>
         </div>
       </section>
     </main>

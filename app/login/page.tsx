@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Login | Shangazi Emma Claudine",
@@ -20,10 +19,7 @@ export default function LoginPage() {
 
       <section className="static-content">
         <div className="static-card">
-          <p>
-            We&apos;re preparing member access for bookings, newsletters, and upcoming courses. In the meantime, feel
-            free to explore our latest <Link href="/blog">articles</Link> or <Link href="/contact">get in touch</Link>.
-          </p>
+          <p>Coming soon.</p>
         </div>
       </section>
     </main>
