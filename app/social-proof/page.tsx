@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ComingSoon from "../components/coming-soon/ComingSoon"
 
 export const metadata: Metadata = {
   title: "Social Proof | Shangazi Emma Claudine",
@@ -9,19 +10,12 @@ export const metadata: Metadata = {
 
 export default function SocialProofPage() {
   return (
-    <main className="static-page">
-      <section className="static-hero">
-        <div className="static-hero-content">
-          <h1 className="static-title">Social Proof</h1>
-          <p className="static-subtitle">What partners and audiences are saying.</p>
-        </div>
-      </section>
-
-      <section className="static-content">
-        <div className="static-card">
-          <p>Coming soon.</p>
-        </div>
-      </section>
-    </main>
+    <ComingSoon
+      title="Social Proof"
+      subtitle="Community stories and testimonials"
+      description="We are collecting stories and testimonials that highlight Shangazi Emma Claudine's community impact."
+      primaryHref="/testimonials"
+      primaryLabel="View Testimonials"
+    />
   )
 }

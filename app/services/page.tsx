@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ComingSoon from "../components/coming-soon/ComingSoon"
 
 export const metadata: Metadata = {
   title: "Services | Shangazi Emma Claudine",
@@ -17,18 +18,12 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   return (
-    <main className="services-page">
-      <section className="services-hero">
-        <div className="services-hero-content">
-          <h1 className="services-title">Services</h1>
-        </div>
-      </section>
-
-      <section className="services-coming-soon">
-        <div className="services-coming-container">
-          <p className="services-coming-text">Coming Soon</p>
-        </div>
-      </section>
-    </main>
+    <ComingSoon
+      title="Services"
+      subtitle="Workshops, talks, and collaborations"
+      description="Services for Emma Claudine (Shangazi) are being prepared. Check back soon for new programs and booking details."
+      primaryHref="/contact"
+      primaryLabel="Inquire Now"
+    />
   )
 }

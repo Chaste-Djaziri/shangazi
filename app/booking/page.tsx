@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ComingSoon from "../components/coming-soon/ComingSoon"
 
 export const metadata: Metadata = {
   title: "Booking | Shangazi Emma Claudine",
@@ -18,19 +19,12 @@ export const metadata: Metadata = {
 
 export default function BookingPage() {
   return (
-    <main className="static-page">
-      <section className="static-hero">
-        <div className="static-hero-content">
-          <h1 className="static-title">Booking</h1>
-          <p className="static-subtitle">Speaking engagements and workshops.</p>
-        </div>
-      </section>
-
-      <section className="static-content">
-        <div className="static-card">
-          <p>Coming soon.</p>
-        </div>
-      </section>
-    </main>
+    <ComingSoon
+      title="Booking"
+      subtitle="Speaking engagements and workshops"
+      description="Bookings for Emma Claudine (Shangazi) are opening soon. Share your request and we will get back to you."
+      primaryHref="/contact"
+      primaryLabel="Request Booking"
+    />
   )
 }

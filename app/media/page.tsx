@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ComingSoon from "../components/coming-soon/ComingSoon"
 
 export const metadata: Metadata = {
   title: "Media | Shangazi Emma Claudine",
@@ -9,19 +10,12 @@ export const metadata: Metadata = {
 
 export default function MediaPage() {
   return (
-    <main className="static-page">
-      <section className="static-hero">
-        <div className="static-hero-content">
-          <h1 className="static-title">Media</h1>
-          <p className="static-subtitle">Interviews, press coverage, and official resources.</p>
-        </div>
-      </section>
-
-      <section className="static-content">
-        <div className="static-card">
-          <p>Coming soon. For urgent requests, please email comms@shangazi.rw.</p>
-        </div>
-      </section>
-    </main>
+    <ComingSoon
+      title="Media"
+      subtitle="Press, interviews, and media resources"
+      description="Our media kit and press resources for Shangazi Emma Claudine are on the way. Contact us for urgent requests."
+      primaryHref="/contact"
+      primaryLabel="Request Media Kit"
+    />
   )
 }
