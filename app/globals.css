@@ -1076,20 +1076,21 @@ body {
 .hero-profile-cluster {
   display: flex;
   align-items: center;
-  width: 230px;
+  gap: 0.75rem;
+  width: auto;
   height: 72px;
   max-width: 868px;
-  padding: 8px 0 16px 20px;
+  padding: 0;
   opacity: 1;
   position: relative;
-  top: -5px;
+  top: 0;
   box-sizing: border-box;
 }
 
 .hero-profile-images {
   display: flex;
   align-items: center;
-  margin-right: -10px;
+  flex-shrink: 0;
 }
 
 .hero-profile-image {
@@ -1126,14 +1127,14 @@ body {
 }
 
 .hero-profile-copy {
-  width: 230px;
-  height: 52px;
+  width: 210px;
+  min-width: 210px;
+  height: 48px;
   max-width: 868px;
   opacity: 1;
   display: flex;
   align-items: center;
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
+  flex-shrink: 0;
 }
 
 .hero-profile-text {
@@ -1234,6 +1235,7 @@ body {
 
   .hero-profile-copy {
     width: 180px;
+    min-width: 180px;
     height: auto;
   }
 
@@ -1302,8 +1304,7 @@ body {
 
   .hero-profile-copy {
     width: 120px;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    min-width: 120px;
   }
 
   .hero-profile-text {
