@@ -19,7 +19,7 @@ export default function Home() {
       <Hero />
       <About />
       <Stats />
-      <Topics />
+      <Topics limit={3} showAllButton />
       <Featured />
       <Contact />
     </main>
