@@ -27,6 +27,9 @@ export default function Hero() {
               </div>
             </div>
             <div className="hero-content-right">
+              <button type="button" className="hero-play-button" aria-label="Play video">
+                <Image src="/vectors/play.svg" alt="" width={16} height={16} className="hero-play-icon" />
+              </button>
               <p className="hero-overlay-link">Watch Videos</p>
             </div>
           </div>
