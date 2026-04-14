@@ -7,6 +7,7 @@ import Dropdown from "./Dropdown";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement | null>(null);
+  const lastScrollYRef = useRef(0);
   const [isFloatingMenuVisible, setIsFloatingMenuVisible] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -14,21 +15,19 @@ export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    const headerElement = headerRef.current;
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const headerHeight = headerRef.current?.offsetHeight ?? 0;
+      const isPastHeader = currentScrollY > headerHeight;
+      const isScrollingUp = currentScrollY < lastScrollYRef.current;
 
-    if (!headerElement) {
-      return;
-    }
+      setIsFloatingMenuVisible(isPastHeader && isScrollingUp);
+      lastScrollYRef.current = Math.max(currentScrollY, 0);
+    };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsFloatingMenuVisible(!entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(headerElement);
-    return () => observer.disconnect();
+    lastScrollYRef.current = window.scrollY;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
