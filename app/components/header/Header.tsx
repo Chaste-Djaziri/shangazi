@@ -77,7 +77,7 @@ export default function Header() {
         <div className="header-container">
           <Link href="/" prefetch={false} className="logo-link" onClick={closeSidebar}>
             <Image
-              src="/logo.png"
+              src="/logo/Shangazi Logo Variations-1.png"
               alt="Shangazi Logo"
               width={180}
               height={65}
@@ -148,7 +148,7 @@ export default function Header() {
         <div className="sidebar-header">
           <Link href="/" prefetch={false} className="sidebar-logo-link" onClick={closeSidebar}>
             <Image
-              src="/logo.png"
+              src="/logo/Shangazi Logo Variations-1.png"
               alt="Shangazi Logo"
               width={150}
               height={54}
