@@ -78,10 +78,12 @@ export default function Topics() {
     <section className="topics">
       <div className="topics-container">
         <div className="topics-content">
-          <h2 className="topics-title">
-            Topics I <span className="topics-title-accent">Cover</span>
-          </h2>
-          <p className="topics-subtitle">Core content themes and expertise areas</p>
+          <p className="topics-kicker">Our Focus</p>
+          <h2 className="topics-title">Guidance That Feels Personal</h2>
+          <p className="topics-subtitle">
+            We create space for learning, reflection and support through open dialogue, shared stories and practical guidance
+            that helps people move forward, not feel judged.
+          </p>
           <div className="topics-grid">
             {topics.map((topic, index) => (
               <div key={index} className="topic-card">
