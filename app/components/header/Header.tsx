@@ -1,15 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [isFloatingMenuVisible, setIsFloatingMenuVisible] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  useEffect(() => {
+    const headerElement = headerRef.current;
+
+    if (!headerElement) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFloatingMenuVisible(!entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(headerElement);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     // Prevent body scroll when an overlay panel is open
@@ -86,7 +106,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="header">
+      <header ref={headerRef} className="header">
         <div className="header-container">
           <Link href="/" prefetch={false} className="logo-link" onClick={closeSidebar}>
             <Image
@@ -147,6 +167,18 @@ export default function Header() {
           </div>
         </div>
       </header>
+
+      {isFloatingMenuVisible && !isSidebarOpen && (
+        <button
+          type="button"
+          className="floating-menu-button"
+          onClick={toggleSidebar}
+          aria-label="Open menu"
+          aria-expanded={isSidebarOpen}
+        >
+          Menu
+        </button>
+      )}
 
       {/* Sidebar Overlay */}
       <div className={`sidebar-overlay ${isSidebarOpen ? "active" : ""}`} onClick={closeSidebar}></div>
