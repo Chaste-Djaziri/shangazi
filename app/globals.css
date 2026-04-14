@@ -4120,8 +4120,10 @@ details[open] .faq-question {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
+  padding: 16px 16px 0;
+  box-sizing: border-box;
 }
 
 .topic-icon-badge {
@@ -4143,7 +4145,8 @@ details[open] .faq-question {
 }
 
 .topic-title {
-  width: 340.5899963378906px;
+  width: 100%;
+  max-width: 340.5899963378906px;
   height: 28px;
   margin: 0;
   font-family: "Fraunces", serif;
@@ -4158,7 +4161,8 @@ details[open] .faq-question {
 }
 
 .topic-description {
-  width: 340.5899963378906px;
+  width: 100%;
+  max-width: 340.5899963378906px;
   min-height: 60px;
   margin: 0;
   font-family: "Marcellus", serif;
