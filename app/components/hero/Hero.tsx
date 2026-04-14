@@ -30,6 +30,9 @@ export default function Hero() {
                     <Image src="/profile/2.png" alt="Community member two" width={72} height={72} className="hero-profile-image" />
                     <Image src="/profile/3.png" alt="Community member three" width={72} height={72} className="hero-profile-image" />
                   </div>
+                  <div className="hero-profile-copy">
+                    <p className="hero-profile-text">2000+ questions listened to &amp; answered</p>
+                  </div>
                   <button type="button" className="hero-profile-arrow-button" aria-label="Open community">
                     <Image
                       src="/vectors/top_right_arrow_black.svg"

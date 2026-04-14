@@ -1076,6 +1076,14 @@ body {
 .hero-profile-cluster {
   display: flex;
   align-items: center;
+  width: 230px;
+  height: 72px;
+  max-width: 868px;
+  padding: 8px 0 16px 20px;
+  opacity: 1;
+  position: relative;
+  top: -5px;
+  box-sizing: border-box;
 }
 
 .hero-profile-images {
@@ -1115,6 +1123,32 @@ body {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+}
+
+.hero-profile-copy {
+  width: 230px;
+  height: 52px;
+  max-width: 868px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
+.hero-profile-text {
+  margin: 0;
+  width: 210px;
+  height: 48px;
+  opacity: 1;
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 
 .hero-overlay-link {
@@ -1190,6 +1224,25 @@ body {
     width: 60px;
     height: 60px;
   }
+
+  .hero-profile-cluster {
+    width: auto;
+    height: auto;
+    padding: 0;
+    top: 0;
+  }
+
+  .hero-profile-copy {
+    width: 180px;
+    height: auto;
+  }
+
+  .hero-profile-text {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 /* Mobile and Small Tablets */
@@ -1245,6 +1298,19 @@ body {
   .hero-profile-arrow-icon {
     width: 18px;
     height: 18px;
+  }
+
+  .hero-profile-copy {
+    width: 120px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .hero-profile-text {
+    width: auto;
+    height: auto;
+    font-size: 12px;
+    line-height: 16px;
   }
 }
 
