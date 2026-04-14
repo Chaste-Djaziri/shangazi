@@ -31,8 +31,7 @@ body {
 
 /* Header Styles */
 .header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
   background: var(--bg-primary);
   border-bottom: 1px solid transparent;
