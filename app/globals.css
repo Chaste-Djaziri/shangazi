@@ -4003,7 +4003,11 @@ details[open] .faq-question {
 /* Topics Section Styles */
 .topics {
   padding: 8rem 2rem;
-  background: var(--bg-secondary);
+  background-color: rgba(220, 236, 209, 1);
+  background-image: url("/backgrounds/topics_bg.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height: 90vh;
   display: flex;
   align-items: center;
