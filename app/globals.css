@@ -1776,6 +1776,11 @@ body {
   position: relative;
 }
 
+.about-tertiary-card .about-card-image {
+  object-fit: contain;
+  background: rgba(245, 177, 192, 1);
+}
+
 .about-quaternary-card {
   width: 292.5px;
   height: 250px;
