@@ -41,7 +41,10 @@ export default function About() {
             </div>
             <div className="about-tertiary-card" aria-hidden="true" />
           </div>
-          <div className="about-secondary-card" aria-hidden="true" />
+          <div className="about-card-column">
+            <div className="about-secondary-card" aria-hidden="true" />
+            <div className="about-quaternary-card" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </section>

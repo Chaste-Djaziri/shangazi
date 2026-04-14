@@ -1763,6 +1763,17 @@ body {
   flex-shrink: 0;
 }
 
+.about-quaternary-card {
+  width: 292.5px;
+  height: 250px;
+  padding: 64px 32px;
+  opacity: 1;
+  border-radius: 12.95px;
+  background: rgba(220, 236, 209, 1);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
 .about-experience-number {
   width: 84px;
   height: 51px;
@@ -1815,7 +1826,8 @@ body {
 
   .about-experience-card,
   .about-secondary-card,
-  .about-tertiary-card {
+  .about-tertiary-card,
+  .about-quaternary-card {
     width: 292.5px;
     height: 250px;
   }
