@@ -1959,9 +1959,12 @@ body {
     width: 100%;
     justify-content: center;
     gap: 1rem;
+    align-items: stretch;
   }
 
   .about-card-column {
+    flex: 1 1 0;
+    min-width: 0;
     gap: 1rem;
   }
 
@@ -1969,7 +1972,7 @@ body {
   .about-secondary-card,
   .about-tertiary-card,
   .about-quaternary-card {
-    width: min(44vw, 292.5px);
+    width: 100%;
     height: auto;
     aspect-ratio: 292.5 / 250;
   }
@@ -2016,7 +2019,7 @@ body {
   .about-secondary-card,
   .about-tertiary-card,
   .about-quaternary-card {
-    width: min(42vw, 292.5px);
+    width: 100%;
   }
 
   .about-title {
