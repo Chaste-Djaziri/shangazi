@@ -19,8 +19,8 @@ export default function Home() {
     <main>
       <Hero />
       <About />
-      <SeoHighlights />
       <Stats />
+      <SeoHighlights />
       <Topics />
       <Featured />
       <Contact />
