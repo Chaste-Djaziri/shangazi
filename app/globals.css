@@ -1451,7 +1451,7 @@ body {
 }
 
 .stat-number-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0;
@@ -1459,7 +1459,7 @@ body {
 }
 
 .stat-number {
-  width: 150px;
+  width: auto;
   height: 51px;
   font-family: "Fraunces", serif;
   font-size: 48px;
@@ -1475,7 +1475,7 @@ body {
 }
 
 .stat-number-accent {
-  width: 150px;
+  width: auto;
   height: 51px;
   font-family: "Fraunces", serif;
   font-size: 48px;
