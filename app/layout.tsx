@@ -149,6 +149,28 @@ export default function RootLayout({
     inLanguage: "en-US",
   };
 
+  const organizationStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Shangazi",
+    url: "https://shangazi.rw",
+    logo: "https://shangazi.rw/logo/Shangazi%20Logo%20Variations-2.png",
+    image: "https://shangazi.rw/profile/about.png",
+    email: "comms@shangazi.rw",
+    telephone: "+250788597423",
+    sameAs: [
+      "https://www.youtube.com/@emmaclaudine/videos",
+      "https://www.facebook.com/emmaclaudine1",
+      "https://www.tiktok.com/@emmaclaudine1",
+      "https://www.instagram.com/emmaclaudine1/",
+    ],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Kigali",
+      addressCountry: "RW",
+    },
+  };
+
   return (
     <html lang="en">
       <head>
@@ -159,6 +181,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }}
         />
       </head>
       <body>

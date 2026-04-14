@@ -4,8 +4,40 @@ import Image from "next/image"
 export const metadata: Metadata = {
   title: "About | Shangazi Emma Claudine",
   description:
-    "Learn about Emma Claudine (Shangazi), a Rwandan journalist and content creator empowering youth through education and open dialogue.",
-  keywords: ["Emma Claudine", "Shangazi", "Shangazi Emma Claudine", "Rwandan journalist", "content creator"],
+    "Learn more about Shangazi Emma Claudine, her story, her media journey, and her work guiding honest conversations for young people, couples, and families.",
+  keywords: [
+    "Emma Claudine",
+    "Shangazi",
+    "Shangazi Emma Claudine",
+    "Rwandan journalist",
+    "content creator",
+    "about Shangazi",
+  ],
+  alternates: {
+    canonical: "https://shangazi.rw/about",
+  },
+  openGraph: {
+    title: "About Shangazi Emma Claudine",
+    description:
+      "Meet Shangazi Emma Claudine and explore her experience in media, youth guidance, and open conversations that create trust.",
+    url: "https://shangazi.rw/about",
+    type: "article",
+    images: [
+      {
+        url: "/profile/about.png",
+        width: 1200,
+        height: 630,
+        alt: "About Shangazi Emma Claudine",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Shangazi Emma Claudine",
+    description:
+      "Explore Shangazi Emma Claudine's background, impact, and trusted voice in honest conversations.",
+    images: ["/profile/about.png"],
+  },
 }
 
 export default function AboutPage() {

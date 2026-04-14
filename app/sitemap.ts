@@ -26,18 +26,25 @@ async function fetchBlogSlugs(): Promise<PostSlug[]> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
+  const now = new Date().toISOString()
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/`, changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/about`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/services`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/contact`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/faq`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/newsletter`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/booking`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/donation`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/testimonials`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/blog`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/`, lastmod: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/about`, lastmod: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${baseUrl}/topics`, lastmod: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/blog`, lastmod: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/impact`, lastmod: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/media`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/services`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/social-proof`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/testimonials`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/contact`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/booking`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/donation`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/newsletter`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/faq`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/privacy`, lastmod: now, changeFrequency: "yearly", priority: 0.4 },
+    { url: `${baseUrl}/terms`, lastmod: now, changeFrequency: "yearly", priority: 0.4 },
   ]
 
   const posts = await fetchBlogSlugs()
