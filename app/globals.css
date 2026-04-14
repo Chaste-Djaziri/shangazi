@@ -790,7 +790,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 300;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -851,34 +851,38 @@ body {
   font-family: "Marcellus", serif;
   font-size: 1.5rem;
   line-height: 1.2;
-  color: var(--text-primary);
+  color: #10240f;
 }
 
 .search-modal-header p {
   margin: 0.35rem 0 0;
-  color: var(--text-secondary);
+  color: rgba(16, 36, 15, 0.76);
   font-size: 0.95rem;
   line-height: 1.5;
 }
 
 .search-modal-close {
   border: 0;
-  background: transparent;
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.28);
+  color: #10240f;
   font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
   padding: 0.25rem;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
 }
 
 .search-modal-input-wrap {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 14px;
   padding: 0.9rem 1rem;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.46);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .search-modal-icon {
@@ -892,14 +896,14 @@ body {
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--text-primary);
+  color: #10240f;
   font-family: "Marcellus", serif;
   font-size: 1rem;
   line-height: 1.4;
 }
 
 .search-modal-input::placeholder {
-  color: var(--text-secondary);
+  color: rgba(16, 36, 15, 0.58);
 }
 
 .search-modal-body {
@@ -909,7 +913,7 @@ body {
 
 .search-modal-hint {
   margin: 0;
-  color: var(--text-secondary);
+  color: rgba(16, 36, 15, 0.76);
   font-size: 0.95rem;
   line-height: 1.5;
 }
