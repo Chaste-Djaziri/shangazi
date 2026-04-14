@@ -851,20 +851,22 @@ body {
   font-family: "Marcellus", serif;
   font-size: 1.5rem;
   line-height: 1.2;
-  color: #10240f;
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
 }
 
 .search-modal-header p {
   margin: 0.35rem 0 0;
-  color: rgba(16, 36, 15, 0.76);
+  color: rgba(255, 255, 255, 0.82);
   font-size: 0.95rem;
   line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
 }
 
 .search-modal-close {
   border: 0;
-  background: rgba(255, 255, 255, 0.28);
-  color: #10240f;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
@@ -878,11 +880,11 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 14px;
   padding: 0.9rem 1rem;
-  background: rgba(255, 255, 255, 0.46);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
 }
 
 .search-modal-icon {
@@ -896,14 +898,14 @@ body {
   border: 0;
   outline: 0;
   background: transparent;
-  color: #10240f;
+  color: #ffffff;
   font-family: "Marcellus", serif;
   font-size: 1rem;
   line-height: 1.4;
 }
 
 .search-modal-input::placeholder {
-  color: rgba(16, 36, 15, 0.58);
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .search-modal-body {
@@ -913,9 +915,10 @@ body {
 
 .search-modal-hint {
   margin: 0;
-  color: rgba(16, 36, 15, 0.76);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
 }
 
 @media (max-width: 768px) {
