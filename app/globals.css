@@ -974,7 +974,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 2rem;
+  padding: 0 42px 36px 44px;
   box-sizing: border-box;
 }
 
@@ -988,7 +988,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.875rem;
+  max-width: 868px;
 }
 
 .hero-content-right {
@@ -1004,6 +1005,7 @@ body {
 
 .hero-cta-section {
   gap: 1.5rem;
+  margin-top: 0.25rem;
 }
 
 .hero-headline-section {
@@ -1213,7 +1215,7 @@ body {
   }
 
   .hero-overlay-content {
-    padding: 1.5rem;
+    padding: 0 28px 28px 30px;
   }
 
   .hero-cta-section {
@@ -1270,7 +1272,7 @@ body {
   }
 
   .hero-overlay-content {
-    padding: 1rem;
+    padding: 0 16px 18px 18px;
   }
 
   .hero-content-left {
