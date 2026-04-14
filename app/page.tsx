@@ -1,5 +1,4 @@
 import Hero from "./components/hero/Hero";
-import SeoHighlights from "./components/seo/SeoHighlights";
 import Stats from "./components/stats/Stats";
 import About from "./components/about/About";
 import Topics from "./components/topics/Topics";
@@ -20,7 +19,6 @@ export default function Home() {
       <Hero />
       <About />
       <Stats />
-      <SeoHighlights />
       <Topics />
       <Featured />
       <Contact />

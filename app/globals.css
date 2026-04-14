@@ -1532,6 +1532,8 @@ body {
   }
 
   .stats-container {
+    width: 100%;
+    height: auto;
     gap: 1.25rem;
   }
 
@@ -1565,10 +1567,13 @@ body {
   .stats {
     padding: 3rem 1.5rem;
     min-height: auto;
+    overflow: visible;
   }
 
   .stats-container {
     justify-items: center;
+    width: 100%;
+    height: auto;
   }
 
   .stat-item {
@@ -1582,6 +1587,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     max-width: 100%;
+    height: auto;
   }
 
   .stat-item {
@@ -1610,6 +1616,8 @@ body {
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+    width: 100%;
+    height: auto;
   }
 
   .stat-item {
@@ -1638,6 +1646,8 @@ body {
   .stats-container {
     grid-template-columns: 1fr;
     gap: 1.25rem;
+    width: 100%;
+    height: auto;
   }
 
   .stat-item {
