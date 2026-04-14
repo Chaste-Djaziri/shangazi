@@ -42,7 +42,15 @@ export default function About() {
             <div className="about-tertiary-card" aria-hidden="true" />
           </div>
           <div className="about-card-column">
-            <div className="about-secondary-card" aria-hidden="true" />
+            <div className="about-secondary-card">
+              <Image
+                src="/profile/about_1.png"
+                alt="Shangazi Emma Claudine"
+                width={586}
+                height={500}
+                className="about-card-image"
+              />
+            </div>
             <div className="about-quaternary-card" aria-hidden="true" />
           </div>
         </div>
