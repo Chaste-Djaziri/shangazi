@@ -1782,11 +1782,16 @@ body {
   padding: 0;
   opacity: 1;
   border-radius: 12.95px;
-  background: rgba(220, 236, 209, 1);
+  background: #ffffff;
   box-sizing: border-box;
   flex-shrink: 0;
   overflow: hidden;
   position: relative;
+}
+
+.about-quaternary-card .about-card-image {
+  object-fit: contain;
+  background: #ffffff;
 }
 
 .about-experience-number {
