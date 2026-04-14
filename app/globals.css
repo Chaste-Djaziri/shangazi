@@ -6321,8 +6321,6 @@ details[open] .faq-question {
 /* SEO Highlights */
 .seo-highlights {
   background: linear-gradient(135deg, #f2f7f1 0%, #fff3f7 100%);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
 }
 
 .seo-highlights-container {
