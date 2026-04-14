@@ -62,7 +62,8 @@ export default function Topics() {
                   <h3 className="topic-title">{topic.title}</h3>
                   <p className="topic-description">{topic.description}</p>
                   <button type="button" className="topic-read-more">
-                    Read More -&gt;
+                    <span>Read More</span>
+                    <Image src="/vectors/right_red_arrow.svg" alt="" width={10} height={10} className="topic-read-more-icon" />
                   </button>
                 </div>
                 <div className="topic-image-wrap">
