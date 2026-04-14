@@ -1957,15 +1957,17 @@ body {
 
   .about-card-group {
     width: 100%;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "experience secondary"
+      "tertiary quaternary";
     gap: 1rem;
     align-items: stretch;
   }
 
   .about-card-column {
-    flex: 1 1 0;
-    min-width: 0;
-    gap: 1rem;
+    display: contents;
   }
 
   .about-experience-card,
@@ -1975,6 +1977,22 @@ body {
     width: 100%;
     height: auto;
     aspect-ratio: 292.5 / 250;
+  }
+
+  .about-experience-card {
+    grid-area: experience;
+  }
+
+  .about-secondary-card {
+    grid-area: secondary;
+  }
+
+  .about-tertiary-card {
+    grid-area: tertiary;
+  }
+
+  .about-quaternary-card {
+    grid-area: quaternary;
   }
 
   .about-title-block,
@@ -2008,10 +2026,6 @@ body {
   }
 
   .about-card-group {
-    gap: 0.75rem;
-  }
-
-  .about-card-column {
     gap: 0.75rem;
   }
 
