@@ -4002,6 +4002,19 @@ details[open] .faq-question {
 
 /* Topics Section Styles */
 .topics {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 20px 20px;
+  background: transparent;
+}
+
+.topics-container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 8rem 2rem;
   background-color: rgba(220, 236, 209, 1);
   background-image: url("/backgrounds/topics_bg.png");
@@ -4011,15 +4024,16 @@ details[open] .faq-question {
   min-height: 90vh;
   display: flex;
   align-items: center;
-}
-
-.topics-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
+  justify-content: center;
+  border-radius: 15px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .topics-content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   text-align: center;
 }
 
