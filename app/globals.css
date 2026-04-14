@@ -1682,6 +1682,11 @@ body {
   justify-content: center;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.about-button span {
+  flex-shrink: 0;
 }
 
 .about-button-icon {
