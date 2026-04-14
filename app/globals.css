@@ -46,14 +46,20 @@ body {
 }
 
 .header-container {
-  max-width: 1200px;
+  width: min(100%, 1440px);
+  max-width: 1440px;
+  height: 90px;
   margin: 0 auto;
-  padding: 1.25rem 2rem;
+  padding: 10px 75px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   position: relative;
+  opacity: 1;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  box-sizing: border-box;
 }
 
 .logo-link {
@@ -88,10 +94,11 @@ body {
   align-items: center;
   gap: 40px;
   margin-left: auto;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 624px;
   height: 20px;
   opacity: 1;
+  white-space: nowrap;
 }
 
 .desktop-nav {
