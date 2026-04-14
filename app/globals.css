@@ -1404,9 +1404,9 @@ body {
 /* Stats Section Styles */
 .stats {
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #164515 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   min-height: auto;
   display: flex;
   align-items: center;
@@ -1415,14 +1415,7 @@ body {
 }
 
 .stats::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  content: none;
   pointer-events: none;
 }
 
