@@ -8,6 +8,7 @@ export default function Hero() {
           <video className="hero-video" autoPlay muted loop playsInline>
             <source src="/backgrounds/hero_background.mp4" type="video/mp4" />
           </video>
+          <div className="hero-video-gradient" />
         </div>
       </div>
     </section>
