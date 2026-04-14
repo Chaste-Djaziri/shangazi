@@ -1066,6 +1066,8 @@ body {
 
 .hero-overlay-link {
   margin: 0;
+  width: 94px;
+  height: 18px;
   color: #ffffff;
   font-family: "Marcellus", serif;
   font-weight: 400;
@@ -1074,6 +1076,7 @@ body {
   line-height: 18px;
   letter-spacing: 0;
   vertical-align: middle;
+  opacity: 1;
 }
 
 
