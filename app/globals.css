@@ -1608,7 +1608,7 @@ body {
   line-height: 20.4px;
   letter-spacing: 0;
   vertical-align: middle;
-  color: var(--color-primary);
+  color: rgba(223, 31, 84, 1);
 }
 
 .about-subtitle-block {
@@ -1665,7 +1665,7 @@ body {
   gap: 15px;
   opacity: 1;
   border-radius: 7px;
-  background: var(--color-primary);
+  background: rgba(27, 94, 47, 1);
   color: #ffffff;
   text-decoration: none;
   border: 0;
