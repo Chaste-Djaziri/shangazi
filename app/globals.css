@@ -1420,15 +1420,17 @@ body {
 }
 
 .stats-container {
-  max-width: 1000px;
+  width: 1290px;
+  height: 144px;
+  max-width: 1290px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 30px;
   align-items: center;
-  width: 100%;
   position: relative;
   z-index: 1;
+  justify-content: center;
 }
 
 .stat-item {
