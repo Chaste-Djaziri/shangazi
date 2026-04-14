@@ -961,10 +961,9 @@ body {
   height: 100%;
   border-radius: 15px;
   background:
-    linear-gradient(180deg, rgba(26, 27, 25, 0.42) 0%, #1a1b19 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 19.27%, rgba(0, 0, 0, 0.9) 93.68%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
-  opacity: 0.45;
+    linear-gradient(180deg, rgba(26, 27, 25, 0.18) 0%, rgba(26, 27, 25, 0.7) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.92) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.26));
   pointer-events: none;
 }
 
