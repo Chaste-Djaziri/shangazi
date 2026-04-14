@@ -927,10 +927,10 @@ body {
 }
 
 .hero-container {
-  width: min(100%, 1400px);
-  max-width: 1400px;
+  width: 100%;
+  max-width: none;
   height: 841.5999755859375px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   display: flex;
   position: relative;
