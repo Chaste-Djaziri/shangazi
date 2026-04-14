@@ -70,8 +70,9 @@ body {
 .logo-image {
   height: auto;
   width: auto;
-  max-width: 140px;
+  max-width: 155.88406372070312px;
   object-fit: contain;
+  opacity: 1;
 }
 
 .logo-tv {

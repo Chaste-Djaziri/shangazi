@@ -79,8 +79,8 @@ export default function Header() {
             <Image
               src="/logo/Shangazi Logo Variations-1.png"
               alt="Shangazi Logo"
-              width={140}
-              height={50}
+              width={156}
+              height={52}
               priority
               className="logo-image logo-default"
               style={{ width: "auto", height: "auto" }}
