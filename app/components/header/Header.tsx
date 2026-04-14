@@ -8,6 +8,7 @@ import Dropdown from "./Dropdown";
 export default function Header() {
   const headerRef = useRef<HTMLElement | null>(null);
   const lastScrollYRef = useRef(0);
+  const isHeroInViewRef = useRef(false);
   const [isFloatingMenuVisible, setIsFloatingMenuVisible] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -21,13 +22,31 @@ export default function Header() {
       const isPastHeader = currentScrollY > headerHeight;
       const isScrollingUp = currentScrollY < lastScrollYRef.current;
 
-      setIsFloatingMenuVisible(isPastHeader && isScrollingUp);
+      setIsFloatingMenuVisible(isPastHeader && isScrollingUp && !isHeroInViewRef.current);
       lastScrollYRef.current = Math.max(currentScrollY, 0);
     };
 
+    const heroElement = document.querySelector(".hero");
+    const heroObserver = heroElement
+      ? new IntersectionObserver(([entry]) => {
+          isHeroInViewRef.current = entry.isIntersecting;
+
+          if (entry.isIntersecting) {
+            setIsFloatingMenuVisible(false);
+          }
+        })
+      : null;
+
+    if (heroElement && heroObserver) {
+      heroObserver.observe(heroElement);
+    }
+
     lastScrollYRef.current = window.scrollY;
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      heroObserver?.disconnect();
+    };
   }, []);
 
   useEffect(() => {
