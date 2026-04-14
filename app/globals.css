@@ -164,14 +164,17 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  min-height: 48px;
-  padding: 1rem 1.5rem;
+  width: 152px;
+  max-width: 196.08px;
+  height: 46px;
+  padding: 0 1rem;
   border: 0;
-  border-radius: 1.5rem;
+  border-radius: 7px;
   background: var(--color-primary);
   color: #ffffff;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 1;
 }
 
 .ask-shangazi-button:hover {
