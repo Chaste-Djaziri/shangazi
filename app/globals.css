@@ -1955,6 +1955,25 @@ body {
     gap: 2rem;
   }
 
+  .about-card-group {
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .about-card-column {
+    gap: 1rem;
+  }
+
+  .about-experience-card,
+  .about-secondary-card,
+  .about-tertiary-card,
+  .about-quaternary-card {
+    width: min(44vw, 292.5px);
+    height: auto;
+    aspect-ratio: 292.5 / 250;
+  }
+
   .about-title-block,
   .about-subtitle-block,
   .about-title,
@@ -1983,6 +2002,21 @@ body {
 @media (max-width: 480px) {
   .about {
     padding: 2rem 1rem;
+  }
+
+  .about-card-group {
+    gap: 0.75rem;
+  }
+
+  .about-card-column {
+    gap: 0.75rem;
+  }
+
+  .about-experience-card,
+  .about-secondary-card,
+  .about-tertiary-card,
+  .about-quaternary-card {
+    width: min(42vw, 292.5px);
   }
 
   .about-title {
