@@ -13,7 +13,7 @@ const statsData: StatData[] = [
   { value: 482, suffix: "K", accent: "+", label: "YouTube Subscribers" },
   { value: 30, suffix: "M", accent: "+", label: "Video Views" },
   { value: 20, suffix: "", accent: "+", label: "Years Experience" },
-  { value: 1000, suffix: "", accent: "+", label: "Lives Impacted" },
+  { value: 1, suffix: "K", accent: "+", label: "Lives Impacted" },
 ];
 
 function formatNumber(value: number, suffix: string): string {
