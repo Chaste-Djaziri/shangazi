@@ -1432,26 +1432,33 @@ body {
 }
 
 .stat-item {
+  width: 300px;
+  height: 144px;
+  padding: 30px;
+  opacity: 1;
+  border-radius: 15px;
+  border: 1px solid rgba(0, 13, 37, 0.16);
+  background: rgba(255, 255, 255, 1);
   text-align: center;
-  padding: 1rem;
-  color: white;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .stat-number {
   font-size: 2.5rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
   line-height: 1.2;
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
   font-size: 1rem;
-  color: white;
+  color: var(--text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1470,6 +1477,11 @@ body {
     gap: 1.25rem;
   }
 
+  .stat-item {
+    width: 100%;
+    min-height: 144px;
+  }
+
   .stat-number {
     font-size: 2.25rem;
   }
@@ -1484,6 +1496,17 @@ body {
   .stats {
     padding: 3rem 1.5rem;
     min-height: auto;
+  }
+
+  .stats-container {
+    justify-items: center;
+  }
+
+  .stat-item {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    min-height: 144px;
   }
 
   .stats-container {
