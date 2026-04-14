@@ -167,6 +167,8 @@ body {
   border-radius: 0;
   transition: all 0.2s ease;
   border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
 }
 
 .profile-icon:hover {
@@ -756,6 +758,8 @@ body {
   transition: all 0.2s ease;
   border-radius: 0;
   border: 1px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
 }
 
 .sidebar-profile:hover {
@@ -767,6 +771,105 @@ body {
 .sidebar-profile .profile-icon-image {
   width: 20px;
   height: 20px;
+}
+
+.search-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(16, 24, 16, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 7rem 1.5rem 2rem;
+}
+
+.search-modal {
+  width: min(100%, 640px);
+  background: var(--bg-primary);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.search-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.search-modal-header h2 {
+  margin: 0;
+  font-family: "Marcellus", serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.search-modal-header p {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.search-modal-close {
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.search-modal-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  background: var(--bg-secondary);
+}
+
+.search-modal-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.search-modal-input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: "Marcellus", serif;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.search-modal-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-modal-body {
+  border-radius: 16px;
+  background: #f8fbf7;
+  padding: 1rem 1.1rem;
+}
+
+.search-modal-hint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {

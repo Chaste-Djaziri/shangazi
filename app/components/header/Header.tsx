@@ -8,6 +8,8 @@ import Dropdown from "./Dropdown";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,8 +22,8 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    // Prevent body scroll when sidebar is open
-    if (isSidebarOpen) {
+    // Prevent body scroll when an overlay panel is open
+    if (isSidebarOpen || isSearchOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -29,7 +31,18 @@ export default function Header() {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isSidebarOpen]);
+  }, [isSidebarOpen, isSearchOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSearchOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const aboutLinks = [
     { href: "/about", label: "About" },
@@ -71,6 +84,16 @@ export default function Header() {
     setOpenDropdown(openDropdown === label ? null : label);
   };
 
+  const openSearchModal = () => {
+    setIsSearchOpen(true);
+    setIsSidebarOpen(false);
+  };
+
+  const closeSearchModal = () => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
   return (
     <>
       <header className={`header ${isScrolled ? "scrolled" : ""}`}>
@@ -109,9 +132,9 @@ export default function Header() {
 
           <div className="header-actions">
             <div className="desktop-header-tools">
-              <Link href="/login" prefetch={false} className="profile-icon desktop-profile" aria-label="Profile">
+              <button type="button" className="profile-icon desktop-profile" aria-label="Open search" onClick={openSearchModal}>
                 <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
-              </Link>
+              </button>
 
               <button type="button" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Ask Shangazi">
                 <span className="ask-shangazi-text">Ask Shangazi</span>
@@ -326,18 +349,59 @@ export default function Header() {
         </nav>
 
         <div className="sidebar-footer">
-          <Link
-            href="/login"
-            prefetch={false}
+          <button
+            type="button"
             className="sidebar-profile"
-            onClick={closeSidebar}
-            aria-label="Profile"
+            onClick={openSearchModal}
+            aria-label="Open search"
           >
             <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
-            <span>Profile</span>
-          </Link>
+            <span>Search</span>
+          </button>
         </div>
       </aside>
+
+      {isSearchOpen ? (
+        <div className="search-modal-overlay" onClick={closeSearchModal} role="presentation">
+          <div
+            className="search-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="site-search-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="search-modal-header">
+              <div>
+                <h2 id="site-search-title">Search Shangazi</h2>
+                <p>Search pages, articles, and topics across the site.</p>
+              </div>
+              <button type="button" className="search-modal-close" onClick={closeSearchModal} aria-label="Close search">
+                ×
+              </button>
+            </div>
+
+            <div className="search-modal-input-wrap">
+              <Image src="/vectors/search.svg" alt="" width={18} height={18} className="search-modal-icon" />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="search-modal-input"
+                placeholder="Search the site"
+                autoFocus
+              />
+            </div>
+
+            <div className="search-modal-body">
+              {searchQuery.trim() ? (
+                <p className="search-modal-hint">Search results for “{searchQuery}” can be wired up next.</p>
+              ) : (
+                <p className="search-modal-hint">Start typing to search Shangazi content.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
