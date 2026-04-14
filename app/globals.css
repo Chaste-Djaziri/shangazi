@@ -1763,7 +1763,7 @@ body {
 .about-tertiary-card {
   width: 292.5px;
   height: 250px;
-  padding: 64px 32px;
+  padding: 0;
   opacity: 1;
   border-top-left-radius: 12.95px;
   border-top-right-radius: 12.95px;
@@ -1772,6 +1772,8 @@ body {
   background: rgba(245, 177, 192, 1);
   box-sizing: border-box;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
 }
 
 .about-quaternary-card {
