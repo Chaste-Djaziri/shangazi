@@ -6,20 +6,10 @@ import Link from "next/link";
 import Dropdown from "./Dropdown";
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     // Prevent body scroll when an overlay panel is open
@@ -96,7 +86,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`header ${isScrolled ? "scrolled" : ""}`}>
+      <header className="header">
         <div className="header-container">
           <Link href="/" prefetch={false} className="logo-link" onClick={closeSidebar}>
             <Image
