@@ -59,7 +59,15 @@ export default function About() {
                 className="about-card-image"
               />
             </div>
-            <div className="about-quaternary-card" aria-hidden="true" />
+            <div className="about-quaternary-card">
+              <Image
+                src="/profile/about_3.png"
+                alt="Shangazi portrait"
+                width={586}
+                height={500}
+                className="about-card-image"
+              />
+            </div>
           </div>
         </div>
       </div>

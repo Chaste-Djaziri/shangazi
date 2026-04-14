@@ -1779,12 +1779,14 @@ body {
 .about-quaternary-card {
   width: 292.5px;
   height: 250px;
-  padding: 64px 32px;
+  padding: 0;
   opacity: 1;
   border-radius: 12.95px;
   background: rgba(220, 236, 209, 1);
   box-sizing: border-box;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
 }
 
 .about-experience-number {
