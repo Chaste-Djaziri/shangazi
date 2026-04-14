@@ -34,9 +34,12 @@ export default function About() {
           </div>
         </div>
         <div className="about-card-group">
-          <div className="about-experience-card" aria-label="20 plus years experience">
-            <p className="about-experience-number">20 +</p>
-            <p className="about-experience-label">Years Experience</p>
+          <div className="about-card-column">
+            <div className="about-experience-card" aria-label="20 plus years experience">
+              <p className="about-experience-number">20 +</p>
+              <p className="about-experience-label">Years Experience</p>
+            </div>
+            <div className="about-tertiary-card" aria-hidden="true" />
           </div>
           <div className="about-secondary-card" aria-hidden="true" />
         </div>

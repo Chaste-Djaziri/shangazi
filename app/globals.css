@@ -1705,7 +1705,14 @@ body {
 
 .about-card-group {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.about-card-column {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   flex-shrink: 0;
 }
@@ -1736,6 +1743,20 @@ body {
   border-top-left-radius: 129.5px;
   border-top-right-radius: 12.95px;
   border-bottom-right-radius: 12.95px;
+  border-bottom-left-radius: 12.95px;
+  background: rgba(245, 177, 192, 1);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.about-tertiary-card {
+  width: 292.5px;
+  height: 250px;
+  padding: 64px 32px;
+  opacity: 1;
+  border-top-left-radius: 12.95px;
+  border-top-right-radius: 12.95px;
+  border-bottom-right-radius: 129.5px;
   border-bottom-left-radius: 12.95px;
   background: rgba(245, 177, 192, 1);
   box-sizing: border-box;
@@ -1793,7 +1814,8 @@ body {
   }
 
   .about-experience-card,
-  .about-secondary-card {
+  .about-secondary-card,
+  .about-tertiary-card {
     width: 292.5px;
     height: 250px;
   }
