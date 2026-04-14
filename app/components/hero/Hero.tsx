@@ -89,6 +89,13 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-container">
+        <div className="hero-video-layer" aria-hidden="true">
+          <video className="hero-video" autoPlay muted loop playsInline>
+            <source src="/backgrounds/hero_background.mp4" type="video/mp4" />
+          </video>
+          <div className="hero-video-overlay" />
+        </div>
+
         <div className="hero-left">
           <h1 className="hero-name">
             <span className="hero-name-pink">Shangazi</span>
