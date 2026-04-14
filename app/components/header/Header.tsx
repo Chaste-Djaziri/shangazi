@@ -109,19 +109,7 @@ export default function Header() {
 
           <div className="header-actions">
             <Link href="/login" prefetch={false} className="profile-icon desktop-profile" aria-label="Profile">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
+              <Image src="/vectors/Vector.svg" alt="" width={21} height={21} className="profile-icon-image" />
             </Link>
 
             <button
@@ -338,19 +326,7 @@ export default function Header() {
             onClick={closeSidebar}
             aria-label="Profile"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+            <Image src="/vectors/Vector.svg" alt="" width={21} height={21} className="profile-icon-image" />
             <span>Profile</span>
           </Link>
         </div>

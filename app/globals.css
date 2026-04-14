@@ -143,7 +143,7 @@ body {
   border-color: var(--border-color);
 }
 
-.profile-icon svg {
+.profile-icon-image {
   width: 20px;
   height: 20px;
 }
@@ -678,7 +678,7 @@ body {
   border-color: var(--color-primary);
 }
 
-.sidebar-profile svg {
+.sidebar-profile .profile-icon-image {
   width: 20px;
   height: 20px;
 }
