@@ -6,9 +6,9 @@ import ClientChrome from "./components/chrome/ClientChrome";
 export const metadata: Metadata = {
   metadataBase: new URL("https://shangazi.rw"),
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/logo/Shangazi Logo Variations-2.png",
+    shortcut: "/logo/Shangazi Logo Variations-2.png",
+    apple: "/logo/Shangazi Logo Variations-2.png",
   },
   title: {
     default: "Shangazi Emma Claudine | Rwandan Journalist & Content Creator",
