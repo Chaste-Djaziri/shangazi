@@ -24,35 +24,48 @@ async function fetchBlogSlugs(): Promise<PostSlug[]> {
   }
 }
 
+const STATIC_PATHS = [
+  ["/", "weekly", 1],
+  ["/about", "monthly", 0.9],
+  ["/topics", "weekly", 0.9],
+  ["/blog", "weekly", 0.8],
+  ["/impact", "monthly", 0.8],
+  ["/media", "monthly", 0.7],
+  ["/services", "monthly", 0.7],
+  ["/social-proof", "monthly", 0.7],
+  ["/testimonials", "monthly", 0.7],
+  ["/contact", "monthly", 0.7],
+  ["/booking", "monthly", 0.7],
+  ["/donation", "monthly", 0.6],
+  ["/newsletter", "monthly", 0.6],
+  ["/faq", "monthly", 0.6],
+  ["/privacy", "yearly", 0.4],
+  ["/terms", "yearly", 0.4],
+] as const satisfies ReadonlyArray<
+  readonly [
+    path: string,
+    changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>,
+    priority: number,
+  ]
+>
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw"
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw").replace(/\/$/, "")
   const now = new Date().toISOString()
 
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/`, lastmod: now, changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/about`, lastmod: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${baseUrl}/topics`, lastmod: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/blog`, lastmod: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${baseUrl}/impact`, lastmod: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/media`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/services`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/social-proof`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/testimonials`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/contact`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/booking`, lastmod: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/donation`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/newsletter`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/faq`, lastmod: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/privacy`, lastmod: now, changeFrequency: "yearly", priority: 0.4 },
-    { url: `${baseUrl}/terms`, lastmod: now, changeFrequency: "yearly", priority: 0.4 },
-  ]
+  const staticRoutes: MetadataRoute.Sitemap = STATIC_PATHS.map(([path, changeFrequency, priority]) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: now,
+    changeFrequency,
+    priority,
+  }))
 
   const posts = await fetchBlogSlugs()
   const blogRoutes: MetadataRoute.Sitemap = posts
     .filter((item) => item.slug)
     .map((item) => ({
       url: `${baseUrl}/blog/${item.slug}`,
-      lastmod: item.updatedAt,
+      lastModified: item.updatedAt ?? now,
       changeFrequency: "weekly",
       priority: 0.7,
     }))
