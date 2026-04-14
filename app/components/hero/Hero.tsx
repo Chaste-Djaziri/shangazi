@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 export default function Hero() {
   return (
     <section className="hero">
@@ -11,7 +13,18 @@ export default function Hero() {
           <div className="hero-video-gradient" />
           <div className="hero-overlay-content">
             <div className="hero-content-left">
-              <h1 className="hero-overlay-title">Welcome to Shangazi</h1>
+              <div className="hero-title-section">
+                <p className="hero-overlay-title">Welcome to Shangazi</p>
+              </div>
+              <div className="hero-headline-section">
+                <h1 className="hero-headline">A Safe Space for Real Questions</h1>
+              </div>
+              <div className="hero-cta-section">
+                <button type="button" className="hero-talk-button" aria-label="Let's Talk">
+                  <span className="hero-talk-text">Let's Talk</span>
+                  <Image src="/vectors/chat_black.svg" alt="" width={16} height={16} className="hero-talk-icon" />
+                </button>
+              </div>
             </div>
             <div className="hero-content-right">
               <p className="hero-overlay-link">Watch Videos</p>
