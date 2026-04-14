@@ -86,9 +86,12 @@ body {
 .nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 40px;
   margin-left: auto;
   flex-wrap: wrap;
+  width: 624px;
+  height: 20px;
+  opacity: 1;
 }
 
 .desktop-nav {
