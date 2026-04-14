@@ -115,8 +115,12 @@ body {
 .nav-link {
   color: var(--text-primary);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0;
   padding: 0.5rem 0;
   position: relative;
   transition: color 0.2s ease;
@@ -224,8 +228,12 @@ body {
   background: none;
   border: none;
   color: var(--text-primary);
-  font-weight: 500;
-  font-size: 1rem;
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0;
   padding: 0.5rem 0;
   cursor: pointer;
   display: flex;
@@ -233,7 +241,6 @@ body {
   gap: 0.25rem;
   position: relative;
   transition: color 0.2s ease;
-  font-family: inherit;
 }
 
 .dropdown-toggle:hover {
@@ -627,8 +634,12 @@ body {
   padding: 1rem 1.5rem;
   color: var(--text-primary);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
 }
@@ -647,8 +658,12 @@ body {
 .sidebar-dropdown-label {
   padding: 1rem 1.5rem;
   color: var(--text-primary);
-  font-weight: 600;
-  font-size: 1rem;
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0;
   background: none;
   border: none;
   border-left: 3px solid transparent;
@@ -659,7 +674,6 @@ body {
   align-items: center;
   justify-content: space-between;
   transition: all 0.2s ease;
-  font-family: inherit;
   position: relative;
   z-index: 1;
 }
