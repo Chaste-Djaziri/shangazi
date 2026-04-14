@@ -18,9 +18,9 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <About />
       <SeoHighlights />
       <Stats />
-      <About />
       <Topics />
       <Featured />
       <Contact />
