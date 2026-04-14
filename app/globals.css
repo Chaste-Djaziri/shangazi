@@ -1273,6 +1273,10 @@ body {
 
   .hero-overlay-content {
     padding: 0 26px 30px 26px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 0.875rem;
   }
 
   .hero-content-left {
@@ -1355,7 +1359,9 @@ body {
 
   .hero-content-right {
     gap: 0.5rem;
-    margin-bottom: 2px;
+    margin-bottom: 0;
+    align-items: center;
+    align-self: flex-start;
   }
 
   .hero-play-button {
