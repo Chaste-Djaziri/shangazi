@@ -1087,6 +1087,13 @@ body {
   box-sizing: border-box;
 }
 
+.hero-profile-visuals {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .hero-profile-images {
   display: flex;
   align-items: center;

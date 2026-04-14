@@ -25,23 +25,25 @@ export default function Hero() {
                   <Image src="/vectors/chat_black.svg" alt="" width={16} height={16} className="hero-talk-icon" />
                 </button>
                 <div className="hero-profile-cluster" aria-label="Community members">
-                  <div className="hero-profile-images">
-                    <Image src="/profile/1.png" alt="Community member one" width={72} height={72} className="hero-profile-image" />
-                    <Image src="/profile/2.png" alt="Community member two" width={72} height={72} className="hero-profile-image" />
-                    <Image src="/profile/3.png" alt="Community member three" width={72} height={72} className="hero-profile-image" />
+                  <div className="hero-profile-visuals">
+                    <div className="hero-profile-images">
+                      <Image src="/profile/1.png" alt="Community member one" width={72} height={72} className="hero-profile-image" />
+                      <Image src="/profile/2.png" alt="Community member two" width={72} height={72} className="hero-profile-image" />
+                      <Image src="/profile/3.png" alt="Community member three" width={72} height={72} className="hero-profile-image" />
+                    </div>
+                    <button type="button" className="hero-profile-arrow-button" aria-label="Open community">
+                      <Image
+                        src="/vectors/top_right_arrow_black.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                        className="hero-profile-arrow-icon"
+                      />
+                    </button>
                   </div>
                   <div className="hero-profile-copy">
                     <p className="hero-profile-text">2000+ questions listened to &amp; answered</p>
                   </div>
-                  <button type="button" className="hero-profile-arrow-button" aria-label="Open community">
-                    <Image
-                      src="/vectors/top_right_arrow_black.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="hero-profile-arrow-icon"
-                    />
-                  </button>
                 </div>
               </div>
             </div>
