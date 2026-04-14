@@ -80,6 +80,7 @@ export default function Header() {
   const contentLinks = [
     { href: "/blog", label: "Blog / Articles" },
     { href: "/media", label: "Media" },
+    { href: "/topics", label: "Topics" },
   ];
 
   const impactLinks = [
