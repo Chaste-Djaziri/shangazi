@@ -1033,15 +1033,16 @@ body {
 .hero-talk-button {
   width: 136px;
   height: 44px;
+  padding: 13px 25px;
+  gap: 10px;
   opacity: 1;
   border: 0;
-  border-radius: 999px;
+  border-radius: 7px;
   background: #ffffff;
   color: #000000;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
   cursor: pointer;
 }
 
