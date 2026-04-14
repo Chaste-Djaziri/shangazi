@@ -101,6 +101,16 @@ body {
   margin-left: auto;
 }
 
+.desktop-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 211.02000427246094px;
+  height: 70px;
+  min-height: 1px;
+  opacity: 1;
+}
+
 .nav-link {
   color: var(--text-primary);
   text-decoration: none;
@@ -744,6 +754,10 @@ body {
   }
 
   .desktop-profile {
+    display: none;
+  }
+
+  .desktop-header-tools {
     display: none;
   }
 

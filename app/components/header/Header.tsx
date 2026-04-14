@@ -108,14 +108,16 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
-            <Link href="/login" prefetch={false} className="profile-icon desktop-profile" aria-label="Profile">
-              <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
-            </Link>
+            <div className="desktop-header-tools">
+              <Link href="/login" prefetch={false} className="profile-icon desktop-profile" aria-label="Profile">
+                <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
+              </Link>
 
-            <button type="button" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Ask Shangazi">
-              <span className="ask-shangazi-text">Ask Shangazi</span>
-              <Image src="/vectors/chat.svg" alt="" width={28} height={28} className="ask-shangazi-icon" />
-            </button>
+              <button type="button" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Ask Shangazi">
+                <span className="ask-shangazi-text">Ask Shangazi</span>
+                <Image src="/vectors/chat.svg" alt="" width={28} height={28} className="ask-shangazi-icon" />
+              </button>
+            </div>
 
             <button
               className="menu-toggle"
