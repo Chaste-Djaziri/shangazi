@@ -1706,8 +1706,10 @@ body {
 .about-card-group {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 1.5rem;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .about-card-column {
