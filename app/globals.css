@@ -4726,7 +4726,7 @@ details[open] .faq-question {
 
 /* Featured Content Section Styles */
 .featured {
-  padding: 0 0 4rem;
+  padding: 0 55px 4rem;
   background: #ffffff;
 }
 
@@ -4740,6 +4740,7 @@ details[open] .faq-question {
   position: relative;
   width: 100%;
   min-height: 675px;
+  border-radius: 15px;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -4936,7 +4937,7 @@ details[open] .faq-question {
 
 @media (max-width: 768px) {
   .featured {
-    padding: 0 0 3rem;
+    padding: 0 24px 3rem;
   }
 
   .featured-container {
@@ -4966,7 +4967,7 @@ details[open] .faq-question {
 
 @media (max-width: 480px) {
   .featured {
-    padding: 0 0 2.5rem;
+    padding: 0 16px 2.5rem;
   }
 
   .featured-container,
