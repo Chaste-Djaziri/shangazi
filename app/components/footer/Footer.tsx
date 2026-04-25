@@ -44,7 +44,7 @@ export default function Footer() {
           <div className="site-footer-brand">
             <Link href="/" prefetch={false} className="site-footer-logo-link">
               <Image
-                src="/logo.png"
+                src="/logo/Shangazi Logo Variations-8.png"
                 alt="Shangazi Logo"
                 width={191}
                 height={72}
