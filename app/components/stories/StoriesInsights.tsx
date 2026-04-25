@@ -14,16 +14,12 @@ const storyCards = [
   {
     category: "Mental Health",
     title: "Common Myths vs Everyday Reality",
-    description:
-      "Gentle guidance that helps unpack common assumptions and reconnect with what real support looks like.",
     image: "/images/topics_2.png",
     href: "/blog",
   },
   {
     category: "Insight",
     title: "The Truth About Sex: Myths vs. Reality",
-    description:
-      "Clear, practical reflections that separate fear and misinformation from honest everyday conversations.",
     image: "/images/topics_3.png",
     href: "/blog",
   },
@@ -79,10 +75,9 @@ export default function StoriesInsights() {
                   <div className="stories-side-card-content">
                     <p className="stories-card-category">{story.category}</p>
                     <h3 className="stories-side-card-title">{story.title}</h3>
-                    <p className="stories-side-card-description">{story.description}</p>
                     <Link href={story.href} className="stories-read-more">
                       <span>Read More</span>
-                      <Image src="/vectors/right_red_arrow.svg" alt="" width={10} height={10} className="stories-read-more-icon" />
+                      <Image src="/vectors/right_green_arrow.svg" alt="" width={10} height={11} className="stories-read-more-icon" />
                     </Link>
                   </div>
                 </article>
