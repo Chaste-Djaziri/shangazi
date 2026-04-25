@@ -4741,7 +4741,10 @@ details[open] .faq-question {
   width: 100%;
   min-height: 675px;
   overflow: hidden;
-  background: url("/backgrounds/featured.png") center center / cover no-repeat;
+  background-image: url("/backgrounds/featured.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: calc(100% + 80px) calc(100% + 80px);
   display: flex;
   align-items: flex-end;
 }
