@@ -4741,12 +4741,16 @@ details[open] .faq-question {
   width: 100%;
   min-height: 675px;
   overflow: hidden;
-  background-image: url("/backgrounds/featured.png");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: calc(100% + 80px) calc(100% + 80px);
   display: flex;
   align-items: flex-end;
+}
+
+.featured-panel::before {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  background: url("/backgrounds/featured.png") center center / cover no-repeat;
+  transform: scale(1.02);
 }
 
 .featured-overlay,
