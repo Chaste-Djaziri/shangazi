@@ -155,7 +155,15 @@ export default function Footer() {
         </div>
 
         <div className="site-footer-bottom">
-          <p className="site-footer-copyright">© Shangazi. All Right Reserved 2026.</p>
+          <div className="site-footer-bottom-meta">
+            <p className="site-footer-copyright">© Shangazi. All Right Reserved 2026.</p>
+            <p className="site-footer-credit">
+              <span>Web made by </span>
+              <a href="https://micorp.pro" target="_blank" rel="noopener noreferrer">
+                Mirror Corporation
+              </a>
+            </p>
+          </div>
           <button type="button" className="site-footer-top-button" onClick={scrollToTop}>
             <span>Back To Top</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

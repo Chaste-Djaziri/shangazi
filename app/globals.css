@@ -6640,11 +6640,30 @@ details[open] .faq-question {
   gap: 24px;
 }
 
+.site-footer-bottom-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .site-footer-copyright {
   margin: 0;
   color: rgba(234, 238, 228, 0.82);
   font-size: 17px;
   line-height: 1.35;
+}
+
+.site-footer-credit {
+  margin: 0;
+  color: rgba(234, 238, 228, 0.82);
+  font-family: "Marcellus", serif;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.site-footer-credit a {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
 }
 
 .site-footer-top-button {
@@ -6721,6 +6740,10 @@ details[open] .faq-question {
     margin-top: 40px;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .site-footer-bottom-meta {
+    text-align: center;
   }
 
   .site-footer-top-button {
