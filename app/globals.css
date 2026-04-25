@@ -5377,7 +5377,7 @@ details[open] .faq-question {
 .contact-container {
   width: min(100%, 1994px);
   margin: 0 auto;
-  padding: 18px;
+  padding: 18px 18px 0;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 675.2999877929688px);
@@ -5450,18 +5450,20 @@ details[open] .faq-question {
 
 .contact-right {
   width: 100%;
-  padding: 32px 40px 32px 0;
+  padding: 32px 40px 0 0;
   box-sizing: border-box;
+  align-self: end;
 }
 
 .contact-form {
   width: 100%;
+  height: 100%;
 }
 
 .contact-form-panel {
   width: 675.2999877929688px;
   max-width: 100%;
-  min-height: 498.010009765625px;
+  height: 498.010009765625px;
   padding: 10px 10px 0;
   border-style: solid;
   border-width: 1px 1px 0 1px;
@@ -5469,6 +5471,19 @@ details[open] .faq-question {
   background: rgba(255, 255, 255, 1);
   box-sizing: border-box;
   border-radius: 24px 24px 0 0;
+}
+
+.contact-form-inner {
+  width: 573.2999877929688px;
+  max-width: 1290px;
+  min-height: 487.010009765625px;
+  margin: 0 auto;
+  padding: 40px 0;
+  gap: 20px;
+  opacity: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-form-grid {
@@ -5620,7 +5635,7 @@ details[open] .faq-question {
   }
 
   .contact-right {
-    padding: 0 32px 32px;
+    padding: 0 32px 0;
   }
 }
 
@@ -5639,7 +5654,7 @@ details[open] .faq-question {
   }
 
   .contact-right {
-    padding: 0 0 12px;
+    padding: 0 0 0;
   }
 
   .contact-kicker,
@@ -5664,6 +5679,13 @@ details[open] .faq-question {
   .contact-form-panel {
     min-height: 0;
     padding: 18px 18px 0;
+    height: auto;
+  }
+
+  .contact-form-inner {
+    width: 100%;
+    min-height: 0;
+    padding: 16px 0 24px;
   }
 
   .contact-form-grid {
@@ -5696,7 +5718,7 @@ details[open] .faq-question {
   }
 
   .contact-right {
-    padding: 0 0 8px;
+    padding: 0;
   }
 
   .contact-title {
@@ -5706,6 +5728,10 @@ details[open] .faq-question {
 
   .contact-form-panel {
     padding: 16px 14px 0;
+  }
+
+  .contact-form-inner {
+    padding: 12px 0 20px;
   }
 
   .form-label {

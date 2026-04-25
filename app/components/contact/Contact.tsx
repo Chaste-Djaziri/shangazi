@@ -68,72 +68,74 @@ export default function Contact() {
         <div className="contact-right">
           <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
             <div className="contact-form-panel">
-              <div className="contact-form-grid">
-                <div className="form-group">
-                  <label htmlFor="name" className="form-label">
-                    Full Name <span className="form-label-required">*</span>
-                  </label>
-                  <input type="text" id="name" name="name" className="form-input" required />
-                </div>
+              <div className="contact-form-inner">
+                <div className="contact-form-grid">
+                  <div className="form-group">
+                    <label htmlFor="name" className="form-label">
+                      Full Name <span className="form-label-required">*</span>
+                    </label>
+                    <input type="text" id="name" name="name" className="form-input" required />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">
-                    Email Address <span className="form-label-required">*</span>
-                  </label>
-                  <input type="email" id="email" name="email" className="form-input" required />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="email" className="form-label">
+                      Email Address <span className="form-label-required">*</span>
+                    </label>
+                    <input type="email" id="email" name="email" className="form-input" required />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="phone" className="form-label">
-                    Phone
-                  </label>
-                  <input type="tel" id="phone" name="phone" className="form-input" />
-                </div>
+                  <div className="form-group">
+                    <label htmlFor="phone" className="form-label">
+                      Phone
+                    </label>
+                    <input type="tel" id="phone" name="phone" className="form-input" />
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="subject" className="form-label">
-                    Select Subject <span className="form-label-required">*</span>
-                  </label>
-                  <div className="form-select-wrap">
-                    <select id="subject" name="subject" className="form-input form-select" defaultValue="" required>
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      <option value="Relationships">Relationships</option>
-                      <option value="Personal Growth">Personal Growth</option>
-                      <option value="Reproductive Health">Reproductive Health</option>
-                      <option value="Family Guidance">Family Guidance</option>
-                    </select>
-                    <span className="form-select-icon" aria-hidden="true">
-                      ⌄
-                    </span>
+                  <div className="form-group">
+                    <label htmlFor="subject" className="form-label">
+                      Select Subject <span className="form-label-required">*</span>
+                    </label>
+                    <div className="form-select-wrap">
+                      <select id="subject" name="subject" className="form-input form-select" defaultValue="" required>
+                        <option value="" disabled>
+                          Select
+                        </option>
+                        <option value="Relationships">Relationships</option>
+                        <option value="Personal Growth">Personal Growth</option>
+                        <option value="Reproductive Health">Reproductive Health</option>
+                        <option value="Family Guidance">Family Guidance</option>
+                      </select>
+                      <span className="form-select-icon" aria-hidden="true">
+                        ⌄
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group form-group-message">
-                <label htmlFor="message" className="form-label">
-                  Message <span className="form-label-required">*</span>
-                </label>
-                <textarea id="message" name="message" className="form-textarea" rows={6} required />
-              </div>
+                <div className="form-group form-group-message">
+                  <label htmlFor="message" className="form-label">
+                    Message <span className="form-label-required">*</span>
+                  </label>
+                  <textarea id="message" name="message" className="form-textarea" rows={6} required />
+                </div>
 
-              <button type="submit" className="contact-submit" disabled={status === "loading"}>
-                <span>{status === "loading" ? "Sending..." : "Send Message"}</span>
-                <Image src="/vectors/right_arrow.svg" alt="" width={10} height={10} className="contact-submit-icon" />
-              </button>
+                <button type="submit" className="contact-submit" disabled={status === "loading"}>
+                  <span>{status === "loading" ? "Sending..." : "Send Message"}</span>
+                  <Image src="/vectors/right_arrow.svg" alt="" width={10} height={10} className="contact-submit-icon" />
+                </button>
 
-              <div className="contact-status">
-                {status === "success" ? (
-                  <div className="contact-success">
-                    <p>Message sent successfully. We&apos;ll get back to you soon.</p>
-                  </div>
-                ) : null}
-                {status === "error" ? (
-                  <div className="contact-error">
-                    <p>{error ?? "Something went wrong. Please try again."}</p>
-                  </div>
-                ) : null}
+                <div className="contact-status">
+                  {status === "success" ? (
+                    <div className="contact-success">
+                      <p>Message sent successfully. We&apos;ll get back to you soon.</p>
+                    </div>
+                  ) : null}
+                  {status === "error" ? (
+                    <div className="contact-error">
+                      <p>{error ?? "Something went wrong. Please try again."}</p>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </form>
