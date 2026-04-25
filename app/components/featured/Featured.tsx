@@ -1,95 +1,16 @@
 "use client"
 
+import Image from "next/image"
 import { useState, useRef, useEffect } from "react"
 
 const featuredVideos = [
   {
     id: "1RUH9zcOTZQ",
     embedUrl: "https://www.youtube.com/embed/1RUH9zcOTZQ?si=1FEFIp41DeZ4p_TT&autoplay=1",
-    title: "Community Dialogue Series",
-    description: "Engaging conversations about important social issues",
-  },
-  {
-    id: "kqx7NBVwaQM",
-    embedUrl: "https://www.youtube.com/embed/kqx7NBVwaQM?si=_gtdvAVFtiWJQ-Nj&autoplay=1",
-    title: "Educational Content",
-    description: "Empowering knowledge and understanding",
-  },
-  {
-    id: "eHfePBZmEqg",
-    embedUrl: "https://www.youtube.com/embed/eHfePBZmEqg?si=rSOwzVKEKyFc5zpa&autoplay=1",
-    title: "Featured Interview",
-    description: "In-depth discussions with thought leaders",
-  },
-  {
-    id: "dQw4w9WgXcQ",
-    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?si=example&autoplay=1",
-    title: "Social Impact Stories",
-    description: "Real stories of change and transformation",
-  },
-  {
-    id: "jNQXAC9IVRw",
-    embedUrl: "https://www.youtube.com/embed/jNQXAC9IVRw?si=example&autoplay=1",
-    title: "Youth Empowerment",
-    description: "Inspiring the next generation of leaders",
-  },
-  {
-    id: "9bZkp7q19f0",
-    embedUrl: "https://www.youtube.com/embed/9bZkp7q19f0?si=example&autoplay=1",
-    title: "Cultural Heritage",
-    description: "Celebrating Rwandan culture and traditions",
+    title: "Menya Byinshi Ku bijyanye no Kuboneza Urubyaro",
+    description: "Latest featured video from Shangazi",
   },
 ]
-
-function VideoPreview({ video, onOpenModal }: { video: (typeof featuredVideos)[0]; onOpenModal: () => void }) {
-  const [currentSrc, setCurrentSrc] = useState(`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`)
-  const [isLoading, setIsLoading] = useState(true)
-
-  const handleImageError = () => {
-    setCurrentSrc(`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`)
-  }
-
-  const handleImageLoad = () => {
-    setIsLoading(false)
-  }
-
-  return (
-    <button
-      onClick={onOpenModal}
-      className="featured-video-card"
-      aria-label={`Play ${video.title}`}
-    >
-      <div className="featured-video-thumbnail">
-        <div className="video-thumbnail">
-          {isLoading && (
-            <div className="video-thumbnail-skeleton">
-              <div className="skeleton-loader"></div>
-            </div>
-          )}
-          <img
-            src={currentSrc || "/placeholder.svg"}
-            alt={video.title}
-            className="thumbnail-image"
-            onError={handleImageError}
-            onLoad={handleImageLoad}
-            loading="lazy"
-          />
-          <div className="video-overlay">
-            <div className="video-play-button">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="featured-video-info">
-        <h3 className="featured-video-title">{video.title}</h3>
-        <p className="featured-video-description">{video.description}</p>
-      </div>
-    </button>
-  )
-}
 
 function VideoModal({
   video,
@@ -165,6 +86,7 @@ function VideoModal({
 export default function Featured() {
   const [selectedVideo, setSelectedVideo] = useState<(typeof featuredVideos)[0] | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const featuredVideo = featuredVideos[0]
 
   const openModal = (video: (typeof featuredVideos)[0]) => {
     setSelectedVideo(video)
@@ -180,22 +102,25 @@ export default function Featured() {
     <>
       <section className="featured">
         <div className="featured-container">
-          <div className="featured-content">
-            <div className="featured-header">
-              <h2 className="featured-title">
-                Featured <span className="featured-title-accent">Content</span>
-              </h2>
-              <p className="featured-subtitle">
-                Explore Emma Claudine's most impactful video series and playlists
-              </p>
-            </div>
-
-            <div className="featured-videos">
-              {featuredVideos.map((video, index) => (
-                <div key={video.id} className="featured-video-preview">
-                  <VideoPreview video={video} onOpenModal={() => openModal(video)} />
+          <div className="featured-panel">
+            <div className="featured-overlay" />
+            <div className="featured-overlay-secondary" />
+            <div className="featured-content">
+              <div className="featured-copy">
+                <p className="featured-kicker">Latest Video</p>
+                <h2 className="featured-title">Menya Byinshi Ku bijyanye no Kuboneza Urubyaro</h2>
+                <div className="featured-watch-row">
+                  <button
+                    type="button"
+                    className="hero-play-button"
+                    aria-label={`Play ${featuredVideo.title}`}
+                    onClick={() => openModal(featuredVideo)}
+                  >
+                    <Image src="/vectors/play.svg" alt="" width={16} height={16} className="hero-play-icon" />
+                  </button>
+                  <p className="hero-overlay-link featured-watch-label">Watch Now</p>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
