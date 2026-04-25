@@ -2,6 +2,7 @@ import Hero from "./components/hero/Hero";
 import Stats from "./components/stats/Stats";
 import About from "./components/about/About";
 import Topics from "./components/topics/Topics";
+import StoriesInsights from "./components/stories/StoriesInsights";
 import Featured from "./components/featured/Featured";
 import Contact from "./components/contact/Contact";
 import type { Metadata } from "next";
@@ -53,6 +54,7 @@ export default function Home() {
       <About />
       <Stats />
       <Topics limit={3} showAllButton />
+      <StoriesInsights />
       <Featured />
       <Contact />
     </main>
