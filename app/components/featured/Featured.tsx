@@ -103,6 +103,13 @@ export default function Featured() {
       <section className="featured">
         <div className="featured-container">
           <div className="featured-panel">
+            <Image
+              src="/backgrounds/featured.png"
+              alt="Featured video cover"
+              fill
+              sizes="100vw"
+              className="featured-background-image"
+            />
             <div className="featured-overlay" />
             <div className="featured-overlay-secondary" />
             <div className="featured-content">

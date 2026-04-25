@@ -45,6 +45,7 @@ export default function About() {
                 alt="Shangazi media moment"
                 width={586}
                 height={500}
+                sizes="(max-width: 768px) 44vw, 293px"
                 className="about-card-image"
               />
             </div>
@@ -56,6 +57,7 @@ export default function About() {
                 alt="Shangazi Emma Claudine"
                 width={586}
                 height={500}
+                sizes="(max-width: 768px) 44vw, 293px"
                 className="about-card-image"
               />
             </div>
@@ -65,6 +67,7 @@ export default function About() {
                 alt="Shangazi portrait"
                 width={586}
                 height={500}
+                sizes="(max-width: 768px) 44vw, 293px"
                 className="about-card-image"
               />
             </div>

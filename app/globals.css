@@ -4490,18 +4490,33 @@ details[open] .faq-question {
 }
 
 .stories-featured-card {
+  position: relative;
   width: 100%;
   min-height: 432px;
   border-radius: 20px;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
 }
 
+.stories-featured-card-media {
+  position: absolute;
+  inset: 0;
+}
+
+.stories-featured-image {
+  object-fit: cover;
+}
+
+.stories-featured-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180.18deg, rgba(0, 0, 0, 0) 45.53%, #000000 98.48%);
+}
+
 .stories-featured-card-content {
+  position: relative;
+  z-index: 1;
   width: 100%;
   padding: 0 32px 28px;
   display: flex;
@@ -4822,12 +4837,8 @@ details[open] .faq-question {
   align-items: flex-end;
 }
 
-.featured-panel::before {
-  content: "";
-  position: absolute;
-  inset: -24px;
-  background: url("/backgrounds/featured.png") center center / cover no-repeat;
-  transform: scale(1.02);
+.featured-background-image {
+  object-fit: cover;
 }
 
 .featured-overlay,

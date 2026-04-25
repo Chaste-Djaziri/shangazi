@@ -53,8 +53,17 @@ export default function StoriesInsights() {
           <div className="stories-insights-grid">
             <article
               className="stories-featured-card"
-              style={{ backgroundImage: `linear-gradient(180.18deg, rgba(0, 0, 0, 0) 45.53%, #000000 98.48%), url(${featuredStory.image})` }}
             >
+              <div className="stories-featured-card-media">
+                <Image
+                  src={featuredStory.image}
+                  alt={featuredStory.title}
+                  fill
+                  sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 100vw, 630px"
+                  className="stories-featured-image"
+                />
+              </div>
+              <div className="stories-featured-card-overlay" />
               <div className="stories-featured-card-content">
                 <p className="stories-card-category stories-card-category-light">{featuredStory.category}</p>
                 <h3 className="stories-featured-card-title">{featuredStory.title}</h3>
@@ -70,7 +79,13 @@ export default function StoriesInsights() {
               {sideStories.map((story) => (
                 <article key={story.title} className="stories-side-card">
                   <div className="stories-side-card-image">
-                    <Image src={story.image} alt={story.title} fill sizes="(max-width: 768px) 100vw, 330px" className="stories-side-image" />
+                    <Image
+                      src={story.image}
+                      alt={story.title}
+                      fill
+                      sizes="(max-width: 768px) calc(100vw - 48px), 330px"
+                      className="stories-side-image"
+                    />
                   </div>
                   <div className="stories-side-card-content">
                     <p className="stories-card-category">{story.category}</p>

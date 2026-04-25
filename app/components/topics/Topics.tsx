@@ -35,7 +35,14 @@ export default function Topics({ limit, showAllButton = false }: TopicsProps) {
                   </button>
                 </div>
                 <div className="topic-image-wrap">
-                  <Image src={topic.image} alt={topic.title} width={381} height={254} className="topic-image" />
+                  <Image
+                    src={topic.image}
+                    alt={topic.title}
+                    width={381}
+                    height={254}
+                    sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 968px) calc(50vw - 48px), 381px"
+                    className="topic-image"
+                  />
                 </div>
               </div>
             ))}

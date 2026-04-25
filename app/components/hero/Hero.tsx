@@ -20,16 +20,37 @@ export default function Hero() {
                 <h1 className="hero-headline">A Safe Space for Real Questions</h1>
               </div>
               <div className="hero-cta-section">
-                <button type="button" className="hero-talk-button" aria-label="Let's Talk">
-                  <span className="hero-talk-text">Let's Talk</span>
+                <button type="button" className="hero-talk-button" aria-label="Let&apos;s Talk">
+                  <span className="hero-talk-text">Let&apos;s Talk</span>
                   <Image src="/vectors/chat_black.svg" alt="" width={16} height={16} className="hero-talk-icon" />
                 </button>
                 <div className="hero-profile-cluster" aria-label="Community members">
                   <div className="hero-profile-visuals">
                     <div className="hero-profile-images">
-                      <Image src="/profile/1.png" alt="Community member one" width={72} height={72} className="hero-profile-image" />
-                      <Image src="/profile/2.png" alt="Community member two" width={72} height={72} className="hero-profile-image" />
-                      <Image src="/profile/3.png" alt="Community member three" width={72} height={72} className="hero-profile-image" />
+                      <Image
+                        src="/profile/1.png"
+                        alt="Community member one"
+                        width={72}
+                        height={72}
+                        sizes="(max-width: 768px) 32px, 72px"
+                        className="hero-profile-image"
+                      />
+                      <Image
+                        src="/profile/2.png"
+                        alt="Community member two"
+                        width={72}
+                        height={72}
+                        sizes="(max-width: 768px) 32px, 72px"
+                        className="hero-profile-image"
+                      />
+                      <Image
+                        src="/profile/3.png"
+                        alt="Community member three"
+                        width={72}
+                        height={72}
+                        sizes="(max-width: 768px) 32px, 72px"
+                        className="hero-profile-image"
+                      />
                     </div>
                     <button type="button" className="hero-profile-arrow-button" aria-label="Open community">
                       <Image

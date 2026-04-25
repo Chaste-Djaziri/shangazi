@@ -48,6 +48,7 @@ export default function Testimonials() {
             alt="Community members walking together"
             width={1440}
             height={849}
+            sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 48vw, 560px"
             className="home-testimonials-image"
           />
         </div>
@@ -71,6 +72,7 @@ export default function Testimonials() {
                   alt={activeTestimonial.name}
                   width={60}
                   height={60}
+                  sizes="60px"
                   className="home-testimonials-avatar"
                 />
                 <div className="home-testimonials-person-copy">

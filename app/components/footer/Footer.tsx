@@ -48,6 +48,7 @@ export default function Footer() {
                 alt="Shangazi Logo"
                 width={191}
                 height={72}
+                sizes="191px"
                 className="site-footer-logo"
               />
             </Link>

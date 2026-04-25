@@ -134,6 +134,7 @@ export default function Header() {
               width={156}
               height={52}
               priority
+              sizes="156px"
               className="logo-image logo-default"
               style={{ width: "auto", height: "auto" }}
             />
@@ -143,6 +144,7 @@ export default function Header() {
               width={220}
               height={80}
               priority
+              sizes="220px"
               className="logo-image logo-tv"
               style={{ width: "auto", height: "auto" }}
             />
@@ -212,6 +214,7 @@ export default function Header() {
               width={130}
               height={46}
               priority
+              sizes="130px"
               className="sidebar-logo"
               style={{ width: "auto", height: "auto" }}
             />
