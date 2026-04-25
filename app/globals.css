@@ -4447,6 +4447,8 @@ details[open] .faq-question {
 
 .stories-insights-actions {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .stories-insights-button {
@@ -4664,6 +4666,21 @@ details[open] .faq-question {
   .stories-insights-grid {
     grid-template-columns: 1fr;
   }
+
+  .stories-side-list {
+    gap: 20px;
+  }
+
+  .stories-side-card {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  }
+
+  .stories-side-card-title,
+  .stories-card-category {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -4673,6 +4690,24 @@ details[open] .faq-question {
 
   .stories-insights-content {
     padding: 32px 20px 24px;
+  }
+
+  .stories-insights-header {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stories-insights-header-copy {
+    width: 100%;
+  }
+
+  .stories-insights-kicker,
+  .stories-insights-title,
+  .stories-insights-description {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
   }
 
   .stories-insights-title {
@@ -4686,11 +4721,29 @@ details[open] .faq-question {
   }
 
   .stories-featured-card {
-    min-height: 380px;
+    min-height: 340px;
   }
 
   .stories-featured-card-content {
     padding: 0 22px 22px;
+  }
+
+  .stories-featured-card-title,
+  .stories-featured-card-description,
+  .stories-card-category,
+  .stories-side-card-title {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+  }
+
+  .stories-insights-actions {
+    width: 100%;
+  }
+
+  .stories-insights-button {
+    min-width: 134px;
   }
 
   .stories-side-card {
@@ -4698,14 +4751,29 @@ details[open] .faq-question {
   }
 
   .stories-side-card-image {
-    min-height: 220px;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .stories-side-card-content {
+    padding: 22px 20px;
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
+  .stories-insights-content {
+    padding: 28px 16px 20px;
+  }
+
   .stories-insights-title {
     font-size: 28px;
     line-height: 32px;
+  }
+
+  .stories-insights-description {
+    font-size: 14px;
+    line-height: 18px;
   }
 
   .stories-featured-card-title,
@@ -4714,13 +4782,21 @@ details[open] .faq-question {
     line-height: 26px;
   }
 
+  .stories-featured-card {
+    min-height: 300px;
+  }
+
+  .stories-featured-card-content {
+    padding: 0 16px 18px;
+  }
+
   .stories-insights-button {
-    width: 134px;
+    width: 100%;
     justify-content: center;
   }
 
   .stories-side-card-content {
-    padding: 22px 18px;
+    padding: 18px 16px;
   }
 }
 
