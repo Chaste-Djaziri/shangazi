@@ -4373,19 +4373,16 @@ details[open] .faq-question {
 }
 
 .stories-insights {
-  padding: 0 1rem 4rem;
+  padding: 0 0 4rem;
   background: #ffffff;
 }
 
 .stories-insights-container {
   width: 100%;
-  max-width: 1400px;
   margin: 0 auto;
-  border-radius: 15px;
   background:
     url("/backgrounds/articles_section.png") center right / cover no-repeat,
     #ffffff;
-  overflow: hidden;
 }
 
 .stories-insights-content {
@@ -4678,7 +4675,7 @@ details[open] .faq-question {
 
 @media (max-width: 768px) {
   .stories-insights {
-    padding: 0 1rem 3rem;
+    padding: 0 0 3rem;
   }
 
   .stories-insights-content {
