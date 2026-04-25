@@ -4,6 +4,7 @@ import About from "./components/about/About";
 import Topics from "./components/topics/Topics";
 import StoriesInsights from "./components/stories/StoriesInsights";
 import Featured from "./components/featured/Featured";
+import Testimonials from "./components/testimonials/Testimonials";
 import Contact from "./components/contact/Contact";
 import type { Metadata } from "next";
 
@@ -56,6 +57,7 @@ export default function Home() {
       <Topics limit={3} showAllButton />
       <StoriesInsights />
       <Featured />
+      <Testimonials />
       <Contact />
     </main>
   );
