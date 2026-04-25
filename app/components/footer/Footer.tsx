@@ -1,6 +1,7 @@
 "use client"
 
-import { useRef } from "react"
+import type React from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -32,9 +33,39 @@ const resourceLinks = [
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null)
+  const newsletterFormRef = useRef<HTMLFormElement>(null)
+  const [newsletterEmail, setNewsletterEmail] = useState("")
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [newsletterError, setNewsletterError] = useState<string | null>(null)
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const handleNewsletterSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setNewsletterStatus("loading")
+    setNewsletterError(null)
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error ?? "Unable to subscribe right now.")
+      }
+
+      setNewsletterStatus("success")
+      setNewsletterEmail("")
+      newsletterFormRef.current?.reset()
+    } catch (error) {
+      setNewsletterError(error instanceof Error ? error.message : "Unable to subscribe right now.")
+      setNewsletterStatus("error")
+    }
   }
 
   return (
@@ -101,13 +132,29 @@ export default function Footer() {
                 <p>Subscribe our newsletter to get update information.</p>
               </div>
 
-              <form className="site-footer-newsletter-form">
-                <input type="email" aria-label="Email address" />
-                <button type="submit" className="site-footer-newsletter-button">
-                  <span>Subscribe</span>
-                  <Image src="/vectors/subscribe.svg" alt="" width={18} height={18} className="site-footer-newsletter-icon" />
-                </button>
-              </form>
+              <div className="site-footer-newsletter-signup">
+                <form className="site-footer-newsletter-form" ref={newsletterFormRef} onSubmit={handleNewsletterSubmit}>
+                  <input
+                    type="email"
+                    name="email"
+                    aria-label="Email address"
+                    placeholder="Enter your email"
+                    required
+                    value={newsletterEmail}
+                    onChange={(event) => setNewsletterEmail(event.target.value)}
+                  />
+                  <button type="submit" className="site-footer-newsletter-button" disabled={newsletterStatus === "loading"}>
+                    <span>{newsletterStatus === "loading" ? "Subscribing..." : "Subscribe"}</span>
+                    <Image src="/vectors/subscribe.svg" alt="" width={18} height={18} className="site-footer-newsletter-icon" />
+                  </button>
+                </form>
+                <div className="site-footer-newsletter-status">
+                  {newsletterStatus === "success" ? <p className="site-footer-newsletter-success">Thanks for subscribing!</p> : null}
+                  {newsletterStatus === "error" ? (
+                    <p className="site-footer-newsletter-error">{newsletterError ?? "Unable to subscribe right now."}</p>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div className="site-footer-divider" />
