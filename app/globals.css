@@ -4740,7 +4740,6 @@ details[open] .faq-question {
   position: relative;
   width: 100%;
   min-height: 675px;
-  border-radius: 15px;
   overflow: hidden;
   background: url("/backgrounds/featured.png") center center / cover no-repeat;
   display: flex;
