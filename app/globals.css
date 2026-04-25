@@ -5464,13 +5464,13 @@ details[open] .faq-question {
   width: 675.2999877929688px;
   max-width: 100%;
   height: 498.010009765625px;
-  padding: 10px 10px 0;
+  padding: 10px;
   border-style: solid;
-  border-width: 1px 1px 0 1px;
+  border-width: 1px;
   border-color: rgba(0, 13, 37, 0.16);
   background: rgba(255, 255, 255, 1);
   box-sizing: border-box;
-  border-radius: 24px 24px 0 0;
+  border-radius: 24px;
 }
 
 .contact-form-inner {
@@ -5678,7 +5678,7 @@ details[open] .faq-question {
 
   .contact-form-panel {
     min-height: 0;
-    padding: 18px 18px 0;
+    padding: 18px;
     height: auto;
   }
 
@@ -5727,7 +5727,7 @@ details[open] .faq-question {
   }
 
   .contact-form-panel {
-    padding: 16px 14px 0;
+    padding: 16px 14px;
   }
 
   .contact-form-inner {
