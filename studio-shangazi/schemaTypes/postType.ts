@@ -55,6 +55,7 @@ export const postType = defineType({
       type: "array",
       of: [
         defineField({
+          name: "link",
           type: "object",
           fields: [
             { name: "label", type: "string" },
