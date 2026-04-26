@@ -60,10 +60,11 @@ export default function LoginForm() {
         requestSignUp: false, // Ensure both are set to be safe
       });
     } catch (err: any) {
+      console.error("Social login error:", err);
       if (err.message?.toLowerCase().includes("user not found") || err.code === "USER_NOT_FOUND") {
         setError("No account found with this Google email. Please sign up first.");
       } else {
-        setError(err.message || `Failed to sign in with ${provider}`);
+        setError(err.message || `Failed to sign in with ${provider}. Check console for details.`);
       }
     }
   };
