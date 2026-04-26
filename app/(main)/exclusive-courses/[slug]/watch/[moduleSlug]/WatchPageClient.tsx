@@ -162,26 +162,18 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     // 2. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.
     const initPlayer = () => {
-      if (iframeRef.current && (window as any).YT && (window as any).YT.Player) {
+      if (iframeRef.current && (window as any).YT?.Player) {
         try {
           playerRef.current = new (window as any).YT.Player(iframeRef.current, {
             events: {
               'onStateChange': (event: any) => {
-                // YT.PlayerState.ENDED is 0
-                if (event.data === 0) {
-                  handleVideoEnd();
-                }
+                if (event.data === 0) handleVideoEnd();
               },
-              'onReady': () => {
-                setIsVideoLoading(false);
-              },
-              'onError': () => {
-                setIsVideoLoading(false);
-              }
+              'onReady': () => setIsVideoLoading(false),
+              'onError': () => setIsVideoLoading(false)
             }
           });
         } catch (e) {
-          console.error("YT Player init error:", e);
           setIsVideoLoading(false);
         }
       }
@@ -250,7 +242,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             </button>
           </div>
 
-          <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100 relative">
+          <div key={`${currentModule.slug}-player`} className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100 relative">
             {isVideoLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
                 <div className="w-12 h-12 border-4 border-[#1d5c19]/30 border-t-[#1d5c19] rounded-full animate-spin" />
