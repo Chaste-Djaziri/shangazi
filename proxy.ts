@@ -5,7 +5,7 @@ const authMiddleware = neonAuthMiddleware({
   loginUrl: "/login",
 });
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   
   // 1. Handle OAuth verifiers (callback logic)
