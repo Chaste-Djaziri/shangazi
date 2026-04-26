@@ -52,6 +52,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const [completedModules, setCompletedModules] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<any>(null);
 
   // Fetch progress on mount
   useEffect(() => {
@@ -102,20 +103,70 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     }
   }, [course.slug, currentModule.slug, course.modules, markAsComplete, router]);
 
-  // Listen for YouTube message events
+  // Official YouTube IFrame API implementation
+  useEffect(() => {
+    const videoUrl = currentModule.videoUrl;
+    if (!videoUrl || !(videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be"))) return;
+
+    // 1. Load the IFrame Player API code asynchronously.
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    // 2. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    const initPlayer = () => {
+      if (iframeRef.current && (window as any).YT && (window as any).YT.Player) {
+        playerRef.current = new (window as any).YT.Player(iframeRef.current, {
+          events: {
+            'onStateChange': (event: any) => {
+              // YT.PlayerState.ENDED is 0
+              if (event.data === 0) {
+                handleVideoEnd();
+              }
+            }
+          }
+        });
+      }
+    };
+
+    if ((window as any).YT && (window as any).YT.Player) {
+      initPlayer();
+    } else {
+      (window as any).onYouTubeIframeAPIReady = initPlayer;
+    }
+
+    return () => {
+      if (playerRef.current && playerRef.current.destroy) {
+        playerRef.current.destroy();
+      }
+    };
+  }, [currentModule.videoUrl, handleVideoEnd]);
+
+  // Fallback / Support for other platforms via message events
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Check if the message is from YouTube iframe
-      if (event.origin !== "https://www.youtube.com") return;
+      // YouTube fallback
+      if (event.origin === "https://www.youtube.com") {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.event === "infoDelivery" && data.info?.playerState === 0) {
+            handleVideoEnd();
+          }
+        } catch (e) {}
+      }
       
-      try {
-        const data = JSON.parse(event.data);
-        // YouTube Player State 0 is "ENDED"
-        if (data.event === "infoDelivery" && data.info?.playerState === 0) {
-          handleVideoEnd();
-        }
-      } catch (e) {
-        // Not a JSON message or not from YouTube
+      // Vimeo support
+      if (event.origin === "https://player.vimeo.com") {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.event === "finish") {
+            handleVideoEnd();
+          }
+        } catch (e) {}
       }
     };
 
