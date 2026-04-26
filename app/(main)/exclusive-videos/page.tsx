@@ -30,7 +30,7 @@ export default async function PortalVideosPage() {
   const videos = await client.fetch(PORTAL_VIDEOS_QUERY);
 
   return (
-    <div className="max-w-[1200px] mx-auto pb-20">
+    <div className="max-w-full mx-auto pb-20">
       <header className="mb-12">
         <h1 className="text-3xl font-serif text-gray-900 mb-2">Member Videos</h1>
         <p className="text-gray-500 font-marcellus">

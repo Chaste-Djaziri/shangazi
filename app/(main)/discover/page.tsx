@@ -40,7 +40,7 @@ export default async function DiscoverPage() {
   ]);
 
   return (
-    <div className="max-w-[1400px] mx-auto pb-20">
+    <div className="max-w-full mx-auto pb-20">
       {/* Welcome Header */}
       <header className="mb-12">
         <h1 className="text-3xl font-serif text-gray-900 mb-2">

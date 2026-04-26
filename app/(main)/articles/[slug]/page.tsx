@@ -176,7 +176,7 @@ export default async function PortalBlogDetailPage({ params }: { params: Promise
   const embed = buildEmbed(blog.videoUrl)
 
   return (
-    <main className="max-w-5xl mx-auto pb-20">
+    <main className="max-w-full mx-auto pb-20">
       {/* Article Header */}
       <div className="mb-8">
         <Link href="/articles" className="text-primary font-bold text-xs uppercase tracking-widest hover:underline flex items-center gap-2 mb-6">

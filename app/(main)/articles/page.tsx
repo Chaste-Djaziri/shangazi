@@ -80,7 +80,7 @@ export default async function PortalBlogPage() {
   const blogs = await client.fetch<BlogPost[]>(PORTAL_POSTS_QUERY, {}, options)
 
   return (
-    <div className="max-w-[1200px] mx-auto pb-20">
+    <div className="max-w-full mx-auto pb-20">
       <header className="mb-12">
         <h1 className="text-3xl font-serif text-gray-900 mb-2">Member Articles</h1>
         <p className="text-gray-500 font-marcellus">

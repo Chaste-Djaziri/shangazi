@@ -54,7 +54,7 @@ export default async function PortalVideoDetailPage({ params }: { params: Promis
   const embedUrl = buildEmbedUrl(video.videoUrl);
 
   return (
-    <div className="max-w-[1200px] mx-auto pb-20">
+    <div className="max-w-full mx-auto pb-20">
       <Link href="/exclusive-videos" className="text-primary font-bold text-[10px] uppercase tracking-[0.2em] hover:opacity-70 flex items-center gap-2 mb-8 transition-opacity">
         <ChevronLeft size={14} /> Back to Member Videos
       </Link>
