@@ -21,6 +21,15 @@ export default function LoginPage() {
           className="object-cover"
         />
         <div className="auth-image-overlay" />
+        <div className="auth-image-content">
+          <h2 className="auth-image-title">
+            Ask Freely, <br />
+            You&apos;re Safe Here
+          </h2>
+          <p className="auth-image-text">
+            Join our community for honest conversations, practical guidance, and trusted support on life and relationships.
+          </p>
+        </div>
       </section>
 
       {/* Right side: Form */}
