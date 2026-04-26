@@ -11,8 +11,11 @@ import {
   User, 
   Settings, 
   LogOut,
-  Menu,
-  X
+  X,
+  Compass,
+  MessageSquare,
+  Bell,
+  Shield
 } from "lucide-react";
 import { useEffect } from "react";
 import { useSidebar } from "../../contexts/SidebarContext";
@@ -27,15 +30,29 @@ export default function MainSidebar() {
     setIsMobileOpen(false);
   }, [pathname, setIsMobileOpen]);
 
-  const navLinks = [
-    { href: "/discover", label: "Discover", icon: LayoutDashboard },
-    { href: "/blog", label: "Articles", icon: BookOpen },
-    { href: "/booking", label: "My Guidance", icon: Calendar },
-  ];
-
-  const bottomLinks = [
-    { href: "/profile", label: "Profile", icon: User },
-    { href: "/settings", label: "Settings", icon: Settings },
+  const groups = [
+    {
+      title: "Navigation",
+      links: [
+        { href: "/discover", label: "Discovery", icon: Compass },
+        { href: "/blog", label: "Articles", icon: BookOpen },
+        { href: "/booking", label: "My Guidance", icon: Calendar },
+      ]
+    },
+    {
+      title: "Community",
+      links: [
+        { href: "/messages", label: "Messages", icon: MessageSquare },
+        { href: "/notifications", label: "Updates", icon: Bell },
+      ]
+    },
+    {
+      title: "Account",
+      links: [
+        { href: "/profile", label: "My Profile", icon: User },
+        { href: "/settings", label: "Settings", icon: Settings },
+      ]
+    }
   ];
 
   const handleLogout = async () => {
@@ -48,20 +65,20 @@ export default function MainSidebar() {
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] lg:hidden transition-all duration-300"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       <aside 
         className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-100 transition-all duration-300 z-[70] flex flex-col
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${isMobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
           ${isCollapsed ? "lg:w-20" : "lg:w-64"}
           w-[280px]
         `}
       >
         {/* Logo Section */}
-        <div className="flex items-center justify-center h-20 px-4">
+        <div className="flex items-center justify-center h-20 px-4 border-b border-gray-50">
           <Link href="/discover" className="relative transition-all duration-300">
             {isCollapsed ? (
               <Image
@@ -91,76 +108,69 @@ export default function MainSidebar() {
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all group ${
-                  isActive 
-                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
-                <Icon size={20} className="shrink-0" />
-                <span className={`font-marcellus font-medium transition-opacity duration-200 
-                  ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
-                  {link.label}
-                </span>
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
-                    {link.label}
-                  </div>
-                )}
-              </Link>
-            );
-          })}
+        {/* Navigation Groups */}
+        <nav className="flex-1 px-3 py-6 space-y-8 overflow-y-auto custom-scrollbar">
+          {groups.map((group, idx) => (
+            <div key={idx} className="space-y-1">
+              {!isCollapsed && (
+                <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-3">
+                  {group.title}
+                </p>
+              )}
+              <div className="space-y-1">
+                {group.links.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group relative ${
+                        isActive 
+                          ? "bg-primary/5 text-primary" 
+                          : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      {/* Active Indicator Line */}
+                      {isActive && (
+                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-primary rounded-r-full" />
+                      )}
+                      
+                      <Icon size={20} className={`shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-primary" : "text-gray-400 group-hover:text-gray-600"}`} />
+                      
+                      <span className={`font-marcellus text-[15px] font-medium transition-opacity duration-200 
+                        ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
+                        {link.label}
+                      </span>
+
+                      {/* Tooltip for collapsed state */}
+                      {isCollapsed && (
+                        <div className="absolute left-full ml-4 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 hidden lg:block whitespace-nowrap z-[100] shadow-xl translate-x-[-10px] group-hover:translate-x-0">
+                          {link.label}
+                          <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 border-8 border-transparent border-right-gray-900" />
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* Bottom Section */}
-        <div className="p-4 space-y-2 border-t border-gray-50">
-          {bottomLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all group ${
-                  isActive 
-                    ? "bg-gray-100 text-gray-900" 
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
-                <Icon size={20} className="shrink-0" />
-                <span className={`font-marcellus font-medium transition-opacity duration-200 
-                  ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
-                  {link.label}
-                </span>
-                {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
-                    {link.label}
-                  </div>
-                )}
-              </Link>
-            );
-          })}
-          
+        <div className="p-3 space-y-1 border-t border-gray-100 bg-gray-50/50">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all group relative"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all group relative"
           >
-            <LogOut size={20} className="shrink-0" />
-            <span className={`font-marcellus font-medium transition-opacity duration-200 
+            <LogOut size={20} className="shrink-0 text-gray-400 group-hover:text-red-500" />
+            <span className={`font-marcellus text-[15px] font-medium transition-opacity duration-200 
               ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
               Logout
             </span>
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
+              <div className="absolute left-full ml-4 px-3 py-2 bg-red-600 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 hidden lg:block whitespace-nowrap z-[100] shadow-xl translate-x-[-10px] group-hover:translate-x-0">
                 Logout
               </div>
             )}
@@ -168,8 +178,8 @@ export default function MainSidebar() {
 
           {/* User Info */}
           {session?.user && (
-            <div className={`mt-4 p-3 bg-gray-50 rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? "lg:p-1 lg:justify-center" : "p-3"}`}>
-              <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white shadow-sm">
+            <div className={`mt-2 p-2 rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? "lg:p-1 lg:justify-center" : "bg-white shadow-sm border border-gray-100"}`}>
+              <div className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-gray-50 shadow-sm">
                 {session.user.image ? (
                   <Image
                     src={session.user.image}
@@ -178,16 +188,16 @@ export default function MainSidebar() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
                     {(session.user.name?.[0] || session.user.email?.[0] || "?").toUpperCase()}
                   </div>
                 )}
               </div>
               <div className={`transition-opacity duration-200 ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
-                <p className="text-sm font-bold text-gray-900 truncate max-w-[120px]">
+                <p className="text-[13px] font-bold text-gray-900 truncate max-w-[130px]">
                   {session.user.name || "Member"}
                 </p>
-                <p className="text-xs text-gray-500 truncate max-w-[120px]">
+                <p className="text-[11px] text-gray-400 truncate max-w-[130px]">
                   {session.user.email}
                 </p>
               </div>
