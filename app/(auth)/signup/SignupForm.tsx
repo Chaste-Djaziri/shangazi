@@ -34,6 +34,7 @@ export default function SignupForm() {
       await authClient.signIn.social({
         provider,
         callbackURL: "/discover",
+        // Note: For signup we WANT it to create the account if it doesn't exist
       });
     } catch (err: any) {
       setError(err.message || `Failed to sign up with ${provider}`);

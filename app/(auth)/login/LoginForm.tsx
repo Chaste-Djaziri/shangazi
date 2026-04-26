@@ -32,9 +32,14 @@ export default function LoginForm() {
       await authClient.signIn.social({
         provider,
         callbackURL: "/discover",
+        dontSignUp: true, // Prevent automatic account creation if it doesn't exist
       });
     } catch (err: any) {
-      setError(err.message || `Failed to sign in with ${provider}`);
+      if (err.message?.toLowerCase().includes("user not found") || err.code === "USER_NOT_FOUND") {
+        setError("No account found with this Google email. Please sign up first.");
+      } else {
+        setError(err.message || `Failed to sign in with ${provider}`);
+      }
     }
   };
 
