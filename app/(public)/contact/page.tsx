@@ -26,7 +26,10 @@ export default function ContactPage() {
           <p className="contact-hero-subtitle">Reach out for questions, collaborations, or guidance.</p>
         </div>
       </section>
-      <Contact />
+      
+      <div className="py-20">
+        <Contact />
+      </div>
     </main>
   )
 }
