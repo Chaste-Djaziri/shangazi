@@ -7,6 +7,10 @@ const remotePatterns: RemotePattern[] = [
     hostname: "cdn.sanity.io",
   },
   {
+    protocol: "https",
+    hostname: "lh3.googleusercontent.com",
+  },
+  {
     protocol: "http",
     hostname: "localhost",
   },
