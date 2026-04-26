@@ -5,6 +5,7 @@ export const COURSES_QUERY = `*[_type == "course"] | order(publishedAt desc) {
   description,
   instructor,
   "thumbnail": thumbnail.asset->url,
+  "firstVideoUrl": modules[0]->videoUrl,
   "lessonCount": count(modules),
   publishedAt
 }`;
