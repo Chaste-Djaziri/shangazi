@@ -61,20 +61,31 @@ export default function MainSidebar() {
         `}
       >
         {/* Logo Section */}
-        <div className="p-6 flex items-center justify-between h-20">
-          <Link href="/discover" className={`block transition-opacity duration-200 ${isCollapsed ? "lg:opacity-0 lg:invisible" : "opacity-100 visible"}`}>
-            <Image
-              src="/logo/Shangazi Logo Variations-1.png"
-              alt="Shangazi Logo"
-              width={120}
-              height={40}
-              priority
-              className="w-auto h-8"
-            />
+        <div className="flex items-center justify-center h-20 px-4">
+          <Link href="/discover" className="relative transition-all duration-300">
+            {isCollapsed ? (
+              <Image
+                src="/logo/Shangazi Logo Variations-2.png"
+                alt="Shangazi Logo"
+                width={36}
+                height={36}
+                priority
+                className="w-9 h-9 object-contain"
+              />
+            ) : (
+              <Image
+                src="/logo/Shangazi Logo Variations-1.png"
+                alt="Shangazi Logo"
+                width={140}
+                height={48}
+                priority
+                className="w-auto h-9 object-contain"
+              />
+            )}
           </Link>
           <button 
             onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400"
+            className="lg:hidden absolute right-4 p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400"
           >
             <X size={20} />
           </button>
