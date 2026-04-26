@@ -167,10 +167,9 @@ export default function Header() {
                 <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
               </button>
 
-              <button type="button" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Ask Shangazi">
-                <span className="ask-shangazi-text">Ask Shangazi</span>
-                <Image src="/vectors/chat.svg" alt="" width={28} height={28} className="ask-shangazi-icon" />
-              </button>
+              <Link href="/login" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Login">
+                <span className="ask-shangazi-text">Login</span>
+              </Link>
             </div>
 
             <button
