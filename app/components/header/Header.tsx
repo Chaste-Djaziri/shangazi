@@ -82,6 +82,8 @@ export default function Header() {
 
   const contentLinks = [
     { href: "/blog", label: "Blog / Articles" },
+    { href: "/courses", label: "Courses" },
+    { href: "/videos", label: "Videos" },
     { href: "/media", label: "Media" },
     { href: "/topics", label: "Topics" },
   ];
@@ -170,15 +172,13 @@ export default function Header() {
                 <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
               </button>
 
-              {isPending ? (
-                <div className="ask-shangazi-button desktop-ask-shangazi !bg-transparent !p-0">
-                  <SkeletonBlock className="w-full h-full !rounded-[7px]" />
-                </div>
-              ) : (
-                <Link href={session ? "/discover" : "/login"} className="ask-shangazi-button desktop-ask-shangazi" aria-label={session ? "Portal" : "Login"}>
-                  <span className="ask-shangazi-text">{session ? "Portal" : "Login"}</span>
-                </Link>
-              )}
+              <Link 
+                href={session ? "/discover" : "/login"} 
+                className="ask-shangazi-button desktop-ask-shangazi" 
+                aria-label={session ? "Portal" : "Login"}
+              >
+                <span className="ask-shangazi-text">{session ? "Portal" : "Login"}</span>
+              </Link>
             </div>
 
             <button
@@ -295,17 +295,11 @@ export default function Header() {
               </span>
             </button>
             <div className={`sidebar-dropdown-links ${openDropdown === "Content" ? "open" : ""}`}>
-              {contentLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  prefetch={false}
-                  className="sidebar-dropdown-link"
-                  onClick={closeSidebar}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              <Link href="/blog" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Blog / Articles</Link>
+              <Link href="/courses" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Courses</Link>
+              <Link href="/videos" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Videos</Link>
+              <Link href="/media" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Media</Link>
+              <Link href="/topics" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Topics</Link>
             </div>
           </div>
           <div className="sidebar-dropdown">

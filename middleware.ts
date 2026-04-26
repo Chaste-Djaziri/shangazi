@@ -26,12 +26,21 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. For everything else (Public or Protected)
-  // Let the official middleware handle it. 
-  // Public routes (/, /about, etc.) are internally handled by neonAuthMiddleware 
-  // if they aren't explicitly protected by its configuration, but since we 
-  // want to protect EVERYTHING else, we call it here.
-  return authMiddleware(request);
+  // 4. Define Protected Routes
+  // These are the routes that require an active session
+  const protectedRoutes = ["/discover", "/articles"];
+  const isProtectedRoute = protectedRoutes.some(route => 
+    pathname === route || pathname.startsWith(route + "/")
+  );
+
+  // 5. For Protected Routes: Use authMiddleware to enforce login
+  if (isProtectedRoute) {
+    return authMiddleware(request);
+  }
+
+  // 6. For everything else (Public Pages, API routes, etc.): 
+  // Allow access without redirection.
+  return NextResponse.next();
 }
 
 export const config = {
