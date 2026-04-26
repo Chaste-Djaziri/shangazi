@@ -90,7 +90,7 @@ export default async function TestimonialsPage() {
               {marqueeA.map((item, idx) => (
                 <div key={`row-a-${idx}`} className="testimonial-card">
                   <div className="testimonial-header">
-                    <div className="testimonial-avatar">
+                    <div className="testimonial-avatar flex items-center justify-center bg-[#1d5c19]/10 text-[#1d5c19] font-bold text-lg overflow-hidden shrink-0 relative">
                       {item.avatar_url ? (
                         <Image src={item.avatar_url} alt={item.name} fill className="object-cover" />
                       ) : (
@@ -122,7 +122,7 @@ export default async function TestimonialsPage() {
               {marqueeB.map((item, idx) => (
                 <div key={`row-b-${idx}`} className="testimonial-card">
                   <div className="testimonial-header">
-                    <div className="testimonial-avatar">
+                    <div className="testimonial-avatar flex items-center justify-center bg-[#1d5c19]/10 text-[#1d5c19] font-bold text-lg overflow-hidden shrink-0 relative">
                       {item.avatar_url ? (
                         <Image src={item.avatar_url} alt={item.name} fill className="object-cover" />
                       ) : (
