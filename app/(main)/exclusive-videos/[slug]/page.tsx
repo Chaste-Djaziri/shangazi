@@ -132,7 +132,7 @@ export default async function PortalVideoDetailPage({ params }: { params: Promis
               <p className="text-gray-600 font-marcellus text-sm mb-6 leading-relaxed">
                 If you have questions about this video or need personal support, feel free to book a guidance session.
               </p>
-              <Link href="/booking" className="inline-flex items-center justify-center w-full bg-primary text-white px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+              <Link href="/booking" className="inline-flex items-center justify-center w-full bg-[#1d5c19] text-white px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:opacity-90 transition-all shadow-lg shadow-primary/20">
                 Book a Session
               </Link>
            </div>
