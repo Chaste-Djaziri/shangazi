@@ -4,12 +4,12 @@ import { NextRequest } from "next/server";
 const handler = authApiHandler();
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ all: string[] }> }) {
-  console.log("Auth API GET hit:", req.url);
+  console.log("DEBUG: Auth API GET hit:", req.url);
   return handler.GET(req, { params });
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ all: string[] }> }) {
-  console.log("Auth API POST hit:", req.url);
+  console.log("DEBUG: Auth API POST hit:", req.url);
   return handler.POST(req, { params });
 }
 
