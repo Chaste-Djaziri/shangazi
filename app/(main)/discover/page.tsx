@@ -18,7 +18,7 @@ function getYouTubeThumbnail(url: string | null) {
   const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
 
-  if (match && match[2].length === 11) {
+  if (match && match[2] && match[2].length === 11) {
     const videoId = match[2];
     return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   }
@@ -81,6 +81,7 @@ export default async function DiscoverPage() {
                         src={thumbnail}
                         alt={course.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
@@ -149,6 +150,7 @@ export default async function DiscoverPage() {
                         src={thumbnail}
                         alt={video.title}
                         fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (

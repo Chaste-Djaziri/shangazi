@@ -86,6 +86,7 @@ export default function Footer() {
                 height={72}
                 sizes="191px"
                 className="site-footer-logo"
+                style={{ height: "auto" }}
               />
             </Link>
 
