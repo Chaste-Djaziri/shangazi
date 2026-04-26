@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import ComingSoon from "../components/coming-soon/ComingSoon"
+import ComingSoon from "../../components/coming-soon/ComingSoon"
 
 export const metadata: Metadata = {
   title: "Login | Shangazi Emma Claudine",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import DonationDetails from "../components/donation/DonationDetails"
+import DonationDetails from "../../components/donation/DonationDetails"
 
 export const metadata: Metadata = {
   title: "Donation | Shangazi Emma Claudine",

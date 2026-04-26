@@ -1,4 +1,4 @@
-import Topics from "../components/topics/Topics";
+import Topics from "../../components/topics/Topics";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

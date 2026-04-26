@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import Contact from "../components/contact/Contact"
+import Contact from "../../components/contact/Contact"
 
 export const metadata: Metadata = {
   title: "Contact | Shangazi Emma Claudine",
