@@ -28,43 +28,67 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
     const url = new URL(videoUrl);
     const host = url.hostname.toLowerCase();
     
-    // For YouTube, we append enablejsapi=1 so we can track events
+    let videoId = null;
     if (host.includes("youtube.com")) {
-      const id = url.searchParams.get("v");
-      if (id) return `https://www.youtube.com/embed/${id}?enablejsapi=1&autoplay=1`;
+      videoId = url.searchParams.get("v");
+      if (!videoId && url.pathname.startsWith("/embed/")) {
+        videoId = url.pathname.split("/")[2];
+      }
+    } else if (host === "youtu.be") {
+      videoId = url.pathname.substring(1);
     }
-    if (host === "youtu.be") {
-      const path = url.pathname.replace("/", "");
-      if (path) return `https://www.youtube.com/embed/${path}?enablejsapi=1&autoplay=1`;
+
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&rel=0`;
     }
+
     if (host.includes("vimeo.com")) {
-      const path = url.pathname.split("/").filter(Boolean).pop();
-      if (path) return `https://player.vimeo.com/video/${path}?autoplay=1`;
+      const vId = url.pathname.split("/").filter(Boolean).pop();
+      if (vId) return `https://player.vimeo.com/video/${vId}?autoplay=1`;
     }
   } catch {
-    return null;
+    if (videoUrl.length === 11) {
+      return `https://www.youtube.com/embed/${videoUrl}?enablejsapi=1&autoplay=1&rel=0`;
+    }
   }
   return null;
 };
 
 export default function WatchPageClient({ course, currentModule, user }: WatchPageClientProps) {
   const router = useRouter();
-  const [completedModules, setCompletedModules] = useState<string[]>([]);
+  
+  // Initialize state from localStorage if available for instant UI feedback
+  const [completedModules, setCompletedModules] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const cache = localStorage.getItem(`progress_${course.slug}`);
+      return cache ? JSON.parse(cache) : [];
+    }
+    return [];
+  });
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
 
-  // Fetch progress on mount
+  // Sync state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(`progress_${course.slug}`, JSON.stringify(completedModules));
+  }, [completedModules, course.slug]);
+
+  // Fetch from DB but merge with local state
   useEffect(() => {
     async function fetchProgress() {
       try {
         const res = await fetch(`/api/course-progress?courseSlug=${course.slug}`);
         if (res.ok) {
           const data = await res.json();
-          setCompletedModules(data.completedModules || []);
+          if (data.completedModules && data.completedModules.length > 0) {
+            setCompletedModules(prev => Array.from(new Set([...prev, ...data.completedModules])));
+          }
         }
       } catch (error) {
-        console.error("Failed to fetch progress:", error);
+        console.error("Failed to fetch progress from DB, using local cache:", error);
       }
     }
     fetchProgress();
@@ -72,22 +96,23 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
 
   // Mark module as complete
   const markAsComplete = useCallback(async (moduleSlug: string) => {
-    try {
-      // Optimistic update
-      setCompletedModules(prev => Array.from(new Set([...prev, moduleSlug])));
-      
-      await fetch("/api/course-progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseSlug: course.slug,
-          moduleSlug,
-          completed: true
-        })
-      });
-    } catch (error) {
-      console.error("Failed to mark module complete:", error);
-    }
+    // 1. Instant UI update (State + LocalStorage)
+    setCompletedModules(prev => {
+      if (prev.includes(moduleSlug)) return prev;
+      const next = [...prev, moduleSlug];
+      return next;
+    });
+
+    // 2. Background DB sync (Don't wait for this to proceed)
+    fetch("/api/course-progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        courseSlug: course.slug,
+        moduleSlug,
+        completed: true
+      })
+    }).catch(err => console.error("DB sync failed:", err));
   }, [course.slug]);
 
   // Handle Video End & Auto-next
@@ -98,10 +123,10 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     const currentIndex = course.modules.findIndex((m: any) => m.slug === currentModule.slug);
     if (currentIndex < course.modules.length - 1) {
       const nextModule = course.modules[currentIndex + 1];
-      // Delay slightly for UX
+      // Auto-next quickly for better UX
       setTimeout(() => {
         router.push(`/exclusive-courses/${course.slug}/watch/${nextModule.slug}`);
-      }, 2000);
+      }, 1500);
     }
   }, [course.slug, currentModule.slug, course.modules, markAsComplete, router]);
 
@@ -201,7 +226,12 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             </button>
           </div>
 
-          <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100">
+          <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100 relative">
+            {isVideoLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
+                <div className="w-12 h-12 border-4 border-[#1d5c19]/30 border-t-[#1d5c19] rounded-full animate-spin" />
+              </div>
+            )}
             {embedUrl ? (
               <iframe
                 ref={iframeRef}
@@ -210,6 +240,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
+                onLoad={() => setIsVideoLoading(false)}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-500">
