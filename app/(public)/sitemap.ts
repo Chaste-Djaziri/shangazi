@@ -8,7 +8,7 @@ type PostSlug = {
 }
 
 const SLUGS_QUERY = `*[
-  _type == "post" && defined(slug.current)
+  _type == "post" && defined(slug.current) && isPublic == true
 ]{
   "slug": slug.current,
   "updatedAt": coalesce(_updatedAt, publishedAt)

@@ -26,7 +26,7 @@ type BlogPost = {
 
 type PortableTextChild = { _type?: string; text?: string }
 
-const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
+const POST_QUERY = `*[_type == "post" && slug.current == $slug && isPublic == true][0]{
   _id,
   title,
   "slug": slug.current,
@@ -41,7 +41,7 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
 }`
 
 const RELATED_QUERY = `*[
-  _type == "post" && defined(slug.current) && slug.current != $slug
+  _type == "post" && defined(slug.current) && slug.current != $slug && isPublic == true
 ]|order(publishedAt desc)[0...5]{
   _id,
   title,

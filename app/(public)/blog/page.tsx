@@ -37,7 +37,7 @@ type BlogPost = {
 }
 
 const POSTS_QUERY = `*[
-  _type == "post" && defined(slug.current)
+  _type == "post" && defined(slug.current) && isPublic == true
 ]|order(publishedAt desc){
   _id,
   title,
