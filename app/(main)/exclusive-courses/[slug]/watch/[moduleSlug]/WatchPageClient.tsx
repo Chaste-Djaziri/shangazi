@@ -57,24 +57,29 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
 export default function WatchPageClient({ course, currentModule, user }: WatchPageClientProps) {
   const router = useRouter();
   
-  // Initialize state from localStorage if available for instant UI feedback
-  const [completedModules, setCompletedModules] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      const cache = localStorage.getItem(`progress_${course.slug}`);
-      return cache ? JSON.parse(cache) : [];
-    }
-    return [];
-  });
-
+  // Initialize as empty for consistent server/client initial render
+  const [completedModules, setCompletedModules] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
 
-  // Sync state to localStorage whenever it changes
+  // Initial mount: Load from localStorage
   useEffect(() => {
-    localStorage.setItem(`progress_${course.slug}`, JSON.stringify(completedModules));
-  }, [completedModules, course.slug]);
+    setHasMounted(true);
+    const cache = localStorage.getItem(`progress_${course.slug}`);
+    if (cache) {
+      setCompletedModules(JSON.parse(cache));
+    }
+  }, [course.slug]);
+
+  // Sync state to localStorage whenever it changes (after initial mount)
+  useEffect(() => {
+    if (hasMounted) {
+      localStorage.setItem(`progress_${course.slug}`, JSON.stringify(completedModules));
+    }
+  }, [completedModules, course.slug, hasMounted]);
 
   // Fetch from DB but merge with local state
   useEffect(() => {
