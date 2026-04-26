@@ -8,6 +8,17 @@ const authMiddleware = neonAuthMiddleware({
 export default async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   
+  // 0. EXPLICITLY BYPASS for all static assets and internal Next.js paths
+  // This is critical to prevent "Failed to load chunk" errors and MIME type issues.
+  if (
+    pathname.startsWith("/_next") || 
+    pathname.startsWith("/api/auth") || // Internal auth routes
+    pathname.includes(".") || // Files with extensions (images, js, css)
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
   // 1. Handle OAuth verifiers (callback logic)
   if (searchParams.has("neon_auth_session_verifier")) {
     return authMiddleware(request);
