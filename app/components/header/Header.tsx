@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
 import { authClient } from "@/auth-client";
+import SkeletonBlock from "../skeletons/SkeletonBlock";
 
 export default function Header() {
   const { data: session, isPending } = authClient.useSession();
@@ -170,8 +171,8 @@ export default function Header() {
               </button>
 
               {isPending ? (
-                <div className="ask-shangazi-button desktop-ask-shangazi opacity-50 cursor-wait">
-                  <span className="ask-shangazi-text">...</span>
+                <div className="ask-shangazi-button desktop-ask-shangazi !bg-transparent !p-0">
+                  <SkeletonBlock className="w-full h-full !rounded-[7px]" />
                 </div>
               ) : (
                 <Link href={session ? "/discover" : "/login"} className="ask-shangazi-button desktop-ask-shangazi" aria-label={session ? "Portal" : "Login"}>
