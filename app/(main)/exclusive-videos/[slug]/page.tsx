@@ -97,7 +97,7 @@ export default async function PortalVideoDetailPage({ params }: { params: Promis
           <div className="bg-white rounded-3xl p-8 lg:p-10 border border-gray-100 shadow-sm">
             <h3 className="text-xl font-serif text-gray-900 mb-6 italic flex items-center gap-3">
               <span className="w-8 h-px bg-primary" />
-              Guidance Details
+              Description
             </h3>
             <div className="prose prose-lg max-w-none font-marcellus text-gray-600 leading-relaxed">
               <p>{video.description || "No description provided for this video."}</p>

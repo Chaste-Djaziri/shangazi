@@ -108,7 +108,7 @@ export default async function VideoDetailPage({ params }: { params: Promise<{ sl
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div className="lg:col-span-8">
-          <h3 className="text-xl font-serif text-gray-900 mb-4 italic">About this guidance</h3>
+          <h3 className="text-xl font-serif text-gray-900 mb-4 italic">Description</h3>
           <div className="prose prose-lg max-w-none font-marcellus text-gray-600 leading-relaxed">
             <p>{video.description || "No description provided for this video."}</p>
           </div>
