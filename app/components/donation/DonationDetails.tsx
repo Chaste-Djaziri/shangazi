@@ -13,12 +13,6 @@ export default function DonationDetails() {
         <div className="donation-card-meta">Account Number: 0001122334455</div>
         <div className="donation-card-meta">SWIFT: BKIGRWRW</div>
       </div>
-      <div className="donation-card">
-        <div className="donation-card-title">International Support</div>
-        <div className="donation-card-value">PayPal</div>
-        <div className="donation-card-meta">paypal.me/shangazi</div>
-        <div className="donation-card-note">Email confirmation will be sent for every contribution.</div>
-      </div>
     </div>
   )
 }
