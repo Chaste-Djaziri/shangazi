@@ -8,7 +8,7 @@ import Testimonials from "../components/testimonials/Testimonials";
 import Contact from "../components/contact/Contact";
 import type { Metadata } from "next";
 import { client } from "@/sanity/client";
-import { HOME_POSTS_QUERY } from "@/src/sanity/queries";
+import { HOME_POSTS_QUERY, PUBLIC_VIDEOS_QUERY } from "@/src/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -51,7 +51,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const blogs = await client.fetch(HOME_POSTS_QUERY);
+  const [blogs, videos] = await Promise.all([
+    client.fetch(HOME_POSTS_QUERY),
+    client.fetch(PUBLIC_VIDEOS_QUERY),
+  ]);
 
   return (
     <main>
@@ -60,7 +63,7 @@ export default async function Home() {
       <Stats />
       <Topics limit={3} showAllButton />
       <StoriesInsights blogs={blogs} />
-      <Featured />
+      <Featured video={videos[0]} />
       <Testimonials />
       <Contact />
     </main>
