@@ -43,7 +43,6 @@ export default function LoginForm() {
       const { error: verifyError } = await authClient.signIn.emailOtp({
         email,
         otp,
-        callbackURL: callbackUrl.startsWith("http") ? callbackUrl : `${window.location.origin}${callbackUrl}`,
       });
       if (verifyError) throw verifyError;
       router.push(callbackUrl);
