@@ -73,7 +73,7 @@ export default function AboutPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <div className="absolute -top-2 -left-6 z-10 bg-[#FF0000] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-red-500/20 transform group-hover:scale-110 transition-transform">
+                <div className="absolute -top-2 -left-6 z-10 bg-[#FF0000] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-red-500/20 transition-transform">
                   500K+ Subscribers
                 </div>
                 <Image src="/socials/youtube.png" alt="YouTube" width={260} height={260} priority />
@@ -89,7 +89,7 @@ export default function AboutPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <div className="absolute -top-2 -right-6 z-10 bg-[#1877F2] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-blue-500/20 transform group-hover:scale-110 transition-transform">
+                <div className="absolute -top-2 -right-6 z-10 bg-[#1877F2] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-blue-500/20 transition-transform">
                   267K+ Followers
                 </div>
                 <Image src="/socials/facebook.png" alt="Facebook" width={260} height={260} />
@@ -126,7 +126,7 @@ export default function AboutPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <div className="absolute -top-2 -left-6 z-10 bg-black text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transform group-hover:scale-110 transition-transform">
+                <div className="absolute -top-2 -left-6 z-10 bg-black text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transition-transform">
                   172.1K+ Followers
                 </div>
                 <Image src="/socials/tiktok.png" alt="TikTok" width={260} height={260} />
@@ -142,7 +142,7 @@ export default function AboutPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <div className="absolute -top-2 -right-6 z-10 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transform group-hover:scale-110 transition-transform">
+                <div className="absolute -top-2 -right-6 z-10 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transition-transform">
                   62.8K+ Followers
                 </div>
                 <Image src="/socials/instagram.png" alt="Instagram" width={260} height={260} />
