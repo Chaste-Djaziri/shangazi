@@ -56,7 +56,8 @@ export default function LoginForm() {
       await authClient.signIn.social({
         provider,
         callbackURL: "/discover",
-        dontSignUp: true,
+        disableSignUp: true, 
+        requestSignUp: false, // Ensure both are set to be safe
       });
     } catch (err: any) {
       if (err.message?.toLowerCase().includes("user not found") || err.code === "USER_NOT_FOUND") {
