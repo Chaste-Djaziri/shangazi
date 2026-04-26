@@ -175,34 +175,6 @@ export default function MainSidebar() {
               </div>
             )}
           </button>
-
-          {/* User Info */}
-          {session?.user && (
-            <div className={`mt-2 p-2 rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? "lg:p-1 lg:justify-center" : "bg-white shadow-sm border border-gray-100"}`}>
-              <div className="relative w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-gray-50 shadow-sm">
-                {session.user.image ? (
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || "User"}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
-                    {(session.user.name?.[0] || session.user.email?.[0] || "?").toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className={`transition-opacity duration-200 ${isCollapsed ? "lg:opacity-0 lg:absolute" : "opacity-100"}`}>
-                <p className="text-[13px] font-bold text-gray-900 truncate max-w-[130px]">
-                  {session.user.name || "Member"}
-                </p>
-                <p className="text-[11px] text-gray-400 truncate max-w-[130px]">
-                  {session.user.email}
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </aside>
     </>
