@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Search, LogOut, X, Menu, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useSidebar } from "../../contexts/SidebarContext";
 
 export default function MainHeader() {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = authClient.useSession();
   const { isCollapsed, toggleCollapsed, toggleMobile } = useSidebar();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
@@ -63,13 +64,26 @@ export default function MainHeader() {
 
         <div className={`flex items-center gap-2 transition-opacity duration-300 ${isSearchExpanded ? "opacity-0 invisible w-0" : "opacity-100 visible"}`}>
           <h2 className="text-xl font-serif text-gray-800 lg:hidden">SEC Portal</h2>
-          <div className="hidden lg:flex items-center gap-2 text-sm text-gray-400 font-marcellus">
+          <div className="hidden lg:flex items-center gap-2 text-sm text-gray-400 font-marcellus text-nowrap">
             <span>SEC Portal</span>
             <span>/</span>
-            <span className="text-gray-900 font-bold uppercase tracking-wider">Discover</span>
+            <span className="text-gray-900 font-bold uppercase tracking-wider">
+              {pathname.includes("/articles") ? "Articles" : 
+               pathname.includes("/courses") ? "Courses" : 
+               pathname.includes("/videos") ? "Videos" : 
+               pathname.includes("/profile") ? "Profile" : 
+               pathname.includes("/settings") ? "Settings" : "Discover"}
+            </span>
           </div>
         </div>
       </div>
+
+      <nav className="hidden xl:flex items-center gap-6 ml-8">
+        <Link href="/discover" className={`text-sm font-marcellus transition-colors ${pathname === "/discover" ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Discover</Link>
+        <Link href="/articles" className={`text-sm font-marcellus transition-colors ${pathname.includes("/articles") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Articles</Link>
+        <Link href="/courses" className={`text-sm font-marcellus transition-colors ${pathname.includes("/courses") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Courses</Link>
+        <Link href="/videos" className={`text-sm font-marcellus transition-colors ${pathname.includes("/videos") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Videos</Link>
+      </nav>
 
       {/* Center/Right: Expanding Search & Actions */}
       <div className="flex-1 flex items-center justify-end gap-6">
