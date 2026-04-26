@@ -5,11 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/auth-client";
 import { useRouter } from "next/navigation";
-import { Search, LogOut, X } from "lucide-react";
+import { Search, LogOut, X, Menu, PanelLeftClose, PanelLeft } from "lucide-react";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 export default function MainHeader() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
+  const { isCollapsed, toggleCollapsed, toggleMobile } = useSidebar();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -39,13 +41,33 @@ export default function MainHeader() {
 
   return (
     <div className="header-container !max-w-full !px-8 h-20 flex items-center justify-between">
-      {/* Left: Section Title (Discovery Area) */}
-      <div className={`flex items-center gap-4 transition-opacity duration-300 ${isSearchExpanded ? "opacity-0 invisible w-0" : "opacity-100 visible"}`}>
-        <h2 className="text-xl font-serif text-gray-800 lg:hidden">SEC Portal</h2>
-        <div className="hidden lg:flex items-center gap-2 text-sm text-gray-400 font-marcellus">
-          <span>SEC Portal</span>
-          <span>/</span>
-          <span className="text-gray-900 font-bold uppercase tracking-wider">Discover</span>
+      {/* Left: Sidebar Toggle & Section Title */}
+      <div className="flex items-center gap-4">
+        {/* Mobile Menu Trigger */}
+        <button 
+          onClick={toggleMobile}
+          className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500"
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
+
+        {/* Desktop Sidebar Toggle */}
+        <button 
+          onClick={toggleCollapsed}
+          className="hidden lg:flex p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-primary"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {isCollapsed ? <PanelLeft size={22} /> : <PanelLeftClose size={22} />}
+        </button>
+
+        <div className={`flex items-center gap-2 transition-opacity duration-300 ${isSearchExpanded ? "opacity-0 invisible w-0" : "opacity-100 visible"}`}>
+          <h2 className="text-xl font-serif text-gray-800 lg:hidden">SEC Portal</h2>
+          <div className="hidden lg:flex items-center gap-2 text-sm text-gray-400 font-marcellus">
+            <span>SEC Portal</span>
+            <span>/</span>
+            <span className="text-gray-900 font-bold uppercase tracking-wider">Discover</span>
+          </div>
         </div>
       </div>
 

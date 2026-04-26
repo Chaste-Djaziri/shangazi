@@ -11,23 +11,21 @@ import {
   User, 
   Settings, 
   LogOut,
-  ChevronLeft,
-  ChevronRight,
   Menu,
   X
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 export default function MainSidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { isCollapsed, isMobileOpen, setIsMobileOpen } = useSidebar();
 
   // Close mobile sidebar on route change
   useEffect(() => {
     setIsMobileOpen(false);
-  }, [pathname]);
+  }, [pathname, setIsMobileOpen]);
 
   const navLinks = [
     { href: "/discover", label: "Discover", icon: LayoutDashboard },
@@ -47,32 +45,24 @@ export default function MainSidebar() {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-40 p-2 bg-white border border-gray-100 rounded-lg shadow-sm text-gray-500"
-      >
-        <Menu size={24} />
-      </button>
-
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 lg:hidden"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       <aside 
-        className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-100 transition-all duration-300 z-50 flex flex-col
+        className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-100 transition-all duration-300 z-[70] flex flex-col
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           ${isCollapsed ? "lg:w-20" : "lg:w-64"}
           w-[280px]
         `}
       >
         {/* Logo Section */}
-        <div className="p-6 flex items-center justify-between">
-          <Link href="/discover" className={`block transition-opacity duration-200 ${isCollapsed ? "lg:opacity-0" : "opacity-100"}`}>
+        <div className="p-6 flex items-center justify-between h-20">
+          <Link href="/discover" className={`block transition-opacity duration-200 ${isCollapsed ? "lg:opacity-0 lg:invisible" : "opacity-100 visible"}`}>
             <Image
               src="/logo/Shangazi Logo Variations-1.png"
               alt="Shangazi Logo"
@@ -83,10 +73,10 @@ export default function MainSidebar() {
             />
           </Link>
           <button 
-            onClick={() => isMobileOpen ? setIsMobileOpen(false) : setIsCollapsed(!isCollapsed)}
-            className="p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400"
+            onClick={() => setIsMobileOpen(false)}
+            className="lg:hidden p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400"
           >
-            {isMobileOpen ? <X size={20} /> : (isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />)}
+            <X size={20} />
           </button>
         </div>
 
@@ -111,7 +101,7 @@ export default function MainSidebar() {
                   {link.label}
                 </span>
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[60]">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
                     {link.label}
                   </div>
                 )}
@@ -141,7 +131,7 @@ export default function MainSidebar() {
                   {link.label}
                 </span>
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[60]">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
                     {link.label}
                   </div>
                 )}
@@ -159,7 +149,7 @@ export default function MainSidebar() {
               Logout
             </span>
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[60]">
+              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block whitespace-nowrap z-[100]">
                 Logout
               </div>
             )}
@@ -167,7 +157,7 @@ export default function MainSidebar() {
 
           {/* User Info */}
           {session?.user && (
-            <div className={`mt-4 p-3 bg-gray-50 rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? "lg:p-1" : "p-3"}`}>
+            <div className={`mt-4 p-3 bg-gray-50 rounded-xl flex items-center gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? "lg:p-1 lg:justify-center" : "p-3"}`}>
               <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white shadow-sm">
                 {session.user.image ? (
                   <Image
