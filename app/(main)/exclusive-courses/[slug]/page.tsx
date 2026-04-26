@@ -4,7 +4,8 @@ import { neonAuth } from "@neondatabase/auth/next/server";
 import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Play, Clock, Lock, ChevronRight, ChevronLeft } from "lucide-react";
+import { BookOpen, Play, Clock, Lock, ChevronRight, ChevronLeft, CheckCircle2 } from "lucide-react";
+import db from "@/src/db";
 
 const COURSE_DETAIL_QUERY = `*[_type == "course" && slug.current == $slug][0]{
   _id,
@@ -35,6 +36,28 @@ export default async function PortalCourseDetailPage({ params }: { params: Promi
   if (!course) {
     notFound();
   }
+
+  // Fetch progress from DB
+  let completedModules: string[] = [];
+  let lastModuleSlug: string | null = null;
+  
+  try {
+    const courseProgress = await db.query(
+      "SELECT last_module_slug FROM public.course_progress WHERE user_id = $1 AND course_slug = $2",
+      [user.id, slug]
+    );
+    lastModuleSlug = courseProgress.rows[0]?.last_module_slug || null;
+
+    const moduleProgress = await db.query(
+      "SELECT module_slug FROM public.module_progress WHERE user_id = $1 AND course_slug = $2 AND completed = true",
+      [user.id, slug]
+    );
+    completedModules = moduleProgress.rows.map((r: any) => r.module_slug);
+  } catch (e) {
+    console.error("Failed to fetch progress on server", e);
+  }
+
+  const startModuleSlug = lastModuleSlug || course.modules?.[0]?.slug;
 
   return (
     <div className="max-w-full mx-auto pb-20">
@@ -91,42 +114,48 @@ export default async function PortalCourseDetailPage({ params }: { params: Promi
             </h3>
             
             <div className="space-y-4">
-              {course.modules?.map((module: any, idx: number) => (
-                <Link 
-                  key={module._id}
-                  href={`/exclusive-videos/${module.slug}`}
-                  className="group flex items-center gap-4 p-5 rounded-2xl bg-white hover:bg-primary/5 transition-all border border-transparent hover:border-primary/10 shadow-sm"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 font-bold text-sm shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                    {idx + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-primary transition-colors font-marcellus">
-                      {module.title}
-                    </h4>
-                    <div className="flex items-center gap-3 mt-1">
-                       <span className="flex items-center gap-1.5 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                         <Clock size={12} /> {module.duration || "5:00"}
-                       </span>
-                       {!module.isPublic && (
-                         <span className="text-[10px] text-primary font-bold uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded">Member</span>
-                       )}
+              {course.modules?.map((module: any, idx: number) => {
+                const isCompleted = completedModules.includes(module.slug);
+                return (
+                  <Link 
+                    key={module._id}
+                    href={`/exclusive-courses/${course.slug}/watch/${module.slug}`}
+                    className={`group flex items-center gap-4 p-5 rounded-2xl transition-all border shadow-sm ${
+                      isCompleted ? "bg-green-50/50 border-green-100" : "bg-white border-transparent hover:bg-primary/5 hover:border-primary/10"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
+                      isCompleted ? "bg-green-500 text-white" : "bg-gray-50 text-gray-400 group-hover:bg-primary group-hover:text-white"
+                    }`}>
+                      {isCompleted ? <CheckCircle2 size={20} /> : idx + 1}
                     </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
-                    <Play size={12} fill="currentColor" />
-                  </div>
-                </Link>
-              ))}
+                    <div className="flex-1 min-w-0">
+                      <h4 className={`text-[15px] font-bold truncate transition-colors font-marcellus ${
+                        isCompleted ? "text-green-700" : "text-gray-900 group-hover:text-primary"
+                      }`}>
+                        {module.title}
+                      </h4>
+                      <div className="flex items-center gap-3 mt-1">
+                         <span className="flex items-center gap-1.5 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                           <Clock size={12} /> {module.duration || "5:00"}
+                         </span>
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
+                      <Play size={12} fill="currentColor" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="mt-10">
               <Link 
-                href={`/exclusive-videos/${course.modules?.[0]?.slug}`}
+                href={`/exclusive-courses/${course.slug}/watch/${startModuleSlug}`}
                 className="w-full bg-[#1d5c19] text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:opacity-90 transition-all shadow-xl shadow-[#1d5c19]/20"
               >
                 <Play size={16} fill="white" />
-                Resume Learning
+                {lastModuleSlug ? "Resume Learning" : "Start Learning Now"}
               </Link>
             </div>
           </div>
