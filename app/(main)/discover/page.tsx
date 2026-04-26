@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { authServer } from "@/auth-server";
+import { neonAuth } from "@neondatabase/auth/next/server";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
 };
 
 export default async function DiscoverPage() {
-  const { user } = await authServer.getSession();
+  // Use neonAuth() which is the standard way to get session in Server Components
+  const { user } = await neonAuth();
 
   if (!user) {
     redirect("/login");
@@ -17,7 +18,7 @@ export default async function DiscoverPage() {
   return (
     <main className="p-8 max-w-4xl mx-auto">
       <header className="mb-8">
-        <h1 className="text-4xl font-serif mb-2">Welcome, {user.name || "Member"}</h1>
+        <h1 className="text-4xl font-serif mb-2">Welcome, {user.name || user.email}</h1>
         <p className="text-xl text-gray-600 font-marcellus">
           Explore exclusive content, manage your guidance sessions, and stay connected with the community.
         </p>
