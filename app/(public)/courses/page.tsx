@@ -6,8 +6,14 @@ import Link from "next/link";
 import { BookOpen, ChevronRight, Lock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Courses | Shangazi Emma Claudine",
-  description: "Explore our guided courses on life, relationships, and reproductive health.",
+  title: "Guided Courses | Shangazi Emma Claudine",
+  description: "Join structured learning paths and guided courses by Shangazi Emma Claudine on relationships, health, and personal development.",
+  keywords: ["Shangazi courses", "Emma Claudine education", "Rwandan youth courses", "relationship guidance Rwanda"],
+  openGraph: {
+    title: "Guided Courses | Shangazi Emma Claudine",
+    description: "Empowering communities through structured guidance and deep learning modules.",
+    type: "website",
+  }
 };
 
 function getYouTubeThumbnail(url: string | null) {

@@ -6,8 +6,14 @@ import Link from "next/link";
 import { Play, Clock, ChevronRight, Lock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Videos | Shangazi Emma Claudine",
-  description: "Watch the latest guidance and stories from Shangazi Emma Claudine.",
+  title: "Guidance Videos | Shangazi Emma Claudine",
+  description: "Watch honest conversations and practical guidance videos by Shangazi Emma Claudine on reproductive health, life, and relationships.",
+  keywords: ["Shangazi videos", "Emma Claudine guidance", "Rwandan health videos", "youth conversations Rwanda"],
+  openGraph: {
+    title: "Guidance Videos | Shangazi Emma Claudine",
+    description: "Insights and honest conversations on film. Dive into practical guidance through our video library.",
+    type: "website",
+  }
 };
 
 function getYouTubeThumbnail(url: string | null) {
