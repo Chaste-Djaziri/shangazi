@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { session } = await neonAuth();
+    const { user } = await neonAuth();
     const body = await request.json();
     const { name, content, rating, avatar_url } = body;
 
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     await db.query(
       `INSERT INTO public.testimonials (user_id, name, content, rating, avatar_url)
        VALUES ($1, $2, $3, $4, $5)`,
-      [session?.user?.id || null, name, content, rating || 5, avatar_url || null]
+      [user?.id || null, name, content, rating || 5, avatar_url || null]
     );
 
     return NextResponse.json({ success: true, message: "Testimonial submitted for approval" });
