@@ -2188,11 +2188,10 @@ body {
   justify-content: center;
   transition: transform 0.25s ease, filter 0.25s ease;
   outline: none;
+  transform: translateY(-6px) scale(1.03);
 }
 
-.about-detail-icon-link:hover,
 .about-detail-icon-link:focus-visible {
-  transform: translateY(-6px) scale(1.03);
   filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.18));
 }
 
