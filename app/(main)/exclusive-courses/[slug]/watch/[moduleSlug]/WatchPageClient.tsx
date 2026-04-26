@@ -65,6 +65,14 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
 
+  // Handle module change: Reset loading state
+  useEffect(() => {
+    setIsVideoLoading(true);
+    // Safety timeout: hide spinner after 10s even if onLoad fails
+    const timer = setTimeout(() => setIsVideoLoading(false), 10000);
+    return () => clearTimeout(timer);
+  }, [currentModule.slug]);
+
   // Initial mount: Load from localStorage
   useEffect(() => {
     setHasMounted(true);
@@ -155,16 +163,27 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     //    after the API code downloads.
     const initPlayer = () => {
       if (iframeRef.current && (window as any).YT && (window as any).YT.Player) {
-        playerRef.current = new (window as any).YT.Player(iframeRef.current, {
-          events: {
-            'onStateChange': (event: any) => {
-              // YT.PlayerState.ENDED is 0
-              if (event.data === 0) {
-                handleVideoEnd();
+        try {
+          playerRef.current = new (window as any).YT.Player(iframeRef.current, {
+            events: {
+              'onStateChange': (event: any) => {
+                // YT.PlayerState.ENDED is 0
+                if (event.data === 0) {
+                  handleVideoEnd();
+                }
+              },
+              'onReady': () => {
+                setIsVideoLoading(false);
+              },
+              'onError': () => {
+                setIsVideoLoading(false);
               }
             }
-          }
-        });
+          });
+        } catch (e) {
+          console.error("YT Player init error:", e);
+          setIsVideoLoading(false);
+        }
       }
     };
 
