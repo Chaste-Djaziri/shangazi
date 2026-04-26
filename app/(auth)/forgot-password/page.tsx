@@ -1,13 +1,34 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Forgot Password | SEC Portal",
-  description: "Reset your SEC Portal password to regain access to your account.",
-};
+import { authClient } from "@/auth-client";
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      await authClient.requestPasswordReset({
+        email,
+        redirectTo: "/login",
+      });
+      setMessage("If an account exists, a reset link has been sent to your email.");
+    } catch (err: any) {
+      setError(err.message || "Failed to request password reset");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className="auth-layout">
       {/* Left side: Image */}
@@ -40,7 +61,19 @@ export default function ForgotPasswordPage() {
             <p className="auth-subtitle">Regain access to the SEC Portal</p>
           </header>
 
-          <form className="auth-form">
+          {message && (
+            <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-md text-sm">
+              {message}
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
+          <form className="auth-form" onSubmit={handleResetPassword}>
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email Address</label>
               <input 
@@ -48,12 +81,18 @@ export default function ForgotPasswordPage() {
                 id="email" 
                 className="form-input" 
                 placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required 
               />
             </div>
 
-            <button type="submit" className="auth-submit-btn">
-              Send Reset Link
+            <button 
+              type="submit" 
+              className="auth-submit-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
 

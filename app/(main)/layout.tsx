@@ -1,3 +1,5 @@
+import MainHeader from "../components/header/MainHeader";
+
 export default function MainLayout({
   children,
 }: {
@@ -5,7 +7,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="main-layout">
-      {/* We can add a specialized sidebar or dashboard header here later */}
+      <MainHeader />
       {children}
     </div>
   );
