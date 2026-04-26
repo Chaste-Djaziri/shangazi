@@ -17,7 +17,7 @@ const pool: Pool =
   global.__pgPool ?? new Pool({ 
     connectionString, 
     ssl: { rejectUnauthorized: false } as any,
-    connectionTimeoutMillis: 10000, // 10 seconds timeout
+    connectionTimeoutMillis: 30000, // 30 seconds timeout
     max: 10 // Maximum number of clients in the pool
   })
 if (!global.__pgPool) global.__pgPool = pool
