@@ -14,7 +14,12 @@ declare global {
 // Ensure TLS for Neon / managed Postgres. `rejectUnauthorized: false` is commonly used
 // for hosted providers that require TLS but provide certificates not trusted by Node.
 const pool: Pool =
-  global.__pgPool ?? new Pool({ connectionString, ssl: { rejectUnauthorized: false } as any })
+  global.__pgPool ?? new Pool({ 
+    connectionString, 
+    ssl: { rejectUnauthorized: false } as any,
+    connectionTimeoutMillis: 10000, // 10 seconds timeout
+    max: 10 // Maximum number of clients in the pool
+  })
 if (!global.__pgPool) global.__pgPool = pool
 
 export async function query(text: string, params?: any[]) {

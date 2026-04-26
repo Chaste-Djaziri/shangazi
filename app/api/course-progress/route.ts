@@ -16,27 +16,30 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 1. Get overall course progress
-    const courseRes = await db.query(
-      "SELECT started_at, completed_at, last_module_slug FROM public.course_progress WHERE user_id = $1 AND course_slug = $2",
-      [user.id, courseSlug]
-    );
-
-    // 2. Get module-specific progress
-    const modulesRes = await db.query(
-      "SELECT module_slug, completed FROM public.module_progress WHERE user_id = $1 AND course_slug = $2",
-      [user.id, courseSlug]
-    );
+    // 1. Fetch both overall progress and module progress in parallel
+    const [courseRes, modulesRes] = await Promise.all([
+      db.query(
+        "SELECT started_at, completed_at, last_module_slug FROM public.course_progress WHERE user_id = $1 AND course_slug = $2",
+        [user.id, courseSlug]
+      ),
+      db.query(
+        "SELECT module_slug, completed FROM public.module_progress WHERE user_id = $1 AND course_slug = $2 AND completed = true",
+        [user.id, courseSlug]
+      )
+    ]);
 
     return NextResponse.json({
       course: courseRes.rows[0] || null,
-      completedModules: modulesRes.rows
-        .filter((m: any) => m.completed)
-        .map((m: any) => m.module_slug),
+      completedModules: modulesRes.rows.map((m: any) => m.module_slug),
     });
   } catch (error) {
     console.error("Error fetching course progress:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    // Return empty state instead of 500 to prevent app crash on transient network issues
+    return NextResponse.json({
+      course: null,
+      completedModules: [],
+      error: "Database connection timed out"
+    }, { status: 200 });
   }
 }
 
