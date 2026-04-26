@@ -93,36 +93,49 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             </h3>
             
             <div className="space-y-4">
-              {course.modules?.map((module: any, idx: number) => (
-                <Link 
-                  key={module._id}
-                  href={`/videos/${module.slug}`}
-                  className="group flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary font-bold text-sm shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                    {idx + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-primary transition-colors font-marcellus">
-                      {module.title}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1">
-                       <Clock size={12} className="text-gray-400" />
-                       <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">{module.duration || "5:00"}</span>
-                       {!module.isPublic && <Lock size={10} className="text-primary" />}
+              {course.modules?.map((module: any, idx: number) => {
+                const watchUrl = module.isPublic 
+                  ? `/courses/${course.slug}/watch/${module.slug}`
+                  : `/login?callbackURL=${encodeURIComponent(`/exclusive-courses/${course.slug}/watch/${module.slug}`)}`;
+
+                return (
+                  <Link 
+                    key={module._id}
+                    href={watchUrl}
+                    className="group flex items-center gap-4 p-4 rounded-2xl hover:bg-[#1d5c19]/5 transition-all border border-transparent hover:border-[#1d5c19]/10"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 font-bold text-sm shrink-0 group-hover:bg-[#1d5c19] group-hover:text-white transition-colors">
+                      {idx + 1}
                     </div>
-                  </div>
-                  <div className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-300 group-hover:border-primary group-hover:text-primary transition-all">
-                    <Play size={14} fill="currentColor" />
-                  </div>
-                </Link>
-              ))}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-[#1d5c19] transition-colors font-marcellus">
+                        {module.title}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-1">
+                         <Clock size={12} className="text-gray-400" />
+                         <span className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">{module.duration || "5:00"}</span>
+                         {!module.isPublic && (
+                           <span className="bg-[#1d5c19]/5 text-[#1d5c19] text-[9px] font-bold uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                             <Lock size={8} /> Member
+                           </span>
+                         )}
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-300 group-hover:border-[#1d5c19] group-hover:text-[#1d5c19] transition-all">
+                      <Play size={12} fill="currentColor" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="mt-10">
               <Link 
-                href={`/videos/${course.modules?.[0]?.slug}`}
-                className="w-full bg-primary text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
+                href={course.modules?.[0]?.isPublic 
+                  ? `/courses/${course.slug}/watch/${course.modules?.[0]?.slug}` 
+                  : `/login?callbackURL=${encodeURIComponent(`/exclusive-courses/${course.slug}/watch/${course.modules?.[0]?.slug}`)}`
+                }
+                className="w-full bg-[#1d5c19] text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:opacity-90 transition-all shadow-xl shadow-[#1d5c19]/20"
               >
                 <Play size={16} fill="white" />
                 Start Learning Now
