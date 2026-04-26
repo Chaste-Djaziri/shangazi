@@ -13,7 +13,7 @@ export default function LoginPage() {
       {/* Left side: Image */}
       <section className="auth-image-side">
         <Image
-          src="/profile/about.png"
+          src="/backgrounds/featured.png"
           alt="Shangazi Emma Claudine"
           fill
           priority
