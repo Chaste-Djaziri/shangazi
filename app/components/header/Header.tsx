@@ -84,7 +84,6 @@ export default function Header() {
     { href: "/blog", label: "Blog / Articles" },
     { href: "/courses", label: "Courses" },
     { href: "/videos", label: "Videos" },
-    { href: "/media", label: "Media" },
     { href: "/topics", label: "Topics" },
   ];
 
@@ -298,7 +297,6 @@ export default function Header() {
               <Link href="/blog" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Blog / Articles</Link>
               <Link href="/courses" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Courses</Link>
               <Link href="/videos" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Videos</Link>
-              <Link href="/media" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Media</Link>
               <Link href="/topics" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Topics</Link>
             </div>
           </div>
