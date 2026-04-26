@@ -84,7 +84,7 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
         >
           <ChevronLeft size={16} /> <span className="hidden sm:inline">Back to Course</span><span className="sm:hidden">Back</span>
         </Link>
-        <span className="text-[10px] font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase tracking-widest truncate max-w-[200px] sm:max-w-none">
+        <span className="text-[10px] font-bold text-[#1d5c19] bg-[#1d5c19]/5 px-3 py-1 rounded-full uppercase tracking-widest truncate max-w-[50%] sm:max-w-[60%] lg:max-w-md shrink-0">
           {course.title}
         </span>
       </div>
