@@ -9,6 +9,7 @@ import { PortableText, type PortableTextBlock, type PortableTextComponents } fro
 import { client } from "@/sanity/client"
 import { neonAuth } from "@neondatabase/auth/next/server"
 import { redirect } from "next/navigation"
+import { BookOpen } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Member Blog | SEC Portal",
