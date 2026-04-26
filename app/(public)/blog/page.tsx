@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { PortableText, type PortableTextBlock, type PortableTextComponents } from "next-sanity"
+import { Lock } from "lucide-react"
 
 import { client } from "@/sanity/client"
 
@@ -34,10 +35,11 @@ type BlogPost = {
   image?: SanityImageSource
   body?: PortableTextBlock[]
   content?: string
+  isPublic?: boolean
 }
 
 const POSTS_QUERY = `*[
-  _type == "post" && defined(slug.current) && isPublic == true
+  _type == "post" && defined(slug.current)
 ]|order(publishedAt desc){
   _id,
   title,
@@ -46,7 +48,8 @@ const POSTS_QUERY = `*[
   author,
   image,
   body,
-  content
+  content,
+  isPublic
 }`
 
 const options = { next: { revalidate: 600 } }
@@ -186,7 +189,7 @@ export default async function BlogPage() {
                     const altText = post.title
 
                     return (
-                      <article key={post._id} className="blog-row-card">
+                      <article key={post._id} className="blog-row-card relative group">
                         <div className="blog-row-media">
                           {imageUrl ? (
                             <Image
@@ -199,9 +202,21 @@ export default async function BlogPage() {
                           ) : (
                             <div className="blog-row-placeholder" aria-hidden="true" />
                           )}
+                          {!post.isPublic && (
+                            <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-md p-2 rounded-full text-white shadow-xl">
+                              <Lock size={16} fill="white" />
+                            </div>
+                          )}
                         </div>
                         <div className="blog-row-content">
-                          <h3 className="blog-row-title">{post.title}</h3>
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="blog-row-title mb-0">{post.title}</h3>
+                            {!post.isPublic && (
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded">
+                                Premium
+                              </span>
+                            )}
+                          </div>
                           {renderExcerpt(post)}
                           <div className="blog-row-meta">
                             {formatDate(post.publishedAt)} • {counts[post._id] ?? 0} views
@@ -236,11 +251,16 @@ export default async function BlogPage() {
                         className="blog-trending-item"
                         href={post.slug ? `/blog/${post.slug}` : "#"}
                       >
-                        <div className="blog-trending-thumb">
+                        <div className="blog-trending-thumb relative">
                           {imageUrl ? (
                             <Image src={imageUrl} alt={altText} fill sizes="80px" className="blog-trending-image" />
                           ) : (
                             <div className="blog-trending-placeholder" aria-hidden="true" />
+                          )}
+                          {!post.isPublic && (
+                            <div className="absolute top-1 right-1 z-10 bg-black/40 backdrop-blur-sm p-1 rounded-full text-white scale-75">
+                              <Lock size={12} fill="white" />
+                            </div>
                           )}
                         </div>
                         <div className="blog-trending-text">

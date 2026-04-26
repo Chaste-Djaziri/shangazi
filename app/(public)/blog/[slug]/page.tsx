@@ -7,8 +7,10 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { ReactNode } from "react"
 import { PortableText, type PortableTextBlock, type PortableTextComponents } from "next-sanity"
+import { Lock } from "lucide-react"
 
 import { client } from "@/sanity/client"
+import { neonAuth } from "@neondatabase/auth/next/server"
 
 type BlogPost = {
   _id: string
@@ -22,11 +24,12 @@ type BlogPost = {
   externalLinks?: { label?: string; url?: string }[]
   body?: PortableTextBlock[] | string
   content?: string
+  isPublic?: boolean
 }
 
 type PortableTextChild = { _type?: string; text?: string }
 
-const POST_QUERY = `*[_type == "post" && slug.current == $slug && isPublic == true][0]{
+const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
   _id,
   title,
   "slug": slug.current,
@@ -37,11 +40,12 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug && isPublic == tr
   videoUrl,
   externalLinks,
   body,
-  content
+  content,
+  isPublic
 }`
 
 const RELATED_QUERY = `*[
-  _type == "post" && defined(slug.current) && slug.current != $slug && isPublic == true
+  _type == "post" && defined(slug.current) && slug.current != $slug
 ]|order(publishedAt desc)[0...5]{
   _id,
   title,
@@ -181,6 +185,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const decodedSlug = decodeURIComponent(slug)
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+  
+  const { session } = await neonAuth();
+
   const [blog, related] = await Promise.all([
     client.fetch<BlogPost | null>(POST_QUERY, { slug: decodedSlug }, options),
     client.fetch<BlogPost[]>(RELATED_QUERY, { slug: decodedSlug }, options),
@@ -188,6 +195,12 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
   if (!blog) {
     notFound()
+  }
+
+  // Redirect if private and no session
+  if (!blog.isPublic && !session) {
+    const callbackUrl = `/blog/${slug}`;
+    redirect(`/login?callbackURL=${encodeURIComponent(callbackUrl)}`);
   }
 
   // Increment view count for this post and fetch updated views

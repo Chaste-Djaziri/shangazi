@@ -4,10 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackURL") || "/discover";
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [otp, setOtp] = useState("");
@@ -64,7 +67,7 @@ export default function SignupForm() {
 
       if (verifyError) throw verifyError;
       
-      router.push("/discover");
+      router.push(callbackUrl);
     } catch (err: any) {
       setError(err.message || "Invalid or expired code");
     } finally {
@@ -76,7 +79,7 @@ export default function SignupForm() {
     try {
       await authClient.signIn.social({
         provider,
-        callbackURL: `${window.location.origin}/discover`,
+        callbackURL: callbackUrl.startsWith("http") ? callbackUrl : `${window.location.origin}${callbackUrl}`,
       });
     } catch (err: any) {
       setError(err.message || `Failed to sign up with ${provider}`);

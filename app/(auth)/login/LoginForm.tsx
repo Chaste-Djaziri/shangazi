@@ -4,10 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackURL") || "/discover";
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false);
@@ -40,10 +43,10 @@ export default function LoginForm() {
       const { error: verifyError } = await authClient.signIn.emailOtp({
         email,
         otp,
-        callbackURL: `${window.location.origin}/discover`,
+        callbackURL: callbackUrl.startsWith("http") ? callbackUrl : `${window.location.origin}${callbackUrl}`,
       });
       if (verifyError) throw verifyError;
-      router.push("/discover");
+      router.push(callbackUrl);
     } catch (err: any) {
       setError(err.message || "Invalid or expired code");
     } finally {
@@ -55,7 +58,7 @@ export default function LoginForm() {
     try {
       await authClient.signIn.social({
         provider,
-        callbackURL: `${window.location.origin}/discover`,
+        callbackURL: callbackUrl.startsWith("http") ? callbackUrl : `${window.location.origin}${callbackUrl}`,
         requestSignUp: false, // This is supported in the types
       });
     } catch (err: any) {
