@@ -75,26 +75,25 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
   const embedUrl = buildEmbedUrl(currentModule.videoUrl);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="max-w-full mx-auto pb-20">
       {/* Video Header / Navigation */}
-      <div className="max-w-7xl mx-auto p-4 lg:p-8 flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8 gap-4">
         <Link 
           href={`/exclusive-courses/${course.slug}`}
-          className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-[0.2em] hover:text-[#1d5c19] transition-colors"
+          className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-[0.2em] hover:text-[#1d5c19] transition-colors shrink-0"
         >
-          <ChevronLeft size={16} /> Back to Course
+          <ChevronLeft size={16} /> <span className="hidden sm:inline">Back to Course</span><span className="sm:hidden">Back</span>
         </Link>
-        <span className="text-[10px] font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase tracking-widest">
+        <span className="text-[10px] font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase tracking-widest truncate max-w-[200px] sm:max-w-none">
           {course.title}
         </span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8">
           
           {/* Main Video Area */}
           <div className="w-full">
-            <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-8 border border-gray-100">
+            <div className="aspect-video bg-black rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-2xl mb-8 border border-gray-100">
               {embedUrl ? (
                 <iframe
                   src={embedUrl}
@@ -110,14 +109,14 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
               )}
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8 items-start">
+            <div className="flex flex-col xl:flex-row gap-8 items-start">
                {/* Title & Actions */}
-               <div className="flex-1 bg-white rounded-[32px] p-8 lg:p-12 border border-gray-100 shadow-sm w-full">
-                  <h1 className="text-3xl lg:text-4xl font-serif text-gray-900 mb-6 leading-tight">{currentModule.title}</h1>
-                  <div className="flex items-center gap-4">
+               <div className="flex-1 bg-white rounded-[24px] lg:rounded-[32px] p-6 sm:p-8 lg:p-12 border border-gray-100 shadow-sm w-full min-w-0">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-gray-900 mb-6 leading-tight break-words">{currentModule.title}</h1>
+                  <div className="flex flex-wrap items-center gap-4">
                     <button 
                       onClick={() => markAsComplete(currentModule.slug)}
-                      className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all ${
+                      className={`flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] sm:text-[11px] transition-all w-full sm:w-auto ${
                         completedModules.includes(currentModule.slug)
                         ? "bg-green-50 text-green-600 border border-green-100"
                         : "bg-[#1d5c19] text-white shadow-xl shadow-[#1d5c19]/20 hover:opacity-90"
@@ -133,10 +132,10 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
                </div>
 
                {/* Curriculum (Visible above description in flow) */}
-               <div className="w-full lg:w-[450px] bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden flex flex-col shrink-0">
+               <div className="w-full xl:w-[450px] bg-white rounded-[24px] lg:rounded-[32px] border border-gray-100 shadow-sm overflow-hidden flex flex-col shrink-0">
                   <div className="p-6 border-b border-gray-100 bg-white flex items-center justify-between">
                     <h2 className="text-lg font-serif font-bold text-gray-900">Curriculum</h2>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{course.modules.length} Lessons</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">{course.modules.length} Lessons</span>
                   </div>
                   <div className="max-h-[400px] overflow-y-auto custom-scrollbar p-4 space-y-2">
                     {course.modules.map((module: any, idx: number) => {
@@ -153,7 +152,7 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className={`text-xs font-bold truncate font-marcellus ${isActive ? "text-[#1d5c19]" : "text-gray-900"}`}>{module.title}</h4>
-                            <div className="flex items-center gap-2 mt-0.5 text-[9px] text-gray-400 font-bold uppercase">
+                            <div className="flex items-center gap-2 mt-0.5 text-[9px] text-gray-400 font-bold uppercase shrink-0">
                                <Clock size={8} /> {module.duration || "5:00"}
                             </div>
                           </div>
@@ -165,18 +164,17 @@ export default function WatchPageClient({ course, currentModule }: WatchPageClie
             </div>
 
             {/* Description (Now below Curriculum) */}
-            <div className="bg-white rounded-[32px] p-8 lg:p-12 border border-gray-100 shadow-sm mt-8">
+            <div className="bg-white rounded-[24px] lg:rounded-[32px] p-6 sm:p-8 lg:p-12 border border-gray-100 shadow-sm mt-8 w-full min-w-0">
               <h3 className="text-xl font-serif text-gray-900 mb-6 flex items-center gap-3">
-                <span className="w-8 h-px bg-[#1d5c19]" />
+                <span className="w-8 h-px bg-[#1d5c19] shrink-0" />
                 Description
               </h3>
-              <div className="prose prose-lg max-w-none font-marcellus text-gray-600 leading-relaxed">
+              <div className="prose prose-sm sm:prose-lg max-w-none font-marcellus text-gray-600 leading-relaxed break-words">
                 <p>{currentModule.description || "In this module, we dive deep into " + currentModule.title + "."}</p>
               </div>
             </div>
 
           </div>
-        </div>
       </div>
     </div>
   );
