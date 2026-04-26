@@ -69,7 +69,7 @@ export default function AboutPage() {
             <div className="about-detail-icon">
               <a
                 className="about-detail-icon-link"
-                href="https://www.youtube.com/@emmaclaudine/videos"
+                href="https://www.youtube.com/@shangaziemmaclaudine"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -82,7 +82,7 @@ export default function AboutPage() {
             <div className="about-detail-icon">
               <a
                 className="about-detail-icon-link"
-                href="https://www.facebook.com/emmaclaudine1"
+                href="https://www.facebook.com/emmaclaudine1/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -116,7 +116,7 @@ export default function AboutPage() {
             <div className="about-detail-icon">
               <a
                 className="about-detail-icon-link"
-                href="https://www.tiktok.com/@emmaclaudine1"
+                href="https://www.tiktok.com/@shangazi_emmaclaudine"
                 target="_blank"
                 rel="noreferrer"
               >

@@ -116,12 +116,11 @@ export default function RootLayout({
       addressCountry: "RW",
     },
     sameAs: [
-      "https://www.youtube.com/@emmaclaudine/videos",
-      "https://www.facebook.com/emmaclaudine1",
-      "https://www.tiktok.com/@emmaclaudine1",
-      "https://www.instagram.com/emmaclaudine1/",
-    ],
-    knowsAbout: [
+      "https://www.youtube.com/@shangaziemmaclaudine",
+      "https://www.facebook.com/emmaclaudine1/",
+      "https://www.tiktok.com/@shangazi_emmaclaudine",
+      "https://www.instagram.com/shangaziemmaclaudine1/",
+    ],    knowsAbout: [
       "Reproductive Health",
       "Youth Counseling",
       "Education",
@@ -159,12 +158,11 @@ export default function RootLayout({
     email: "comms@shangazi.rw",
     telephone: "+250788597423",
     sameAs: [
-      "https://www.youtube.com/@emmaclaudine/videos",
-      "https://www.facebook.com/emmaclaudine1",
-      "https://www.tiktok.com/@emmaclaudine1",
-      "https://www.instagram.com/emmaclaudine1/",
-    ],
-    address: {
+      "https://www.youtube.com/@shangaziemmaclaudine",
+      "https://www.facebook.com/emmaclaudine1/",
+      "https://www.tiktok.com/@shangazi_emmaclaudine",
+      "https://www.instagram.com/shangaziemmaclaudine1/",
+    ],    address: {
       "@type": "PostalAddress",
       addressLocality: "Kigali",
       addressCountry: "RW",
