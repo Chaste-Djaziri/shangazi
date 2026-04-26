@@ -15,7 +15,8 @@ import {
   Compass,
   MessageSquare,
   Bell,
-  Shield
+  Shield,
+  Play
 } from "lucide-react";
 import { useEffect } from "react";
 import { useSidebar } from "../../contexts/SidebarContext";
