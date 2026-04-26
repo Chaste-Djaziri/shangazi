@@ -94,7 +94,7 @@ export default async function PortalBlogPage() {
           return (
             <Link 
               key={post._id} 
-              href={`/blog/${post.slug}`}
+              href={`/articles/${post.slug}`}
               className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
             >
               <div className="relative aspect-[16/10] bg-gray-100">
