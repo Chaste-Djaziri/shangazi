@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import LoginForm from "./LoginForm";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Login | Shangazi Emma Claudine",
@@ -34,7 +35,9 @@ export default function LoginPage() {
 
       {/* Right side: Form */}
       <section className="auth-form-side">
-        <LoginForm />
+        <Suspense fallback={<div className="animate-pulse bg-gray-50 h-[400px] w-full rounded-2xl" />}>
+          <LoginForm />
+        </Suspense>
       </section>
     </main>
   );

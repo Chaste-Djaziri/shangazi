@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import SignupForm from "./SignupForm";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Sign Up | Shangazi Emma Claudine",
@@ -12,7 +13,9 @@ export default function SignupPage() {
     <main className="auth-layout flex-row-reverse">
       {/* Form Side (now on left because of flex-row-reverse) */}
       <section className="auth-form-side">
-        <SignupForm />
+        <Suspense fallback={<div className="animate-pulse bg-gray-50 h-[400px] w-full rounded-2xl" />}>
+          <SignupForm />
+        </Suspense>
       </section>
 
       {/* Image Side (now on right because of flex-row-reverse) */}
