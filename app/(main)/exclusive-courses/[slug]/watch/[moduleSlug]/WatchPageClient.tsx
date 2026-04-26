@@ -39,16 +39,17 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
     }
 
     if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&rel=0`;
+      // Manual play prioritized: removed autoplay=1
+      return `https://www.youtube.com/embed/${videoId}?rel=0&enablejsapi=1`;
     }
 
     if (host.includes("vimeo.com")) {
       const vId = url.pathname.split("/").filter(Boolean).pop();
-      if (vId) return `https://player.vimeo.com/video/${vId}?autoplay=1`;
+      if (vId) return `https://player.vimeo.com/video/${vId}`;
     }
   } catch {
     if (videoUrl.length === 11) {
-      return `https://www.youtube.com/embed/${videoUrl}?enablejsapi=1&autoplay=1&rel=0`;
+      return `https://www.youtube.com/embed/${videoUrl}?rel=0&enablejsapi=1`;
     }
   }
   return null;
@@ -57,7 +58,7 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
 export default function WatchPageClient({ course, currentModule, user }: WatchPageClientProps) {
   const router = useRouter();
   
-  // Initialize as empty for consistent server/client initial render
+  // Initialize state
   const [completedModules, setCompletedModules] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
@@ -65,15 +66,15 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
 
-  // Handle module change: Reset loading state
+  // 1. Reset loading state on module change
   useEffect(() => {
     setIsVideoLoading(true);
-    // Safety timeout: hide spinner after 10s even if onLoad fails
-    const timer = setTimeout(() => setIsVideoLoading(false), 10000);
+    // Faster safety timeout for manual play
+    const timer = setTimeout(() => setIsVideoLoading(false), 5000);
     return () => clearTimeout(timer);
   }, [currentModule.slug]);
 
-  // Initial mount: Load from localStorage
+  // 2. Initial mount: Load from localStorage
   useEffect(() => {
     setHasMounted(true);
     const cache = localStorage.getItem(`progress_${course.slug}`);
@@ -82,14 +83,14 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     }
   }, [course.slug]);
 
-  // Sync state to localStorage whenever it changes (after initial mount)
+  // 3. Sync state to localStorage whenever it changes (after initial mount)
   useEffect(() => {
     if (hasMounted) {
       localStorage.setItem(`progress_${course.slug}`, JSON.stringify(completedModules));
     }
   }, [completedModules, course.slug, hasMounted]);
 
-  // Fetch from DB but merge with local state
+  // 4. Fetch from DB but merge with local state
   useEffect(() => {
     async function fetchProgress() {
       try {
@@ -107,16 +108,15 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     fetchProgress();
   }, [course.slug]);
 
-  // Mark module as complete
+  // 5. Mark module as complete
   const markAsComplete = useCallback(async (moduleSlug: string) => {
-    // 1. Instant UI update (State + LocalStorage)
+    // Instant UI update
     setCompletedModules(prev => {
       if (prev.includes(moduleSlug)) return prev;
-      const next = [...prev, moduleSlug];
-      return next;
+      return [...prev, moduleSlug];
     });
 
-    // 2. Background DB sync (Don't wait for this to proceed)
+    // Background sync
     fetch("/api/course-progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -128,7 +128,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     }).catch(err => console.error("DB sync failed:", err));
   }, [course.slug]);
 
-  // Handle Video End & Auto-next
+  // 6. Handle Video End & Auto-next
   const handleVideoEnd = useCallback(() => {
     markAsComplete(currentModule.slug);
     
@@ -136,31 +136,30 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     const currentIndex = course.modules.findIndex((m: any) => m.slug === currentModule.slug);
     if (currentIndex < course.modules.length - 1) {
       const nextModule = course.modules[currentIndex + 1];
-      // Auto-next quickly for better UX
       setTimeout(() => {
         router.push(`/exclusive-courses/${course.slug}/watch/${nextModule.slug}`);
       }, 1500);
     }
   }, [course.slug, currentModule.slug, course.modules, markAsComplete, router]);
 
-  // Official YouTube IFrame API implementation
+  // 7. Official YouTube IFrame API implementation
   useEffect(() => {
     const videoUrl = currentModule.videoUrl;
     if (!videoUrl || !(videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be"))) return;
 
-    // Force iframe reload by re-initializing player
     playerRef.current = null;
 
-    // 1. Load the IFrame Player API code asynchronously.
     if (!(window as any).YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      if (firstScriptTag?.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        document.head.appendChild(tag);
+      }
     }
 
-    // 2. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
     const initPlayer = () => {
       if (iframeRef.current && (window as any).YT?.Player) {
         try {
@@ -179,23 +178,20 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
       }
     };
 
-    if ((window as any).YT && (window as any).YT.Player) {
+    if ((window as any).YT?.Player) {
       initPlayer();
     } else {
       (window as any).onYouTubeIframeAPIReady = initPlayer;
     }
 
     return () => {
-      if (playerRef.current && playerRef.current.destroy) {
-        playerRef.current.destroy();
-      }
+      if (playerRef.current?.destroy) playerRef.current.destroy();
     };
   }, [currentModule.slug, currentModule.videoUrl, handleVideoEnd]);
 
-  // Fallback / Support for other platforms via message events
+  // 8. Fallback / Support for other platforms via message events
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // YouTube fallback
       if (event.origin === "https://www.youtube.com") {
         try {
           const data = JSON.parse(event.data);
@@ -205,7 +201,6 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
         } catch (e) {}
       }
       
-      // Vimeo support
       if (event.origin === "https://player.vimeo.com") {
         try {
           const data = JSON.parse(event.data);
@@ -223,7 +218,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const embedUrl = buildEmbedUrl(currentModule.videoUrl);
 
   return (
-    <div key={currentModule.slug} className="flex flex-col lg:flex-row min-h-screen bg-white">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-white">
       {/* Main Player Section */}
       <div className="flex-1 bg-gray-50">
         <div className="max-w-5xl mx-auto p-4 lg:p-10">
@@ -254,7 +249,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
                 src={embedUrl}
                 title={currentModule.title}
                 className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 onLoad={() => setIsVideoLoading(false)}
               />
