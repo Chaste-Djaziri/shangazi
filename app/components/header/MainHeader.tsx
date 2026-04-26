@@ -17,6 +17,17 @@ export default function MainHeader() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Debounced search for real-time results
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+    
+    const handler = setTimeout(() => {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchQuery, router]);
+
   const handleLogout = async () => {
     await authClient.signOut();
     window.location.href = "/login";
@@ -147,6 +158,7 @@ export default function MainHeader() {
                 src={session.user.image}
                 alt={session.user.name || "User"}
                 fill
+                sizes="40px"
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
               />
             ) : (
