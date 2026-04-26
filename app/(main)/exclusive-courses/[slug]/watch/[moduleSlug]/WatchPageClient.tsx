@@ -3,17 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { 
   Play, 
   CheckCircle2, 
-  Circle, 
   Clock, 
   ChevronLeft, 
-  ChevronRight,
-  Menu,
-  X,
-  ListVideo
+  ListVideo,
+  X
 } from "lucide-react";
 
 interface WatchPageClientProps {
@@ -39,7 +35,6 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
     }
 
     if (videoId) {
-      // Manual play prioritized: removed autoplay=1
       return `https://www.youtube.com/embed/${videoId}?rel=0&enablejsapi=1`;
     }
 
@@ -58,7 +53,6 @@ const buildEmbedUrl = (videoUrl?: string): string | null => {
 export default function WatchPageClient({ course, currentModule, user }: WatchPageClientProps) {
   const router = useRouter();
   
-  // Initialize state
   const [completedModules, setCompletedModules] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
@@ -66,98 +60,83 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
 
-  // 1. Reset loading state on module change
-  useEffect(() => {
-    setIsVideoLoading(true);
-    // Faster safety timeout for manual play
-    const timer = setTimeout(() => setIsVideoLoading(false), 5000);
-    return () => clearTimeout(timer);
-  }, [currentModule.slug]);
-
-  // 2. Initial mount: Load from localStorage
+  // 1. Initial Load & Cache
   useEffect(() => {
     setHasMounted(true);
     const cache = localStorage.getItem(`progress_${course.slug}`);
     if (cache) {
-      setCompletedModules(JSON.parse(cache));
+      try {
+        setCompletedModules(JSON.parse(cache));
+      } catch (e) {}
     }
   }, [course.slug]);
 
-  // 3. Sync state to localStorage whenever it changes (after initial mount)
+  // 2. Reset Player State on Module Change
+  useEffect(() => {
+    setIsVideoLoading(true);
+    // Explicitly hide loader after 6 seconds as a hard fallback
+    const timer = setTimeout(() => setIsVideoLoading(false), 6000);
+    return () => clearTimeout(timer);
+  }, [currentModule.slug]);
+
+  // 3. Sync Cache
   useEffect(() => {
     if (hasMounted) {
       localStorage.setItem(`progress_${course.slug}`, JSON.stringify(completedModules));
     }
   }, [completedModules, course.slug, hasMounted]);
 
-  // 4. Fetch from DB but merge with local state
+  // 4. Robust DB Fetch
   useEffect(() => {
     async function fetchProgress() {
       try {
         const res = await fetch(`/api/course-progress?courseSlug=${course.slug}`);
         if (res.ok) {
           const data = await res.json();
-          if (data.completedModules && data.completedModules.length > 0) {
+          if (data.completedModules) {
             setCompletedModules(prev => Array.from(new Set([...prev, ...data.completedModules])));
           }
         }
       } catch (error) {
-        console.error("Failed to fetch progress from DB, using local cache:", error);
+        console.warn("DB fetch failed, relying on local cache.");
       }
     }
     fetchProgress();
   }, [course.slug]);
 
-  // 5. Mark module as complete
+  // 5. Completion Tracker
   const markAsComplete = useCallback(async (moduleSlug: string) => {
-    // Instant UI update
-    setCompletedModules(prev => {
-      if (prev.includes(moduleSlug)) return prev;
-      return [...prev, moduleSlug];
-    });
-
-    // Background sync
-    fetch("/api/course-progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        courseSlug: course.slug,
-        moduleSlug,
-        completed: true
-      })
-    }).catch(err => console.error("DB sync failed:", err));
+    setCompletedModules(prev => prev.includes(moduleSlug) ? prev : [...prev, moduleSlug]);
+    
+    try {
+      await fetch("/api/course-progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseSlug: course.slug, moduleSlug, completed: true })
+      });
+    } catch (e) {
+      console.warn("Background completion sync failed.");
+    }
   }, [course.slug]);
 
-  // 6. Handle Video End & Auto-next
   const handleVideoEnd = useCallback(() => {
     markAsComplete(currentModule.slug);
-    
-    // Find next module
     const currentIndex = course.modules.findIndex((m: any) => m.slug === currentModule.slug);
     if (currentIndex < course.modules.length - 1) {
       const nextModule = course.modules[currentIndex + 1];
-      setTimeout(() => {
-        router.push(`/exclusive-courses/${course.slug}/watch/${nextModule.slug}`);
-      }, 1500);
+      router.push(`/exclusive-courses/${course.slug}/watch/${nextModule.slug}`);
     }
   }, [course.slug, currentModule.slug, course.modules, markAsComplete, router]);
 
-  // 7. Official YouTube IFrame API implementation
+  // 6. Youtube API Integration
   useEffect(() => {
     const videoUrl = currentModule.videoUrl;
     if (!videoUrl || !(videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be"))) return;
 
-    playerRef.current = null;
-
     if (!(window as any).YT) {
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      if (firstScriptTag?.parentNode) {
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      } else {
-        document.head.appendChild(tag);
-      }
+      document.head.appendChild(tag);
     }
 
     const initPlayer = () => {
@@ -185,32 +164,28 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
     }
 
     return () => {
-      if (playerRef.current?.destroy) playerRef.current.destroy();
+      if (playerRef.current?.destroy) {
+        try { playerRef.current.destroy(); } catch (e) {}
+      }
     };
-  }, [currentModule.slug, currentModule.videoUrl, handleVideoEnd]);
+  }, [currentModule.slug, handleVideoEnd, currentModule.videoUrl]);
 
-  // 8. Fallback / Support for other platforms via message events
+  // 7. Message Fallback
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin === "https://www.youtube.com") {
         try {
           const data = JSON.parse(event.data);
-          if (data.event === "infoDelivery" && data.info?.playerState === 0) {
-            handleVideoEnd();
-          }
+          if (data.event === "infoDelivery" && data.info?.playerState === 0) handleVideoEnd();
         } catch (e) {}
       }
-      
       if (event.origin === "https://player.vimeo.com") {
         try {
           const data = JSON.parse(event.data);
-          if (data.event === "finish") {
-            handleVideoEnd();
-          }
+          if (data.event === "finish") handleVideoEnd();
         } catch (e) {}
       }
     };
-
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [handleVideoEnd]);
@@ -219,7 +194,6 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-white">
-      {/* Main Player Section */}
       <div className="flex-1 bg-gray-50">
         <div className="max-w-5xl mx-auto p-4 lg:p-10">
           <div className="flex items-center justify-between mb-8">
@@ -229,17 +203,14 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             >
               <ChevronLeft size={16} /> Back to Course
             </Link>
-            <button 
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-2 bg-white rounded-xl shadow-sm text-gray-500 border border-gray-100"
-            >
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="lg:hidden p-2 bg-white rounded-xl shadow-sm text-gray-500 border border-gray-100">
               <ListVideo size={20} />
             </button>
           </div>
 
-          <div key={`${currentModule.slug}-player`} className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100 relative">
+          <div key={currentModule.slug} className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100 relative">
             {isVideoLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-20">
                 <div className="w-12 h-12 border-4 border-[#1d5c19]/30 border-t-[#1d5c19] rounded-full animate-spin" />
               </div>
             )}
@@ -248,8 +219,8 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
                 ref={iframeRef}
                 src={embedUrl}
                 title={currentModule.title}
-                className="w-full h-full border-0"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                className="w-full h-full border-0 relative z-10"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 onLoad={() => setIsVideoLoading(false)}
               />
@@ -267,28 +238,25 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             </div>
             
             <div className="mt-12 flex items-center justify-between pt-10 border-t border-gray-100">
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={() => markAsComplete(currentModule.slug)}
-                  className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all ${
-                    completedModules.includes(currentModule.slug)
-                    ? "bg-green-50 text-green-600 border border-green-100"
-                    : "bg-[#1d5c19] text-white shadow-xl shadow-[#1d5c19]/20 hover:opacity-90"
-                  }`}
-                >
-                  {completedModules.includes(currentModule.slug) ? (
-                    <><CheckCircle2 size={18} /> Completed</>
-                  ) : (
-                    "Mark as Complete"
-                  )}
-                </button>
-              </div>
+              <button 
+                onClick={() => markAsComplete(currentModule.slug)}
+                className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all ${
+                  completedModules.includes(currentModule.slug)
+                  ? "bg-green-50 text-green-600 border border-green-100"
+                  : "bg-[#1d5c19] text-white shadow-xl shadow-[#1d5c19]/20 hover:opacity-90"
+                }`}
+              >
+                {completedModules.includes(currentModule.slug) ? (
+                  <><CheckCircle2 size={18} /> Completed</>
+                ) : (
+                  "Mark as Complete"
+                )}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Playlist Sidebar */}
       <aside 
         className={`bg-white border-l border-gray-100 transition-all duration-300
           ${isSidebarOpen ? "w-full lg:w-[450px]" : "w-0 lg:opacity-0 pointer-events-none"}

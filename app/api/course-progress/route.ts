@@ -16,8 +16,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 1. Fetch both overall progress and module progress in parallel
-    const [courseRes, modulesRes] = await Promise.all([
+    // 1. Fetch both overall progress and module progress with a timeout racing mechanism
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("DB Timeout")), 5000)
+    );
+
+    const dbPromise = Promise.all([
       db.query(
         "SELECT started_at, completed_at, last_module_slug FROM public.course_progress WHERE user_id = $1 AND course_slug = $2",
         [user.id, courseSlug]
@@ -28,17 +32,18 @@ export async function GET(request: NextRequest) {
       )
     ]);
 
+    const [courseRes, modulesRes]: any = await Promise.race([dbPromise, timeoutPromise]);
+
     return NextResponse.json({
       course: courseRes.rows[0] || null,
       completedModules: modulesRes.rows.map((m: any) => m.module_slug),
     });
   } catch (error) {
-    console.error("Error fetching course progress:", error);
-    // Return empty state instead of 500 to prevent app crash on transient network issues
+    console.error("Database connection issue, returning empty progress state:", error);
     return NextResponse.json({
       course: null,
       completedModules: [],
-      error: "Database connection timed out"
+      error: "Service temporarily slow"
     }, { status: 200 });
   }
 }
