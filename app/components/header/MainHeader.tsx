@@ -69,7 +69,7 @@ export default function MainHeader() {
             <span>/</span>
             <span className="text-gray-900 font-bold uppercase tracking-wider">
               {pathname.includes("/articles") ? "Articles" : 
-               pathname.includes("/courses") ? "Courses" : 
+               pathname.includes("/exclusive-courses") ? "Courses" : 
                pathname.includes("/exclusive-videos") ? "Videos" : 
                pathname.includes("/profile") ? "Profile" : 
                pathname.includes("/settings") ? "Settings" : "Discover"}
@@ -81,7 +81,7 @@ export default function MainHeader() {
       <nav className="hidden xl:flex items-center gap-6 ml-8">
         <Link href="/discover" className={`text-sm font-marcellus transition-colors ${pathname === "/discover" ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Discover</Link>
         <Link href="/articles" className={`text-sm font-marcellus transition-colors ${pathname.includes("/articles") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Articles</Link>
-        <Link href="/courses" className={`text-sm font-marcellus transition-colors ${pathname.includes("/courses") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Courses</Link>
+        <Link href="/exclusive-courses" className={`text-sm font-marcellus transition-colors ${pathname.includes("/exclusive-courses") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Courses</Link>
         <Link href="/exclusive-videos" className={`text-sm font-marcellus transition-colors ${pathname.includes("/exclusive-videos") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Videos</Link>
       </nav>
 

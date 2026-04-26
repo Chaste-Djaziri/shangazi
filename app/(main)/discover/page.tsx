@@ -60,7 +60,7 @@ export default async function DiscoverPage() {
             </div>
             <h2 className="text-2xl font-serif text-gray-900">Recommended Courses</h2>
           </div>
-          <Link href="/courses" className="text-sm font-bold text-primary hover:underline flex items-center gap-1">
+          <Link href="/exclusive-courses" className="text-sm font-bold text-primary hover:underline flex items-center gap-1">
             View All <ChevronRight size={16} />
           </Link>
         </div>
@@ -72,7 +72,7 @@ export default async function DiscoverPage() {
               return (
                 <Link 
                   key={course._id} 
-                  href={`/courses/${course.slug}`}
+                  href={`/exclusive-courses/${course.slug}`}
                   className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col"
                 >
                   <div className="relative aspect-[16/9] bg-gray-100 overflow-hidden">
@@ -128,7 +128,7 @@ export default async function DiscoverPage() {
             </div>
             <h2 className="text-2xl font-serif text-gray-900">Latest Guidance Videos</h2>
           </div>
-          <Link href="/videos" className="text-sm font-bold text-secondary hover:underline flex items-center gap-1">
+          <Link href="/exclusive-videos" className="text-sm font-bold text-secondary hover:underline flex items-center gap-1">
             Browse All <ChevronRight size={16} />
           </Link>
         </div>
@@ -140,7 +140,7 @@ export default async function DiscoverPage() {
               return (
                 <Link 
                   key={video._id} 
-                  href={`/videos/${video.slug}`}
+                  href={`/exclusive-videos/${video.slug}`}
                   className="group flex flex-col gap-3"
                 >
                   <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100">

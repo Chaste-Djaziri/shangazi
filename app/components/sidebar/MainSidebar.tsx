@@ -37,7 +37,7 @@ export default function MainSidebar() {
       links: [
         { href: "/discover", label: "Discovery", icon: Compass },
         { href: "/articles", label: "Articles", icon: BookOpen },
-        { href: "/courses", label: "Courses", icon: LayoutDashboard },
+        { href: "/exclusive-courses", label: "Courses", icon: LayoutDashboard },
         { href: "/exclusive-videos", label: "Videos", icon: Play },
         { href: "/booking", label: "My Guidance", icon: Calendar },
       ]
