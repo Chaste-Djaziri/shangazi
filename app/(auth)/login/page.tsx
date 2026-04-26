@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Login | Shangazi Emma Claudine",
-  description: "Sign in to your Shangazi account to manage your profile and preferences.",
+  description: "Sign in to the SEC Portal to manage your profile and preferences.",
 };
 
 export default function LoginPage() {
@@ -37,7 +37,7 @@ export default function LoginPage() {
         <div className="auth-card">
           <header className="auth-header">
             <h1 className="auth-title">Welcome Back</h1>
-            <p className="auth-subtitle">Log in to your Shangazi account</p>
+            <p className="auth-subtitle">Log in to the SEC Portal</p>
           </header>
 
           <div className="auth-social-group">
