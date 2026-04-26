@@ -29,6 +29,13 @@ export default function MainHeader() {
     }
   };
 
+  const handleSearch = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchExpanded(false);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -106,6 +113,7 @@ export default function MainHeader() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
             placeholder="Search portal content, guidance, articles..."
             className={`w-full bg-gray-50 border border-transparent rounded-full py-2 pl-10 pr-10 outline-none focus:border-primary/30 focus:bg-white transition-all duration-300 font-marcellus text-sm ${
               isSearchExpanded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
