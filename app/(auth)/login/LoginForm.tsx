@@ -56,8 +56,7 @@ export default function LoginForm() {
       await authClient.signIn.social({
         provider,
         callbackURL: "/discover",
-        disableSignUp: true, 
-        requestSignUp: false, // Ensure both are set to be safe
+        requestSignUp: false, // This is supported in the types
       });
     } catch (err: any) {
       console.error("Social login error:", err);
