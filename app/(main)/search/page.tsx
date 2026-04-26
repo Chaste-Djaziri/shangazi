@@ -61,7 +61,7 @@ export default async function SearchResultsPage({
     );
   }
 
-  const results = await client.fetch(SEARCH_QUERY as any, { query: `*${query}*` });
+  const results = await client.fetch<any[]>(SEARCH_QUERY as any, { query: `*${query}*` } as any);
 
   return (
     <div className="max-w-full mx-auto pb-20">
