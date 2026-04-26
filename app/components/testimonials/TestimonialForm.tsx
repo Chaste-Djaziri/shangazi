@@ -86,18 +86,18 @@ export default function TestimonialForm() {
           <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 ml-4">
             Rating
           </label>
-          <div className="flex gap-2 ml-4">
+          <div className="flex gap-2 ml-4 bg-[#1d5c19]/5 p-3 rounded-2xl w-fit">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
                 onClick={() => setFormData({ ...formData, rating: star })}
-                className="transition-transform hover:scale-110"
+                className="transition-all hover:scale-125"
               >
                 <Star 
-                  size={24} 
-                  fill={star <= formData.rating ? "#1d5c19" : "none"} 
-                  className={star <= formData.rating ? "text-[#1d5c19]" : "text-gray-300"}
+                  size={28} 
+                  fill={star <= formData.rating ? "#1d5c19" : "#ffffff"} 
+                  className={star <= formData.rating ? "text-[#1d5c19]" : "text-white drop-shadow-sm"}
                 />
               </button>
             ))}
