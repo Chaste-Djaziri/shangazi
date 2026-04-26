@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ClientChrome from "./components/chrome/ClientChrome";
+import SmoothScroll from "./components/SmoothScroll";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shangazi.rw"),
@@ -188,9 +189,11 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider>
-          <ClientChrome>{children}</ClientChrome>
-        </ThemeProvider>
+        <SmoothScroll>
+          <ThemeProvider>
+            <ClientChrome>{children}</ClientChrome>
+          </ThemeProvider>
+        </SmoothScroll>
       </body>
     </html>
   );
