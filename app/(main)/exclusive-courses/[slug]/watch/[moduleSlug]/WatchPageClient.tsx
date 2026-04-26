@@ -73,6 +73,9 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   // Mark module as complete
   const markAsComplete = useCallback(async (moduleSlug: string) => {
     try {
+      // Optimistic update
+      setCompletedModules(prev => Array.from(new Set([...prev, moduleSlug])));
+      
       await fetch("/api/course-progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,7 +85,6 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
           completed: true
         })
       });
-      setCompletedModules(prev => Array.from(new Set([...prev, moduleSlug])));
     } catch (error) {
       console.error("Failed to mark module complete:", error);
     }
@@ -107,6 +109,9 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   useEffect(() => {
     const videoUrl = currentModule.videoUrl;
     if (!videoUrl || !(videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be"))) return;
+
+    // Force iframe reload by re-initializing player
+    playerRef.current = null;
 
     // 1. Load the IFrame Player API code asynchronously.
     if (!(window as any).YT) {
@@ -144,7 +149,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
         playerRef.current.destroy();
       }
     };
-  }, [currentModule.videoUrl, handleVideoEnd]);
+  }, [currentModule.slug, currentModule.videoUrl, handleVideoEnd]);
 
   // Fallback / Support for other platforms via message events
   useEffect(() => {
@@ -177,7 +182,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
   const embedUrl = buildEmbedUrl(currentModule.videoUrl);
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-white">
+    <div key={currentModule.slug} className="flex flex-col lg:flex-row min-h-screen bg-white">
       {/* Main Player Section */}
       <div className="flex-1 bg-gray-50">
         <div className="max-w-5xl mx-auto p-4 lg:p-10">
@@ -196,7 +201,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             </button>
           </div>
 
-          <div key={currentModule.slug} className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100">
+          <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100">
             {embedUrl ? (
               <iframe
                 ref={iframeRef}
