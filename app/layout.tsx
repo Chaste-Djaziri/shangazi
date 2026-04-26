@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import ClientChrome from "./components/chrome/ClientChrome";
 import SmoothScroll from "./components/SmoothScroll";
 
 export const metadata: Metadata = {
@@ -191,7 +190,7 @@ export default function RootLayout({
       <body>
         <SmoothScroll>
           <ThemeProvider>
-            <ClientChrome>{children}</ClientChrome>
+            {children}
           </ThemeProvider>
         </SmoothScroll>
       </body>
