@@ -216,19 +216,23 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
                   href={`/exclusive-courses/${course.slug}/watch/${module.slug}`}
                   className={`flex items-center gap-5 p-5 rounded-[24px] transition-all border ${
                     isActive 
-                    ? "bg-primary/5 border-primary/20 shadow-sm" 
+                    ? "bg-[#1d5c19]/5 border-[#1d5c19]/20 shadow-sm" 
                     : "bg-white border-transparent hover:bg-gray-50 hover:border-gray-100"
                   }`}
                 >
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm shrink-0 transition-all ${
-                    isActive ? "bg-primary text-white scale-110 shadow-lg" : isCompleted ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400"
+                    isActive 
+                    ? "bg-[#1d5c19] text-white scale-110 shadow-lg" 
+                    : isCompleted 
+                    ? "bg-green-100 text-green-600" 
+                    : "bg-gray-100 text-gray-400 group-hover:bg-[#1d5c19]/10 group-hover:text-[#1d5c19]"
                   }`}>
                     {isCompleted ? <CheckCircle2 size={24} /> : idx + 1}
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <h4 className={`text-[16px] font-bold truncate transition-colors font-marcellus leading-tight ${
-                      isActive ? "text-primary" : "text-gray-900"
+                      isActive ? "text-[#1d5c19]" : "text-gray-900 group-hover:text-[#1d5c19]"
                     }`}>
                       {module.title}
                     </h4>
@@ -240,7 +244,7 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
                   </div>
 
                   {isActive && (
-                    <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(29,92,25,0.5)]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#1d5c19] animate-pulse shadow-[0_0_10px_rgba(29,92,25,0.5)]" />
                   )}
                 </Link>
               );

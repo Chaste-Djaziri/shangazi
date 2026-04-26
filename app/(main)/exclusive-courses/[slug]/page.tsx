@@ -121,17 +121,17 @@ export default async function PortalCourseDetailPage({ params }: { params: Promi
                     key={module._id}
                     href={`/exclusive-courses/${course.slug}/watch/${module.slug}`}
                     className={`group flex items-center gap-4 p-5 rounded-2xl transition-all border shadow-sm ${
-                      isCompleted ? "bg-green-50/50 border-green-100" : "bg-white border-transparent hover:bg-primary/5 hover:border-primary/10"
+                      isCompleted ? "bg-green-50/50 border-green-100" : "bg-white border-transparent hover:bg-[#1d5c19]/5 hover:border-[#1d5c19]/10"
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
-                      isCompleted ? "bg-green-500 text-white" : "bg-gray-50 text-gray-400 group-hover:bg-primary group-hover:text-white"
+                      isCompleted ? "bg-green-500 text-white" : "bg-gray-50 text-gray-400 group-hover:bg-[#1d5c19] group-hover:text-white"
                     }`}>
                       {isCompleted ? <CheckCircle2 size={20} /> : idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className={`text-[15px] font-bold truncate transition-colors font-marcellus ${
-                        isCompleted ? "text-green-700" : "text-gray-900 group-hover:text-primary"
+                        isCompleted ? "text-green-700" : "text-gray-900 group-hover:text-[#1d5c19]"
                       }`}>
                         {module.title}
                       </h4>
@@ -141,7 +141,7 @@ export default async function PortalCourseDetailPage({ params }: { params: Promi
                          </span>
                       </div>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
+                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-[#1d5c19] group-hover:text-white transition-all shadow-inner">
                       <Play size={12} fill="currentColor" />
                     </div>
                   </Link>
