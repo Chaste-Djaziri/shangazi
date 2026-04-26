@@ -51,7 +51,7 @@ export default async function ProfilePage() {
       "thumbnail": thumbnail.asset->url,
       instructor
     }`,
-    { slugs: progress.map(p => p.course_slug) }
+    { slugs: progress.map((p: any) => p.course_slug) }
   ) : [];
 
   const joinedDate = user.createdAt ? new Date(user.id.startsWith('user_') ? parseInt(user.id.split('_')[1], 36) : Date.now()).toLocaleDateString('en-US', {
