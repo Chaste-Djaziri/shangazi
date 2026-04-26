@@ -67,7 +67,12 @@ export default function LoginPage() {
 
           <form className="auth-form">
             <div className="form-group">
-              <label htmlFor="email" className="form-label">Email Address</label>
+              <div className="flex justify-between items-center mb-1">
+                <label htmlFor="email" className="form-label mb-0">Email Address</label>
+                <Link href="/forgot-password" className="text-sm text-gray-500 hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
               <input 
                 type="email" 
                 id="email" 
