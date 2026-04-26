@@ -40,7 +40,7 @@ export default function LoginForm() {
       const { error: verifyError } = await authClient.signIn.emailOtp({
         email,
         otp,
-        callbackURL: "/discover",
+        callbackURL: `${window.location.origin}/discover`,
       });
       if (verifyError) throw verifyError;
       router.push("/discover");
@@ -55,7 +55,7 @@ export default function LoginForm() {
     try {
       await authClient.signIn.social({
         provider,
-        callbackURL: "/discover",
+        callbackURL: `${window.location.origin}/discover`,
         requestSignUp: false, // This is supported in the types
       });
     } catch (err: any) {

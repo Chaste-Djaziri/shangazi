@@ -7,6 +7,6 @@ export default neonAuthMiddleware({
 export const config = {
   matcher: [
     "/discover/:path*",
-    // Add other protected routes here
+    "/api/auth/:path*",
   ],
 };

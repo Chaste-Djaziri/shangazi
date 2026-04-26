@@ -76,7 +76,7 @@ export default function SignupForm() {
     try {
       await authClient.signIn.social({
         provider,
-        callbackURL: "/discover",
+        callbackURL: `${window.location.origin}/discover`,
       });
     } catch (err: any) {
       setError(err.message || `Failed to sign up with ${provider}`);
