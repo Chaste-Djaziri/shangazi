@@ -4514,6 +4514,12 @@ details[open] .faq-question {
   align-items: stretch;
 }
 
+.stories-insights-grid.stories-insights-single {
+  grid-template-columns: 1fr;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .stories-featured-card {
   position: relative;
   width: 100%;

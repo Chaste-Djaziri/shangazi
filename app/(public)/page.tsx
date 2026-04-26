@@ -7,6 +7,8 @@ import Featured from "../components/featured/Featured";
 import Testimonials from "../components/testimonials/Testimonials";
 import Contact from "../components/contact/Contact";
 import type { Metadata } from "next";
+import { client } from "@/sanity/client";
+import { HOME_POSTS_QUERY } from "@/src/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -48,14 +50,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const blogs = await client.fetch(HOME_POSTS_QUERY);
+
   return (
     <main>
       <Hero />
       <About />
       <Stats />
       <Topics limit={3} showAllButton />
-      <StoriesInsights />
+      <StoriesInsights blogs={blogs} />
       <Featured />
       <Testimonials />
       <Contact />

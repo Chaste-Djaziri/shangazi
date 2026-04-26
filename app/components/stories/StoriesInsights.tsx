@@ -1,32 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const storyCards = [
-  {
-    category: "Tips",
-    title: "What People Rarely Say Out Loud",
-    description:
-      "Short reflections inspired by real questions and shared experiences from the community.",
-    image: "/backgrounds/stories_1.png",
-    href: "/blog",
-    featured: true,
-  },
-  {
-    category: "Mental Health",
-    title: "Common Myths vs Everyday Reality",
-    image: "/images/topics_2.png",
-    href: "/blog",
-  },
-  {
-    category: "Insight",
-    title: "The Truth About Sex: Myths vs. Reality",
-    image: "/images/topics_3.png",
-    href: "/blog",
-  },
-];
+interface StoriesInsightsProps {
+  blogs?: any[];
+}
 
-export default function StoriesInsights() {
-  const [featuredStory, ...sideStories] = storyCards;
+export default function StoriesInsights({ blogs = [] }: StoriesInsightsProps) {
+  if (blogs.length === 0) return null;
+
+  const [featuredStory, ...sideStories] = blogs;
 
   return (
     <section className="stories-insights">
@@ -50,13 +32,13 @@ export default function StoriesInsights() {
             </div>
           </div>
 
-          <div className="stories-insights-grid">
+          <div className={`stories-insights-grid ${sideStories.length === 0 ? "stories-insights-single" : ""}`}>
             <article
               className="stories-featured-card"
             >
               <div className="stories-featured-card-media">
                 <Image
-                  src={featuredStory.image}
+                  src={featuredStory.image || "/backgrounds/stories_1.png"}
                   alt={featuredStory.title}
                   fill
                   sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 100vw, 630px"
@@ -65,39 +47,41 @@ export default function StoriesInsights() {
               </div>
               <div className="stories-featured-card-overlay" />
               <div className="stories-featured-card-content">
-                <p className="stories-card-category stories-card-category-light">{featuredStory.category}</p>
+                <p className="stories-card-category stories-card-category-light">Guidance</p>
                 <h3 className="stories-featured-card-title">{featuredStory.title}</h3>
-                <p className="stories-featured-card-description">{featuredStory.description}</p>
-                <Link href={featuredStory.href} className="stories-read-more stories-read-more-light">
+                <p className="stories-featured-card-description line-clamp-2">{featuredStory.description}</p>
+                <Link href={`/blog/${featuredStory.slug}`} className="stories-read-more stories-read-more-light">
                   <span>Read More</span>
                   <Image src="/vectors/right_arrow.svg" alt="" width={10} height={11} className="stories-read-more-icon" />
                 </Link>
               </div>
             </article>
 
-            <div className="stories-side-list">
-              {sideStories.map((story) => (
-                <article key={story.title} className="stories-side-card">
-                  <div className="stories-side-card-image">
-                    <Image
-                      src={story.image}
-                      alt={story.title}
-                      fill
-                      sizes="(max-width: 768px) calc(100vw - 48px), 330px"
-                      className="stories-side-image"
-                    />
-                  </div>
-                  <div className="stories-side-card-content">
-                    <p className="stories-card-category">{story.category}</p>
-                    <h3 className="stories-side-card-title">{story.title}</h3>
-                    <Link href={story.href} className="stories-read-more">
-                      <span>Read More</span>
-                      <Image src="/vectors/right_green_arrow.svg" alt="" width={10} height={11} className="stories-read-more-icon" />
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+            {sideStories.length > 0 && (
+              <div className="stories-side-list">
+                {sideStories.map((story) => (
+                  <article key={story.slug} className="stories-side-card">
+                    <div className="stories-side-card-image">
+                      <Image
+                        src={story.image || "/images/topics_2.png"}
+                        alt={story.title}
+                        fill
+                        sizes="(max-width: 768px) calc(100vw - 48px), 330px"
+                        className="stories-side-image"
+                      />
+                    </div>
+                    <div className="stories-side-card-content">
+                      <p className="stories-card-category">Insight</p>
+                      <h3 className="stories-side-card-title line-clamp-2">{story.title}</h3>
+                      <Link href={`/blog/${story.slug}`} className="stories-read-more">
+                        <span>Read More</span>
+                        <Image src="/vectors/right_green_arrow.svg" alt="" width={10} height={11} className="stories-read-more-icon" />
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

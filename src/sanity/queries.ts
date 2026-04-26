@@ -51,3 +51,14 @@ export const PUBLIC_VIDEOS_QUERY = `*[_type == "video" && isPublic == true] | or
 // Keep defaults for backward compatibility if needed, but point to portal for discover page
 export const COURSES_QUERY = PORTAL_COURSES_QUERY;
 export const VIDEOS_QUERY = PORTAL_VIDEOS_QUERY;
+
+// Blog Queries
+export const HOME_POSTS_QUERY = `*[_type == "post" && defined(slug.current) && isPublic == true] | order(publishedAt desc) [0...3] {
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  "description": content, 
+  "image": image.asset->url,
+  isPublic
+}`;
