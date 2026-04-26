@@ -11,6 +11,10 @@ const remotePatterns: RemotePattern[] = [
     hostname: "lh3.googleusercontent.com",
   },
   {
+    protocol: "https",
+    hostname: "img.youtube.com",
+  },
+  {
     protocol: "http",
     hostname: "localhost",
   },
