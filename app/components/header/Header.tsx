@@ -89,8 +89,6 @@ export default function Header() {
 
   const impactLinks = [
     { href: "/testimonials", label: "Testimonials" },
-    { href: "/impact", label: "Impact" },
-    { href: "/social-proof", label: "Social Proof" },
   ];
 
   const getInvolvedLinks = [
@@ -160,7 +158,7 @@ export default function Header() {
             </Link>
             <Dropdown label="About" links={aboutLinks} />
             <Dropdown label="Content" links={contentLinks} />
-            <Dropdown label="Impact" links={impactLinks} />
+            <Link href="/testimonials" className="nav-link">Testimonials</Link>
             <Dropdown label="Get Involved" links={getInvolvedLinks} />
             <Dropdown label="Help" links={helpLinks} />
           </nav>
@@ -300,36 +298,8 @@ export default function Header() {
               <Link href="/topics" prefetch={false} className="sidebar-dropdown-link" onClick={closeSidebar}>Topics</Link>
             </div>
           </div>
-          <div className="sidebar-dropdown">
-            <button
-              type="button"
-              className="sidebar-dropdown-label"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleDropdown("Impact");
-              }}
-              aria-expanded={openDropdown === "Impact"}
-            >
-              Impact
-              <span className="sidebar-dropdown-arrow">
-                {openDropdown === "Impact" ? "−" : "+"}
-              </span>
-            </button>
-            <div className={`sidebar-dropdown-links ${openDropdown === "Impact" ? "open" : ""}`}>
-              {impactLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  prefetch={false}
-                  className="sidebar-dropdown-link"
-                  onClick={closeSidebar}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          <Link href="/testimonials" prefetch={false} className="sidebar-link" onClick={closeSidebar}>Testimonials</Link>
+
           <div className="sidebar-dropdown">
             <button
               type="button"
