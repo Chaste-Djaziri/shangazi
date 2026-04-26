@@ -196,10 +196,9 @@ export default function WatchPageClient({ course, currentModule, user }: WatchPa
             </button>
           </div>
 
-          <div className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100">
+          <div key={currentModule.slug} className="aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl mb-12 border border-gray-100">
             {embedUrl ? (
               <iframe
-                key={currentModule.slug}
                 ref={iframeRef}
                 src={embedUrl}
                 title={currentModule.title}
