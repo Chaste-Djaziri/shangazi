@@ -4,8 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
+import { authClient } from "@/auth-client";
 
 export default function Header() {
+  const { data: session } = authClient.useSession();
   const headerRef = useRef<HTMLElement | null>(null);
   const lastScrollYRef = useRef(0);
   const isHeroInViewRef = useRef(false);
@@ -167,8 +169,8 @@ export default function Header() {
                 <Image src="/vectors/search.svg" alt="" width={21} height={21} className="profile-icon-image" />
               </button>
 
-              <Link href="/login" className="ask-shangazi-button desktop-ask-shangazi" aria-label="Login">
-                <span className="ask-shangazi-text">Login</span>
+              <Link href={session ? "/discover" : "/login"} className="ask-shangazi-button desktop-ask-shangazi" aria-label={session ? "Portal" : "Login"}>
+                <span className="ask-shangazi-text">{session ? "Portal" : "Login"}</span>
               </Link>
             </div>
 
