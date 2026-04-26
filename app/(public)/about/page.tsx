@@ -66,26 +66,32 @@ export default function AboutPage() {
                 2025.
               </p>
             </div>
-            <div className="about-detail-icon">
+            <div className="about-detail-icon relative group">
               <a
-                className="about-detail-icon-link"
+                className="about-detail-icon-link block"
                 href="https://www.youtube.com/@shangaziemmaclaudine"
                 target="_blank"
                 rel="noreferrer"
               >
+                <div className="absolute -top-4 -right-4 z-10 bg-[#FF0000] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-red-500/20 transform group-hover:scale-110 transition-transform">
+                  500K+ Subscribers
+                </div>
                 <Image src="/socials/youtube.png" alt="YouTube" width={260} height={260} priority />
               </a>
             </div>
           </div>
 
           <div className="about-detail-row about-detail-row-reverse">
-            <div className="about-detail-icon">
+            <div className="about-detail-icon relative group">
               <a
-                className="about-detail-icon-link"
+                className="about-detail-icon-link block"
                 href="https://www.facebook.com/emmaclaudine1/"
                 target="_blank"
                 rel="noreferrer"
               >
+                <div className="absolute -top-4 -left-4 z-10 bg-[#1877F2] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl shadow-blue-500/20 transform group-hover:scale-110 transition-transform">
+                  267K+ Followers
+                </div>
                 <Image src="/socials/facebook.png" alt="Facebook" width={260} height={260} />
               </a>
             </div>
@@ -113,15 +119,43 @@ export default function AboutPage() {
                 through education and open dialogue.
               </p>
             </div>
-            <div className="about-detail-icon">
+            <div className="about-detail-icon relative group">
               <a
-                className="about-detail-icon-link"
+                className="about-detail-icon-link block"
                 href="https://www.tiktok.com/@shangazi_emmaclaudine"
                 target="_blank"
                 rel="noreferrer"
               >
+                <div className="absolute -top-4 -right-4 z-10 bg-black text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transform group-hover:scale-110 transition-transform">
+                  172.1K+ Followers
+                </div>
                 <Image src="/socials/tiktok.png" alt="TikTok" width={260} height={260} />
               </a>
+            </div>
+          </div>
+
+          <div className="about-detail-row about-detail-row-reverse">
+            <div className="about-detail-icon relative group">
+              <a
+                className="about-detail-icon-link block"
+                href="https://www.instagram.com/shangaziemmaclaudine1/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="absolute -top-4 -left-4 z-10 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-xl transform group-hover:scale-110 transition-transform">
+                  62.8K+ Followers
+                </div>
+                <Image src="/socials/instagram.png" alt="Instagram" width={260} height={260} />
+              </a>
+            </div>
+            <div className="about-detail-text">
+              <h2 className="about-detail-title">
+                Authentic <span className="about-highlight-primary">Engagement</span>
+              </h2>
+              <p className="about-detail-body">
+                Through Instagram, Shangazi maintains a close and visual connection with her community, sharing daily wisdom,
+                behind-the-scenes moments, and interactive guidance that brings honest conversations directly to her followers&apos; feeds.
+              </p>
             </div>
           </div>
         </div>
