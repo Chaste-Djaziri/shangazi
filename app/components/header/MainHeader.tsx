@@ -70,7 +70,7 @@ export default function MainHeader() {
             <span className="text-gray-900 font-bold uppercase tracking-wider">
               {pathname.includes("/articles") ? "Articles" : 
                pathname.includes("/courses") ? "Courses" : 
-               pathname.includes("/videos") ? "Videos" : 
+               pathname.includes("/exclusive-videos") ? "Videos" : 
                pathname.includes("/profile") ? "Profile" : 
                pathname.includes("/settings") ? "Settings" : "Discover"}
             </span>
@@ -82,7 +82,7 @@ export default function MainHeader() {
         <Link href="/discover" className={`text-sm font-marcellus transition-colors ${pathname === "/discover" ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Discover</Link>
         <Link href="/articles" className={`text-sm font-marcellus transition-colors ${pathname.includes("/articles") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Articles</Link>
         <Link href="/courses" className={`text-sm font-marcellus transition-colors ${pathname.includes("/courses") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Courses</Link>
-        <Link href="/videos" className={`text-sm font-marcellus transition-colors ${pathname.includes("/videos") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Videos</Link>
+        <Link href="/exclusive-videos" className={`text-sm font-marcellus transition-colors ${pathname.includes("/exclusive-videos") ? "text-primary font-bold" : "text-gray-500 hover:text-primary"}`}>Videos</Link>
       </nav>
 
       {/* Center/Right: Expanding Search & Actions */}
