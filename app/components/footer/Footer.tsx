@@ -34,6 +34,7 @@ const resourceLinks = [
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null)
   const newsletterFormRef = useRef<HTMLFormElement>(null)
+  const [newsletterName, setNewsletterName] = useState("")
   const [newsletterEmail, setNewsletterEmail] = useState("")
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [newsletterError, setNewsletterError] = useState<string | null>(null)
@@ -51,7 +52,10 @@ export default function Footer() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newsletterEmail }),
+        body: JSON.stringify({ 
+          name: newsletterName,
+          email: newsletterEmail 
+        }),
       })
 
       if (!res.ok) {
@@ -60,6 +64,7 @@ export default function Footer() {
       }
 
       setNewsletterStatus("success")
+      setNewsletterName("")
       setNewsletterEmail("")
       newsletterFormRef.current?.reset()
     } catch (error) {
@@ -129,6 +134,15 @@ export default function Footer() {
 
               <div className="site-footer-newsletter-signup">
                 <form className="site-footer-newsletter-form" ref={newsletterFormRef} onSubmit={handleNewsletterSubmit}>
+                  <input
+                    type="text"
+                    name="name"
+                    aria-label="Your Name"
+                    placeholder="Enter your names"
+                    required
+                    value={newsletterName}
+                    onChange={(event) => setNewsletterName(event.target.value)}
+                  />
                   <input
                     type="email"
                     name="email"
