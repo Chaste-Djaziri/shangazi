@@ -61,7 +61,7 @@ export default function MainHeader() {
     <div className="header-container !max-w-full !px-8 h-20 flex items-center justify-between">
       {/* Left: Sidebar Toggle & Section Title */}
       <div className="flex items-center gap-4">
-        <SidebarTrigger />
+        <SidebarTrigger className="md:hidden" />
 
         <div className={`flex items-center gap-2 transition-opacity duration-300 ${isSearchExpanded ? "opacity-0 invisible w-0" : "opacity-100 visible"}`}>
           <h2 className="text-xl font-serif text-gray-800 lg:hidden">SEC Portal</h2>

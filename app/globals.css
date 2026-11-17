@@ -45,6 +45,20 @@
 }
 
 
+/* Compact Laterbox-inspired icon rail for the SEC Portal. */
+.sec-portal [data-sidebar="sidebar"] [data-sidebar="menu-button"] {
+  width: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+}
+.sec-portal [data-sidebar="sidebar"] [data-sidebar="menu-button"] > svg {
+  width: 26px;
+  height: 26px;
+}
+.sec-portal [data-slot="sidebar-container"] {
+  border: 0;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;
