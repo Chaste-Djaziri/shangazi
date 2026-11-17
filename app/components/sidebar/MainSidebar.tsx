@@ -22,10 +22,10 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const mainLinks = [
   { href: "/discover", label: "Discover", icon: Compass },
@@ -52,21 +52,31 @@ export default function MainSidebar() {
     window.location.href = "/login";
   };
 
+  // Use real links for the icon rail: shadcn SidebarMenuButton enforces a
+  // 32px collapsed size, which previously shrank the active background.
   const renderLinks = (links: typeof mainLinks | typeof accountLinks) =>
     links.map(({ href, label, icon: Icon }) => {
       const active = pathname === href || pathname.startsWith(`${href}/`);
       return (
         <SidebarMenuItem key={href} className="flex justify-center">
-          <SidebarMenuButton
-            render={<Link href={href} aria-label={label} aria-current={active ? "page" : undefined} onClick={() => setOpenMobile(false)} />}
-            isActive={active}
-            tooltip={label}
-            title={label}
-            className={`!size-[56px] !rounded-[18px] !justify-center !p-0 !border !transition-colors focus-visible:!ring-[#e71d5b] ${active ? "!border-[#e3e3e3] !bg-[#f0f0f0] !text-[#222222] hover:!bg-[#ebebeb]" : "!border-transparent !bg-transparent !text-[#858585] hover:!bg-transparent hover:!text-[#222222]"}`}
-          >
-            <Icon className="!size-[30px]" strokeWidth={active ? 2.3 : 1.85} aria-hidden="true" />
-            <span className="sr-only">{label}</span>
-          </SidebarMenuButton>
+          <Tooltip>
+            <TooltipTrigger render={
+              <Link
+                href={href}
+                aria-label={label}
+                aria-current={active ? "page" : undefined}
+                onClick={() => setOpenMobile(false)}
+                className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[18px] border transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e71d5b] ${
+                  active
+                    ? "border-[#dedede] bg-[#ebebeb] text-[#222222]"
+                    : "border-transparent bg-transparent text-[#858585] hover:text-[#222222]"
+                }`}
+              />
+            }>
+              <Icon className="size-[32px] shrink-0" strokeWidth={active ? 2.2 : 1.9} aria-hidden="true" />
+            </TooltipTrigger>
+            <TooltipContent side="right" align="center">{label}</TooltipContent>
+          </Tooltip>
         </SidebarMenuItem>
       );
     });
@@ -103,7 +113,7 @@ export default function MainSidebar() {
       <SidebarContent className="gap-0 px-0" data-lenis-prevent>
         <div className="mx-auto mb-5 h-px w-9 bg-[#e9e9e9]" aria-hidden="true" />
         <nav aria-label="Main navigation">
-          <SidebarMenu className="items-center gap-2">
+          <SidebarMenu className="items-center gap-3">
             {renderLinks(mainLinks)}
           </SidebarMenu>
         </nav>
@@ -115,33 +125,31 @@ export default function MainSidebar() {
         </nav>
       </SidebarContent>
 
-      <SidebarFooter className="items-center gap-2 border-t-0 px-0 pb-4">
-        <SidebarMenu className="items-center gap-1">
+      <SidebarFooter className="items-center gap-2 px-0 pb-4">
+        <SidebarMenu className="items-center gap-2">
           <SidebarMenuItem className="flex justify-center">
-            <SidebarMenuButton
-              render={<Link href="/profile" aria-label={displayName} onClick={() => setOpenMobile(false)} />}
-              tooltip={displayName}
-              title={displayName}
-              className="!size-[56px] !rounded-[18px] !p-0 !justify-center !bg-transparent hover:!bg-[#f4f4f4]"
-            >
-              <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full text-[#1d5c19]">
-                {session?.user?.image ? (
-                  <Image src={session.user.image} alt="" width={40} height={40} unoptimized className="size-full object-cover" />
-                ) : <span className="text-lg font-semibold">{initial}</span>}
-              </span>
-            </SidebarMenuButton>
+            <Tooltip>
+              <TooltipTrigger render={
+                <Link href="/profile" aria-label={displayName} onClick={() => setOpenMobile(false)} className="flex size-[60px] items-center justify-center rounded-[18px] focus-visible:outline-2 focus-visible:outline-[#e71d5b]" />
+              }>
+                <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full text-[#252525]">
+                  {session?.user?.image ? (
+                    <Image src={session.user.image} alt="" width={40} height={40} unoptimized className="size-full object-cover" />
+                  ) : <span className="text-lg font-semibold">{initial}</span>}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="right">{displayName}</TooltipContent>
+            </Tooltip>
           </SidebarMenuItem>
           <SidebarMenuItem className="flex justify-center">
-            <SidebarMenuButton
-              onClick={signOut}
-              aria-label="Sign out"
-              tooltip="Sign out"
-              title="Sign out"
-              className="!size-[56px] !rounded-[18px] !p-0 !justify-center !bg-transparent !text-[#85877c] hover:!bg-white hover:!text-[#a52a2a]"
-            >
-              <LogOut className="!size-[30px]" strokeWidth={1.85} aria-hidden="true" />
-              <span className="sr-only">Sign out</span>
-            </SidebarMenuButton>
+            <Tooltip>
+              <TooltipTrigger render={
+                <button type="button" onClick={signOut} aria-label="Sign out" className="flex size-[60px] items-center justify-center rounded-[18px] text-[#858585] hover:text-[#a52a2a] focus-visible:outline-2 focus-visible:outline-[#e71d5b]" />
+              }>
+                <LogOut size={32} strokeWidth={1.9} aria-hidden="true" />
+              </TooltipTrigger>
+              <TooltipContent side="right">Sign out</TooltipContent>
+            </Tooltip>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

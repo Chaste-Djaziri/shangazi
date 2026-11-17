@@ -45,20 +45,11 @@
 }
 
 
-/* Compact Laterbox-inspired icon rail for the SEC Portal. */
-.sec-portal [data-sidebar="sidebar"] [data-sidebar="menu-button"] {
-  width: 56px !important;
-  height: 56px !important;
-  padding: 0 !important;
-}
-.sec-portal [data-sidebar="sidebar"] [data-sidebar="menu-button"] > svg {
-  width: 30px;
-  height: 30px;
-}
+/* Compact SEC icon rail. The sidebar menu uses 60px links instead of
+   shadcn's 32px collapsed menu buttons so active states fill each tile. */
 .sec-portal [data-slot="sidebar-container"] {
   border: 0;
 }
-/* The full icon rail has its own soft neutral surface, like Laterbox. */
 .sec-portal [data-slot="sidebar-inner"],
 .sec-portal [data-mobile="true"][data-slot="sidebar"] {
   background: #fafafa !important;
