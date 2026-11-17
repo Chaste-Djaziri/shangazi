@@ -68,7 +68,7 @@ export default function MainSidebar() {
               render={<Link href={href} onClick={() => setOpenMobile(false)} aria-current={isActive ? "page" : undefined} />}
               isActive={isActive}
               tooltip={label}
-              className="!h-10 !rounded-md !bg-transparent px-3 font-[Manrope] !text-[13px] font-medium text-[#69726b] hover:!bg-transparent hover:!text-[#1d5c19] data-active:!bg-transparent data-active:!font-semibold data-active:!text-[#1d5c19] group-data-[collapsible=icon]:!size-10"
+              className="!h-10 rounded-md px-3 font-[Manrope] !text-[13px] font-medium text-[#667269] hover:text-[#1d5c19] data-active:font-semibold data-active:!text-[#1d5c19] group-data-[collapsible=icon]:!size-10"
             >
               <Icon className="!size-[18px]" strokeWidth={isActive ? 2 : 1.8} />
               <span>{label}</span>
@@ -87,7 +87,7 @@ export default function MainSidebar() {
     <Sidebar
       collapsible="icon"
       variant="sidebar"
-      className="!border-0 bg-white text-[#29352c] [&_[data-slot=sidebar-inner]]:!bg-white [&_[data-slot=sidebar-container]]:!border-0"
+      className="text-sidebar-foreground"
     >
       <SidebarHeader className="h-20 justify-center px-5 group-data-[collapsible=icon]:px-2">
         <Link href="/discover" onClick={() => setOpenMobile(false)} aria-label="Shangazi portal home" className="flex items-center outline-offset-4">
@@ -134,7 +134,7 @@ export default function MainSidebar() {
               render={<Link href="/profile" onClick={() => setOpenMobile(false)} />}
               tooltip={name}
               size="lg"
-              className="!h-12 !rounded-md !bg-transparent px-2 hover:!bg-transparent group-data-[collapsible=icon]:!size-10"
+              className="!h-12 rounded-md px-2 group-data-[collapsible=icon]:!size-10"
             >
               <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full font-[Manrope] text-sm font-semibold text-[#1d5c19]">
                 {session?.user?.image ? (
@@ -151,7 +151,7 @@ export default function MainSidebar() {
             <SidebarMenuButton
               onClick={signOut}
               tooltip="Sign out"
-              className="!h-10 !rounded-md !bg-transparent px-3 font-[Manrope] !text-[13px] text-[#8f6565] hover:!bg-transparent hover:!text-[#a52a2a] group-data-[collapsible=icon]:!size-10"
+              className="!h-10 rounded-md px-3 font-[Manrope] !text-[13px] text-[#8f6565] hover:!text-[#a52a2a] group-data-[collapsible=icon]:!size-10"
             >
               <LogOut className="!size-[18px]" />
               <span>Sign out</span>
