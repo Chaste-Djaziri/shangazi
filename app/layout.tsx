@@ -80,9 +80,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: "https://shangazi.rw",
-  },
   category: "Media & Journalism",
   classification: "Journalism, Education, Youth Counseling",
   other: {
