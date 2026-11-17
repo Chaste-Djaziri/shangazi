@@ -62,7 +62,7 @@ export default function MainSidebar() {
             isActive={active}
             tooltip={label}
             title={label}
-            className="!size-[58px] !rounded-2xl !justify-center !p-0 !text-[#788579] !bg-transparent hover:!bg-[#f0f4ec] hover:!text-[#1d5c19] data-active:!bg-[#e5eddf] data-active:!text-[#1d5c19] focus-visible:!ring-[#1d5c19] transition-colors"
+            className={`!size-[56px] !rounded-[18px] !justify-center !p-0 !border !transition-colors focus-visible:!ring-[#758a50] ${active ? "!border-[#d3df9e] !bg-[#e6edb0] !text-[#26331d] shadow-[0_2px_8px_rgba(30,42,20,0.06)] hover:!bg-[#e6edb0]" : "!border-transparent !bg-transparent !text-[#85877c] hover:!bg-white hover:!text-[#171711]"}`}
           >
             <Icon className="!size-[30px]" strokeWidth={active ? 2.3 : 1.85} aria-hidden="true" />
             <span className="sr-only">{label}</span>
@@ -78,15 +78,15 @@ export default function MainSidebar() {
     <Sidebar
       collapsible="icon"
       aria-label="Portal navigation"
-      className="!border-0 !bg-transparent [&_[data-slot=sidebar-inner]]:!bg-transparent [&_[data-slot=sidebar-container]]:!border-0"
+      className="!border-0 [&_[data-slot=sidebar-inner]]:!bg-[#f7f5ee] [&_[data-slot=sidebar-container]]:!border-0"
     >
-      <SidebarHeader className="items-center px-0 pb-3 pt-4">
+      <SidebarHeader className="items-center px-0 pb-4 pt-5">
         <Link
           href="/discover"
           aria-label="Shangazi portal home"
           title="Shangazi portal home"
           onClick={() => setOpenMobile(false)}
-          className="flex size-[52px] items-center justify-center rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1d5c19]"
+          className="flex size-[56px] items-center justify-center rounded-[18px] bg-[#e6edb0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#758a50]"
         >
           <Image
             src="/logo/Shangazi Logo Variations-2.png"
@@ -95,33 +95,34 @@ export default function MainSidebar() {
             priority
             unoptimized
             alt="Shangazi"
-            className="size-[42px] object-contain"
+            className="size-[40px] object-contain"
           />
         </Link>
       </SidebarHeader>
 
       <SidebarContent className="gap-0 px-0" data-lenis-prevent>
+        <div className="mx-auto mb-5 h-px w-9 bg-[#e5e2d6]" aria-hidden="true" />
         <nav aria-label="Main navigation">
-          <SidebarMenu className="items-center gap-2.5">
+          <SidebarMenu className="items-center gap-2">
             {renderLinks(mainLinks)}
           </SidebarMenu>
         </nav>
-        <div className="my-4" aria-hidden="true" />
+        <div className="mx-auto my-5 h-px w-9 bg-[#e5e2d6]" aria-hidden="true" />
         <nav aria-label="Account navigation">
-          <SidebarMenu className="items-center gap-1">
+          <SidebarMenu className="items-center gap-2">
             {renderLinks(accountLinks)}
           </SidebarMenu>
         </nav>
       </SidebarContent>
 
-      <SidebarFooter className="items-center gap-2 px-0 pb-4">
+      <SidebarFooter className="items-center gap-2 border-t-0 px-0 pb-4">
         <SidebarMenu className="items-center gap-1">
           <SidebarMenuItem className="flex justify-center">
             <SidebarMenuButton
               render={<Link href="/profile" aria-label={displayName} onClick={() => setOpenMobile(false)} />}
               tooltip={displayName}
               title={displayName}
-              className="!size-[58px] !rounded-2xl !p-0 !justify-center !bg-transparent hover:!bg-[#f0f4ec]"
+              className="!size-[56px] !rounded-[18px] !p-0 !justify-center !bg-transparent hover:!bg-white"
             >
               <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full text-[#1d5c19]">
                 {session?.user?.image ? (
@@ -136,7 +137,7 @@ export default function MainSidebar() {
               aria-label="Sign out"
               tooltip="Sign out"
               title="Sign out"
-              className="!size-[58px] !rounded-2xl !p-0 !justify-center !bg-transparent !text-[#788579] hover:!bg-[#fff0f0] hover:!text-[#a52a2a]"
+              className="!size-[56px] !rounded-[18px] !p-0 !justify-center !bg-transparent !text-[#85877c] hover:!bg-white hover:!text-[#a52a2a]"
             >
               <LogOut className="!size-[30px]" strokeWidth={1.85} aria-hidden="true" />
               <span className="sr-only">Sign out</span>
