@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "../LocalSafeImage";
 import { useState } from "react";
 
 const testimonials = [

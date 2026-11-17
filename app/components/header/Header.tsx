@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import Image from "../LocalSafeImage";
 import Link from "next/link";
 import Dropdown from "./Dropdown";
 import { authClient } from "@/auth-client";

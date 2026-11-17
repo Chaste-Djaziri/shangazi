@@ -8,7 +8,7 @@
     "studio-shangazi": {
       "root": "studio-shangazi",
       "framework": "sanity",
-      "buildCommand": "npm run build",
+      "buildCommand": "npm run build:vercel",
       "outputDirectory": "dist"
     }
   },

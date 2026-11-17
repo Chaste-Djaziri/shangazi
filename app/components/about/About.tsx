@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "../LocalSafeImage"
 import Link from "next/link"
 
 export default function About() {
