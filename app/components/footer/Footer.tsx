@@ -26,7 +26,7 @@ const serviceLinks = [
 const resourceLinks = [
   { href: "/faq", label: "Help Center" },
   { href: "/contact", label: "Support" },
-  { href: "/terms", label: "Term Services" },
+  { href: "/terms", label: "Terms of Use" },
   { href: "/blog", label: "Documentation" },
   { href: "/privacy", label: "Privacy Policy" },
 ]
