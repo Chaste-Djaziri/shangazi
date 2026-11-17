@@ -10,10 +10,10 @@ export default function MainLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-[#FDFCFB]">
+      <div className="flex min-h-screen bg-white">
         <MainSidebar />
         <MainContent>
-          <header className="sticky top-0 z-30 w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+          <header className="sticky top-0 z-30 w-full bg-white">
             <MainHeader />
           </header>
           <main className="min-h-screen p-6 lg:p-10">

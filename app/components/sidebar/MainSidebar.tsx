@@ -67,10 +67,10 @@ export default function MainSidebar() {
         aria-current={active ? "page" : undefined}
         title={isCollapsed ? link.label : undefined}
         onClick={() => setIsMobileOpen(false)}
-        className={`group relative flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1d5c19] ${
+        className={`group relative flex h-11 items-center gap-3 px-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1d5c19] ${
           active
-            ? "bg-[#eaf2e8] text-[#1d5c19]"
-            : "text-[#5c675d] hover:bg-[#f3f6f1] hover:text-[#183d1a]"
+            ? "text-[#1d5c19] font-semibold"
+            : "text-[#5c675d] hover:text-[#183d1a]"
         } ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
       >
         <Icon size={19} strokeWidth={active ? 2.1 : 1.8} className="shrink-0" aria-hidden="true" />
@@ -93,17 +93,17 @@ export default function MainSidebar() {
           type="button"
           aria-label="Close navigation"
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 z-[60] bg-[#102110]/40 lg:hidden"
+          className="fixed inset-0 z-[60] bg-black/20 lg:hidden"
         />
       )}
 
       <aside
         aria-label="Portal navigation"
-        className={`fixed inset-y-0 left-0 z-[70] flex w-[272px] flex-col border-r border-[#e6ebe4] bg-white transition-[width,transform] duration-200 ease-out
+        className={`fixed inset-y-0 left-0 z-[70] flex w-[272px] flex-col bg-white transition-[width,transform] duration-200 ease-out
           ${isMobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full lg:translate-x-0"}
           ${isCollapsed ? "lg:w-[80px]" : "lg:w-64"}`}
       >
-        <div className={`flex h-20 shrink-0 items-center border-b border-[#eef0eb] px-5 ${isCollapsed ? "lg:justify-center lg:px-2" : "justify-between"}`}>
+        <div className={`flex h-20 shrink-0 items-center px-5 ${isCollapsed ? "lg:justify-center lg:px-2" : "justify-between"}`}>
           <Link
             href="/discover"
             title="Shangazi SEC Portal"
@@ -124,7 +124,7 @@ export default function MainSidebar() {
             type="button"
             onClick={() => setIsMobileOpen(false)}
             aria-label="Close sidebar"
-            className="ml-auto rounded-lg p-2 text-[#526252] hover:bg-[#f3f6f1] lg:hidden"
+            className="ml-auto rounded-lg p-2 text-[#526252] lg:hidden"
           >
             <X size={20} />
           </button>
@@ -138,7 +138,7 @@ export default function MainSidebar() {
             {primaryLinks.map(renderLink)}
           </nav>
 
-          <div className="my-6 border-t border-[#eef0eb]" />
+          <div className="h-7" />
 
           <nav aria-label="Account navigation" className="space-y-1">
             <p className={`mb-3 px-3 font-[Manrope] text-[10px] font-bold uppercase tracking-[0.16em] text-[#94a094] ${isCollapsed ? "lg:sr-only" : ""}`}>
@@ -148,14 +148,14 @@ export default function MainSidebar() {
           </nav>
         </div>
 
-        <div className="shrink-0 border-t border-[#eef0eb] p-3">
+        <div className="shrink-0 p-3">
           <Link
             href="/profile"
             onClick={() => setIsMobileOpen(false)}
             title={isCollapsed ? displayName : undefined}
-            className={`flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-[#f5f7f3] ${isCollapsed ? "lg:justify-center" : ""}`}
+            className={`flex items-center gap-3 px-2 py-2.5 transition-colors hover:text-[#1d5c19] ${isCollapsed ? "lg:justify-center" : ""}`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eaf2e8] font-[Manrope] text-sm font-semibold text-[#1d5c19]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full font-[Manrope] text-sm font-semibold text-[#1d5c19]">
               {session?.user?.image ? (
                 <Image src={session.user.image} alt="" width={36} height={36} unoptimized className="h-full w-full object-cover" />
               ) : initial}
@@ -170,7 +170,7 @@ export default function MainSidebar() {
             type="button"
             onClick={handleLogout}
             title={isCollapsed ? "Sign out" : undefined}
-            className={`mt-1 flex h-10 w-full items-center gap-3 rounded-lg px-3 font-[Manrope] text-[13px] font-medium text-[#7b5555] transition-colors hover:bg-[#fff2f2] hover:text-[#a52a2a] focus-visible:outline-2 focus-visible:outline-[#a52a2a] ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+            className={`mt-1 flex h-10 w-full items-center gap-3 px-3 font-[Manrope] text-[13px] font-medium text-[#7b5555] transition-colors hover:text-[#a52a2a] focus-visible:outline-2 focus-visible:outline-[#a52a2a] ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
           >
             <LogOut size={18} strokeWidth={1.8} aria-hidden="true" />
             <span className={isCollapsed ? "lg:sr-only" : ""}>Sign out</span>
