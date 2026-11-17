@@ -1,17 +1,31 @@
+// app/(public)/robots.ts
 import type { MetadataRoute } from "next";
 
-export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw";
+const SITE_URL = "https://shangazi.rw";
 
+export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/login", "/api/"],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      // Private SEC portal, account screens, API routes and CMS tools are not search results.
+      disallow: [
+        "/api/",
+        "/admin/",
+        "/studio/",
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/discover",
+        "/articles",
+        "/exclusive-courses",
+        "/exclusive-videos",
+        "/profile",
+        "/settings",
+        "/search",
+      ],
+    },
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

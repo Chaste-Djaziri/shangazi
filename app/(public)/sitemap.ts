@@ -1,117 +1,125 @@
-import type { MetadataRoute } from "next"
-import { client } from "@/sanity/client"
+// app/(public)/sitemap.ts
+import type { MetadataRoute } from "next";
+import { client } from "@/sanity/client";
 
-type SanitySlug = {
-  slug?: string
-  updatedAt?: string
-}
+// A sitemap always advertises production canonicals, even in local/preview builds.
+const SITE_URL = "https://shangazi.rw";
+export const revalidate = 3600;
 
-type CourseWithModules = {
-  slug?: string
-  updatedAt?: string
-  modules?: { slug?: string }[]
-}
+// Never expose unpublished Sanity drafts, even when the app has a preview token.
+const publishedClient = client.withConfig({
+  perspective: "published",
+  token: undefined,
+  useCdn: false,
+});
 
-const BLOG_SLUGS_QUERY = `*[_type == "post" && defined(slug.current) && isPublic == true]{
+type PublishedItem = {
+  slug?: string | null;
+  updatedAt?: string | null;
+};
+
+type PublishedCourse = PublishedItem & {
+  modules?: Array<{ slug?: string | null; isPublic?: boolean | null }> | null;
+};
+
+const POSTS_QUERY = `*[
+  _type == "post" && isPublic == true && defined(slug.current)
+  && (!defined(publishedAt) || publishedAt <= now())
+]{
   "slug": slug.current,
   "updatedAt": coalesce(_updatedAt, publishedAt)
-}`
+}`;
 
-const VIDEO_SLUGS_QUERY = `*[_type == "video" && defined(slug.current) && isPublic == true]{
+const VIDEOS_QUERY = `*[
+  _type == "video" && isPublic == true && defined(slug.current)
+]{
   "slug": slug.current,
   "updatedAt": _updatedAt
-}`
+}`;
 
-const COURSE_SLUGS_QUERY = `*[_type == "course" && defined(slug.current) && isPublic == true]{
+const COURSES_QUERY = `*[
+  _type == "course" && isPublic == true && defined(slug.current)
+  && (!defined(publishedAt) || publishedAt <= now())
+]{
   "slug": slug.current,
   "updatedAt": coalesce(_updatedAt, publishedAt),
   "modules": modules[]->{ "slug": slug.current, isPublic }
-}`
+}`;
 
-const options = { next: { revalidate: 3600 } }
+const staticPaths = [
+  "/",
+  "/about",
+  "/topics",
+  "/blog",
+  "/courses",
+  "/videos",
+  "/testimonials",
+  "/contact",
+  "/booking",
+  "/donation",
+  "/newsletter",
+  "/faq",
+  "/privacy",
+  "/terms",
+] as const;
 
-const STATIC_PATHS = [
-  ["/", "weekly", 1],
-  ["/about", "monthly", 0.9],
-  ["/topics", "weekly", 0.9],
-  ["/blog", "weekly", 0.8],
-  ["/courses", "weekly", 0.8],
-  ["/videos", "weekly", 0.8],
-  ["/testimonials", "monthly", 0.7],
-  ["/contact", "monthly", 0.7],
-  ["/booking", "monthly", 0.7],
-  ["/donation", "monthly", 0.6],
-  ["/newsletter", "monthly", 0.6],
-  ["/faq", "monthly", 0.6],
-  ["/privacy", "yearly", 0.4],
-  ["/terms", "yearly", 0.4],
-] as const satisfies ReadonlyArray<
-  readonly [
-    path: string,
-    changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>,
-    priority: number,
-  ]
->
+function validLastModified(value?: string | null): Date | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date : undefined;
+}
+
+function makeEntry(path: string, updatedAt?: string | null): MetadataRoute.Sitemap[number] {
+  return {
+    url: new URL(path, SITE_URL).toString(),
+    ...(validLastModified(updatedAt) ? { lastModified: validLastModified(updatedAt) } : {}),
+  };
+}
+
+function validSlug(slug?: string | null): slug is string {
+  return Boolean(slug && slug.trim() && !slug.includes("/") && slug !== "." && slug !== "..");
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://shangazi.rw").replace(/\/$/, "")
-  const now = new Date().toISOString()
+  const staticEntries = staticPaths.map((path) => makeEntry(path));
 
-  const staticRoutes: MetadataRoute.Sitemap = STATIC_PATHS.map(([path, changeFrequency, priority]) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: now,
-    changeFrequency,
-    priority,
-  }))
-
+  // A temporary CMS failure should not make /sitemap.xml return a server error.
   const [posts, videos, courses] = await Promise.all([
-    client.fetch<SanitySlug[]>(BLOG_SLUGS_QUERY, {}, options).catch(() => []),
-    client.fetch<SanitySlug[]>(VIDEO_SLUGS_QUERY, {}, options).catch(() => []),
-    client.fetch<CourseWithModules[]>(COURSE_SLUGS_QUERY, {}, options).catch(() => []),
-  ])
+    publishedClient.fetch<PublishedItem[]>(POSTS_QUERY).catch(() => []),
+    publishedClient.fetch<PublishedItem[]>(VIDEOS_QUERY).catch(() => []),
+    publishedClient.fetch<PublishedCourse[]>(COURSES_QUERY).catch(() => []),
+  ]);
 
-  const blogRoutes: MetadataRoute.Sitemap = posts
-    .filter((item) => item.slug)
-    .map((item) => ({
-      url: `${baseUrl}/blog/${item.slug}`,
-      lastModified: item.updatedAt ?? now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    }))
+  const dynamicEntries: MetadataRoute.Sitemap = [];
 
-  const videoRoutes: MetadataRoute.Sitemap = videos
-    .filter((item) => item.slug)
-    .map((item) => ({
-      url: `${baseUrl}/videos/${item.slug}`,
-      lastModified: item.updatedAt ?? now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    }))
-
-  const courseRoutes: MetadataRoute.Sitemap = []
-  courses.forEach((course) => {
-    if (course.slug) {
-      // Course landing page
-      courseRoutes.push({
-        url: `${baseUrl}/courses/${course.slug}`,
-        lastModified: course.updatedAt ?? now,
-        changeFrequency: "weekly",
-        priority: 0.8,
-      })
-
-      // Course modules (watch pages)
-      course.modules?.forEach((module: any) => {
-        if (module.slug && module.isPublic !== false) {
-          courseRoutes.push({
-            url: `${baseUrl}/courses/${course.slug}/watch/${module.slug}`,
-            lastModified: course.updatedAt ?? now,
-            changeFrequency: "weekly",
-            priority: 0.6,
-          })
-        }
-      })
+  for (const post of posts) {
+    if (validSlug(post.slug)) {
+      dynamicEntries.push(makeEntry(`/blog/${encodeURIComponent(post.slug)}`, post.updatedAt));
     }
-  })
+  }
 
-  return [...staticRoutes, ...blogRoutes, ...videoRoutes, ...courseRoutes]
+  for (const video of videos) {
+    if (validSlug(video.slug)) {
+      dynamicEntries.push(makeEntry(`/videos/${encodeURIComponent(video.slug)}`, video.updatedAt));
+    }
+  }
+
+  for (const course of courses) {
+    if (!validSlug(course.slug)) continue;
+    const coursePath = `/courses/${encodeURIComponent(course.slug)}`;
+    dynamicEntries.push(makeEntry(coursePath, course.updatedAt));
+
+    // Only publicly accessible lessons belonging to a public course.
+    for (const module of course.modules ?? []) {
+      if (module?.isPublic === true && validSlug(module.slug)) {
+        dynamicEntries.push(makeEntry(`${coursePath}/watch/${encodeURIComponent(module.slug)}`, course.updatedAt));
+      }
+    }
+  }
+
+  const uniqueEntries = new Map<string, MetadataRoute.Sitemap[number]>();
+  for (const entry of [...staticEntries, ...dynamicEntries]) {
+    uniqueEntries.set(entry.url, entry);
+  }
+  return [...uniqueEntries.values()];
 }
