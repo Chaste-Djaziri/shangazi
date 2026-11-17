@@ -2,47 +2,58 @@
 import type { Metadata } from "next";
 import { neonAuth } from "@neondatabase/auth/next/server";
 import { redirect } from "next/navigation";
+import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 import { client } from "@/sanity/client";
-import { COURSES_QUERY, VIDEOS_QUERY } from "@/sanity/queries";
+import { PORTAL_VIDEOS_QUERY } from "@/sanity/queries";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Play } from "lucide-react";
+import { BookOpen, Play } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Discover | SEC Portal",
-  description: "Explore courses, articles and guidance videos from Shangazi Emma Claudine.",
-};
-
-type Course = {
-  _id: string;
-  slug?: string;
-  title?: string;
-  description?: string;
-  instructor?: string;
-  thumbnail?: string;
-  firstVideoUrl?: string;
-  lessonCount?: number;
+  description: "Browse member videos and articles from Shangazi Emma Claudine.",
 };
 
 type Video = {
   _id: string;
   slug?: string;
   title?: string;
-  description?: string;
   thumbnail?: string;
   videoUrl?: string;
   duration?: string;
 };
+
+type Article = {
+  _id: string;
+  slug: string;
+  title: string;
+  image?: SanityImageSource;
+  publishedAt?: string;
+  author?: string;
+};
+
+const ARTICLES_QUERY = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) [0...12] {
+  _id,
+  title,
+  "slug": slug.current,
+  image,
+  publishedAt,
+  author
+}`;
+
+const { projectId, dataset } = client.config();
+const urlFor = (source: SanityImageSource) =>
+  projectId && dataset ? createImageUrlBuilder({ projectId, dataset }).image(source) : null;
 
 function getYouTubeThumbnail(value?: string): string | null {
   if (!value) return null;
   try {
     const url = new URL(value);
     const host = url.hostname.toLowerCase();
-    const id = host === "youtu.be" || host === "www.youtu.be"
+    const id = ["youtu.be", "www.youtu.be"].includes(host)
       ? url.pathname.split("/")[1]
       : ["youtube.com", "www.youtube.com", "m.youtube.com"].includes(host)
-        ? url.searchParams.get("v") || url.pathname.split("/")[2]
+        ? url.searchParams.get("v") || (url.pathname.startsWith("/shorts/") || url.pathname.startsWith("/embed/") ? url.pathname.split("/")[2] : null)
         : null;
     return id && /^[a-zA-Z0-9_-]{11}$/.test(id)
       ? `https://img.youtube.com/vi/${id}/hqdefault.jpg`
@@ -52,38 +63,27 @@ function getYouTubeThumbnail(value?: string): string | null {
   }
 }
 
-function SectionHeading({
-  eyebrow,
+function ContentRow({
   title,
   href,
-  action,
+  children,
 }: {
-  eyebrow: string;
   title: string;
   href: string;
-  action: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p className="mb-2 font-[Manrope] text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d5c19]">{eyebrow}</p>
-        <h2 className="font-[Fraunces] text-[27px] font-normal tracking-tight text-[#242b24] sm:text-[32px]">{title}</h2>
+    <section aria-label={title} className="min-w-0">
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <h2 className="font-[Manrope] text-lg font-semibold tracking-tight text-[#202020]">{title}</h2>
+        <Link href={href} className="font-[Manrope] text-sm font-medium text-[#777] hover:text-[#222]">
+          See all
+        </Link>
       </div>
-      <Link href={href} className="inline-flex items-center gap-2 pb-1 font-[Manrope] text-sm font-semibold text-[#1d5c19] transition-opacity hover:opacity-70">
-        {action} <ArrowRight size={16} aria-hidden="true" />
-      </Link>
-    </div>
-  );
-}
-
-function EmptySection({ message, href, action }: { message: string; href: string; action: string }) {
-  return (
-    <div className="py-10">
-      <p className="font-[Manrope] text-sm leading-7 text-[#6e746e]">{message}</p>
-      <Link href={href} className="mt-3 inline-flex items-center gap-2 font-[Manrope] text-sm font-semibold text-[#1d5c19] hover:underline">
-        {action} <ArrowRight size={16} aria-hidden="true" />
-      </Link>
-    </div>
+      <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {children}
+      </div>
+    </section>
   );
 }
 
@@ -91,97 +91,55 @@ export default async function DiscoverPage() {
   const { user } = await neonAuth();
   if (!user) redirect("/login");
 
-  const [courses, videos] = await Promise.all([
-    client.fetch<Course[]>(COURSES_QUERY),
-    client.fetch<Video[]>(VIDEOS_QUERY),
+  const [videos, articles] = await Promise.all([
+    client.fetch<Video[]>(PORTAL_VIDEOS_QUERY),
+    client.fetch<Article[]>(ARTICLES_QUERY, {}, { next: { revalidate: 60 } }),
   ]);
-
-  const firstName = user.name?.trim().split(/\s+/)[0] || "there";
-  const availableCourses = courses.filter((course) => Boolean(course.slug)).slice(0, 3);
-  const availableVideos = videos.filter((video) => Boolean(video.slug)).slice(0, 4);
+  const availableVideos = (videos ?? []).filter((video) => video.slug);
+  const availableArticles = (articles ?? []).filter((article) => article.slug);
 
   return (
-    <div className="mx-auto max-w-[1220px] pb-16">
-      <header className="mb-14 pt-3 sm:mb-16 sm:pt-6">
-        <p className="mb-4 font-[Manrope] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1d5c19]">Your SEC Portal</p>
-        <h1 className="max-w-[780px] font-[Fraunces] text-[36px] font-normal leading-[1.15] tracking-tight text-[#242b24] sm:text-[48px] lg:text-[56px]">
-          Welcome back, {firstName}.
-        </h1>
-        <p className="mt-5 max-w-xl font-[Marcellus] text-[17px] leading-7 text-[#6c726b] sm:text-lg">
-          A place to learn, reflect and find guidance that matters to you.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
-          <Link href="/exclusive-courses" className="inline-flex items-center gap-2 font-[Manrope] text-sm font-semibold text-[#1d5c19] hover:underline">
-            Explore courses <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link href="/articles" className="inline-flex items-center gap-2 font-[Manrope] text-sm font-medium text-[#4c594e] hover:text-[#1d5c19]">
-            Read articles <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </header>
+    <main className="mx-auto max-w-[1480px] space-y-12 pb-16">
+      <ContentRow title="Videos" href="/exclusive-videos">
+        {availableVideos.length ? availableVideos.map((video) => {
+          const thumbnail = video.thumbnail || getYouTubeThumbnail(video.videoUrl);
+          return (
+            <Link key={video._id} href={`/exclusive-videos/${video.slug}`} className="group min-w-0">
+              <div className="relative aspect-video overflow-hidden rounded-xl bg-[#f2f2f2]">
+                {thumbnail ? (
+                  <Image src={thumbnail} alt={video.title || "Video"} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.035]" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[#999]"><Play size={36} strokeWidth={1.5} /></div>
+                )}
+                {video.duration && <span className="absolute bottom-2 right-2 rounded bg-[#161616]/85 px-1.5 py-0.5 text-[11px] font-semibold text-white">{video.duration}</span>}
+              </div>
+              <h3 className="mt-3 line-clamp-2 font-[Manrope] text-[14px] font-semibold leading-[1.45] text-[#202020] group-hover:text-[#555]">{video.title}</h3>
+              <p className="mt-1 font-[Manrope] text-xs text-[#8a8a8a]">Video</p>
+            </Link>
+          );
+        }) : <p className="col-span-full py-8 text-sm text-[#888]">No videos available yet.</p>}
+      </ContentRow>
 
-      <section aria-labelledby="discover-courses" className="mb-16 sm:mb-20">
-        <div id="discover-courses">
-          <SectionHeading eyebrow="Learn at your pace" title="Explore courses" href="/exclusive-courses" action="All courses" />
-        </div>
-        {availableCourses.length ? (
-          <div className="grid grid-cols-1 gap-x-7 gap-y-9 md:grid-cols-2 xl:grid-cols-3">
-            {availableCourses.map((course) => {
-              const image = course.thumbnail || getYouTubeThumbnail(course.firstVideoUrl);
-              return (
-                <Link key={course._id} href={`/exclusive-courses/${course.slug}`} className="group block min-w-0">
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-[6px] bg-[#f1f3ee]">
-                    {image ? (
-                      <Image src={image} alt={course.title || "Course"} fill sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.035]" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[#98a396]"><BookOpen size={36} strokeWidth={1.3} /></div>
-                    )}
-                  </div>
-                  <div className="pt-4">
-                    <p className="font-[Manrope] text-[11px] font-medium uppercase tracking-[0.1em] text-[#1d5c19]">
-                      {course.lessonCount ? `${course.lessonCount} lessons` : "Course"}
-                    </p>
-                    <h3 className="mt-2 font-[Fraunces] text-xl font-normal leading-snug text-[#293029] transition-colors group-hover:text-[#1d5c19]">{course.title}</h3>
-                    {course.description && <p className="mt-2 line-clamp-2 font-[Manrope] text-[13px] leading-6 text-[#777d76]">{course.description}</p>}
-                    {course.instructor && <p className="mt-3 font-[Manrope] text-xs text-[#8a9089]">{course.instructor}</p>}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        ) : (
-          <EmptySection message="Courses will appear here once they're available." href="/articles" action="Browse articles instead" />
-        )}
-      </section>
-
-      <section aria-labelledby="discover-videos">
-        <div id="discover-videos">
-          <SectionHeading eyebrow="Watch and reflect" title="Latest guidance videos" href="/exclusive-videos" action="All videos" />
-        </div>
-        {availableVideos.length ? (
-          <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 xl:grid-cols-4">
-            {availableVideos.map((video) => {
-              const image = video.thumbnail || getYouTubeThumbnail(video.videoUrl);
-              return (
-                <Link key={video._id} href={`/exclusive-videos/${video.slug}`} className="group block min-w-0">
-                  <div className="relative aspect-video overflow-hidden rounded-[6px] bg-[#f1f3ee]">
-                    {image ? (
-                      <Image src={image} alt={video.title || "Guidance video"} fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.035]" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[#98a396]"><Play size={32} strokeWidth={1.3} /></div>
-                    )}
-                    {video.duration && <span className="absolute bottom-3 right-3 rounded-sm bg-[#1b211b]/75 px-2 py-1 font-[Manrope] text-[11px] text-white">{video.duration}</span>}
-                  </div>
-                  <p className="mt-4 font-[Manrope] text-[11px] font-medium uppercase tracking-[0.1em] text-[#1d5c19]">Guidance video</p>
-                  <h3 className="mt-2 font-[Fraunces] text-lg font-normal leading-snug text-[#293029] transition-colors group-hover:text-[#1d5c19]">{video.title}</h3>
-                </Link>
-              );
-            })}
-          </div>
-        ) : (
-          <EmptySection message="New guidance videos will appear here as they're published." href="/articles" action="Explore articles" />
-        )}
-      </section>
-    </div>
+      <ContentRow title="Articles" href="/articles">
+        {availableArticles.length ? availableArticles.map((article) => {
+          const thumbnail = article.image ? urlFor(article.image)?.width(720).height(405).fit("crop").url() : undefined;
+          return (
+            <Link key={article._id} href={`/articles/${article.slug}`} className="group min-w-0">
+              <div className="relative aspect-video overflow-hidden rounded-xl bg-[#f2f2f2]">
+                {thumbnail ? (
+                  <Image src={thumbnail} alt={article.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.035]" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[#999]"><BookOpen size={36} strokeWidth={1.5} /></div>
+                )}
+              </div>
+              <h3 className="mt-3 line-clamp-2 font-[Manrope] text-[14px] font-semibold leading-[1.45] text-[#202020] group-hover:text-[#555]">{article.title}</h3>
+              <p className="mt-1 truncate font-[Manrope] text-xs text-[#8a8a8a]">
+                {[article.author, article.publishedAt ? new Date(article.publishedAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : null].filter(Boolean).join(" · ") || "Article"}
+              </p>
+            </Link>
+          );
+        }) : <p className="col-span-full py-8 text-sm text-[#888]">No articles available yet.</p>}
+      </ContentRow>
+    </main>
   );
 }
