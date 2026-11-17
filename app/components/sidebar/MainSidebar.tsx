@@ -62,7 +62,7 @@ export default function MainSidebar() {
             isActive={active}
             tooltip={label}
             title={label}
-            className={`!size-[56px] !rounded-[18px] !justify-center !p-0 !border !transition-colors focus-visible:!ring-[#e71d5b] ${active ? "!border-[#e3e3e3] !bg-[#f0f0f0] !text-[#222222] hover:!bg-[#ebebeb]" : "!border-transparent !bg-transparent !text-[#858585] hover:!bg-[#f4f4f4] hover:!text-[#222222]"}`}
+            className={`!size-[56px] !rounded-[18px] !justify-center !p-0 !border !transition-colors focus-visible:!ring-[#e71d5b] ${active ? "!border-[#e3e3e3] !bg-[#f0f0f0] !text-[#222222] hover:!bg-[#ebebeb]" : "!border-transparent !bg-transparent !text-[#858585] hover:!bg-transparent hover:!text-[#222222]"}`}
           >
             <Icon className="!size-[30px]" strokeWidth={active ? 2.3 : 1.85} aria-hidden="true" />
             <span className="sr-only">{label}</span>
@@ -86,7 +86,7 @@ export default function MainSidebar() {
           aria-label="Shangazi portal home"
           title="Shangazi portal home"
           onClick={() => setOpenMobile(false)}
-          className="flex size-[56px] items-center justify-center rounded-[18px] bg-[#f0f0f0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e71d5b]"
+          className="flex size-[56px] items-center justify-center rounded-[18px] bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e71d5b]"
         >
           <Image
             src="/logo/Shangazi Logo Variations-2.png"
