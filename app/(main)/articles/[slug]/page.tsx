@@ -250,8 +250,8 @@ export default async function PortalBlogDetailPage({ params }: { params: Promise
         </div>
 
         {/* Sidebar / Related */}
-        <aside className="space-y-8">
-          <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <div className="rounded-3xl border border-gray-100 bg-gray-50 p-8 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain">
             <h3 className="text-xl font-serif mb-6">More Articles</h3>
             <div className="space-y-6">
               {relatedPosts.map((post) => {
