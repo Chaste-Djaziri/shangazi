@@ -1,26 +1,21 @@
+// app/(main)/layout.tsx
 import MainHeader from "../components/header/MainHeader";
 import MainSidebar from "../components/sidebar/MainSidebar";
-import { SidebarProvider } from "../contexts/SidebarContext";
-import MainContent from "./MainContent";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen bg-white">
+    <TooltipProvider>
+      <SidebarProvider className="sec-portal bg-white" defaultOpen>
         <MainSidebar />
-        <MainContent>
+        <SidebarInset className="min-w-0 bg-white">
           <header className="sticky top-0 z-30 w-full bg-white">
             <MainHeader />
           </header>
-          <main className="min-h-screen p-6 lg:p-10">
-            {children}
-          </main>
-        </MainContent>
-      </div>
-    </SidebarProvider>
+          <div className="min-h-screen p-6 lg:p-10">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }

@@ -9,18 +9,28 @@ import { authClient } from "@/auth-client";
 import {
   BookOpenText,
   CalendarDays,
-  ChevronRight,
   Compass,
   GraduationCap,
   LogOut,
   PlaySquare,
   Settings2,
   UserRound,
-  X,
 } from "lucide-react";
-import { useSidebar } from "../../contexts/SidebarContext";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
-const primaryLinks = [
+const explore = [
   { href: "/discover", label: "Discover", icon: Compass },
   { href: "/articles", label: "Articles", icon: BookOpenText },
   { href: "/exclusive-courses", label: "Courses", icon: GraduationCap },
@@ -28,7 +38,7 @@ const primaryLinks = [
   { href: "/booking", label: "Book guidance", icon: CalendarDays },
 ] as const;
 
-const accountLinks = [
+const account = [
   { href: "/profile", label: "My profile", icon: UserRound },
   { href: "/settings", label: "Settings", icon: Settings2 },
 ] as const;
@@ -36,147 +46,119 @@ const accountLinks = [
 export default function MainSidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
-  const { isCollapsed, isMobileOpen, setIsMobileOpen } = useSidebar();
+  const { setOpenMobile } = useSidebar();
 
   useEffect(() => {
-    setIsMobileOpen(false);
-  }, [pathname, setIsMobileOpen]);
+    setOpenMobile(false);
+  }, [pathname, setOpenMobile]);
 
-  useEffect(() => {
-    if (!isMobileOpen) return;
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMobileOpen(false);
-    };
-    window.addEventListener("keydown", onEscape);
-    return () => window.removeEventListener("keydown", onEscape);
-  }, [isMobileOpen, setIsMobileOpen]);
-
-  const handleLogout = async () => {
+  const signOut = async () => {
     await authClient.signOut();
     window.location.href = "/login";
   };
 
-  const renderLink = (link: (typeof primaryLinks)[number] | (typeof accountLinks)[number]) => {
-    const Icon = link.icon;
-    const active = pathname === link.href || pathname.startsWith(link.href + "/");
+  const menu = (items: typeof explore | typeof account) => (
+    <SidebarMenu className="gap-1">
+      {items.map(({ href, label, icon: Icon }) => {
+        const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
-    return (
-      <Link
-        key={link.href}
-        href={link.href}
-        aria-current={active ? "page" : undefined}
-        title={isCollapsed ? link.label : undefined}
-        onClick={() => setIsMobileOpen(false)}
-        className={`group relative flex h-11 items-center gap-3 px-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1d5c19] ${
-          active
-            ? "text-[#1d5c19] font-semibold"
-            : "text-[#5c675d] hover:text-[#183d1a]"
-        } ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
-      >
-        <Icon size={19} strokeWidth={active ? 2.1 : 1.8} className="shrink-0" aria-hidden="true" />
-        <span className={`min-w-0 truncate font-[Manrope] ${isCollapsed ? "lg:sr-only" : ""}`}>
-          {link.label}
-        </span>
-        {active && !isCollapsed && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#1d5c19]" aria-hidden="true" />}
-      </Link>
-    );
-  };
+        return (
+          <SidebarMenuItem key={href}>
+            <SidebarMenuButton
+              render={<Link href={href} onClick={() => setOpenMobile(false)} aria-current={isActive ? "page" : undefined} />}
+              isActive={isActive}
+              tooltip={label}
+              className="!h-10 !rounded-md !bg-transparent px-3 font-[Manrope] !text-[13px] font-medium text-[#69726b] hover:!bg-transparent hover:!text-[#1d5c19] data-active:!bg-transparent data-active:!font-semibold data-active:!text-[#1d5c19] group-data-[collapsible=icon]:!size-10"
+            >
+              <Icon className="!size-[18px]" strokeWidth={isActive ? 2 : 1.8} />
+              <span>{label}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
+    </SidebarMenu>
+  );
 
-  const displayName = session?.user?.name?.trim() || "Your account";
+  const name = session?.user?.name?.trim() || "Your account";
   const email = session?.user?.email || "SEC Portal";
   const initial = (session?.user?.name?.[0] || session?.user?.email?.[0] || "S").toUpperCase();
 
   return (
-    <>
-      {isMobileOpen && (
-        <button
-          type="button"
-          aria-label="Close navigation"
-          onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 z-[60] bg-black/20 lg:hidden"
-        />
-      )}
+    <Sidebar
+      collapsible="icon"
+      variant="sidebar"
+      className="!border-0 bg-white text-[#29352c] [&_[data-slot=sidebar-inner]]:!bg-white [&_[data-slot=sidebar-container]]:!border-0"
+    >
+      <SidebarHeader className="h-20 justify-center px-5 group-data-[collapsible=icon]:px-2">
+        <Link href="/discover" onClick={() => setOpenMobile(false)} aria-label="Shangazi portal home" className="flex items-center outline-offset-4">
+          <Image
+            src="/logo/Shangazi Logo Variations-1.png"
+            alt="Shangazi"
+            width={136}
+            height={42}
+            priority
+            unoptimized
+            className="h-9 w-auto max-w-[136px] object-contain group-data-[collapsible=icon]:hidden"
+          />
+          <Image
+            src="/logo/Shangazi Logo Variations-2.png"
+            alt=""
+            width={36}
+            height={36}
+            priority
+            unoptimized
+            className="hidden size-9 object-contain group-data-[collapsible=icon]:block"
+          />
+        </Link>
+      </SidebarHeader>
 
-      <aside
-        aria-label="Portal navigation"
-        className={`fixed inset-y-0 left-0 z-[70] flex w-[272px] flex-col bg-white transition-[width,transform] duration-200 ease-out
-          ${isMobileOpen ? "translate-x-0 shadow-xl" : "-translate-x-full lg:translate-x-0"}
-          ${isCollapsed ? "lg:w-[80px]" : "lg:w-64"}`}
-      >
-        <div className={`flex h-20 shrink-0 items-center px-5 ${isCollapsed ? "lg:justify-center lg:px-2" : "justify-between"}`}>
-          <Link
-            href="/discover"
-            title="Shangazi SEC Portal"
-            onClick={() => setIsMobileOpen(false)}
-            className="flex min-w-0 items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1d5c19]"
-          >
-            <Image
-              src={isCollapsed ? "/logo/Shangazi Logo Variations-2.png" : "/logo/Shangazi Logo Variations-1.png"}
-              alt="Shangazi"
-              width={isCollapsed ? 38 : 136}
-              height={42}
-              priority
-              unoptimized
-              className={`h-9 object-contain object-left ${isCollapsed ? "w-9" : "w-[136px]"}`}
-            />
-          </Link>
-          <button
-            type="button"
-            onClick={() => setIsMobileOpen(false)}
-            aria-label="Close sidebar"
-            className="ml-auto rounded-lg p-2 text-[#526252] lg:hidden"
-          >
-            <X size={20} />
-          </button>
-        </div>
+      <SidebarContent className="gap-4 px-2 pt-4" data-lenis-prevent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-3 font-[Manrope] text-[10px] uppercase tracking-[0.14em] text-[#9aa29b]">
+            Explore
+          </SidebarGroupLabel>
+          <SidebarGroupContent>{menu(explore)}</SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-3 font-[Manrope] text-[10px] uppercase tracking-[0.14em] text-[#9aa29b]">
+            Your space
+          </SidebarGroupLabel>
+          <SidebarGroupContent>{menu(account)}</SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-3 py-6" data-lenis-prevent>
-          <nav aria-label="Main navigation" className="space-y-1">
-            <p className={`mb-3 px-3 font-[Manrope] text-[10px] font-bold uppercase tracking-[0.16em] text-[#94a094] ${isCollapsed ? "lg:sr-only" : ""}`}>
-              Explore
-            </p>
-            {primaryLinks.map(renderLink)}
-          </nav>
-
-          <div className="h-7" />
-
-          <nav aria-label="Account navigation" className="space-y-1">
-            <p className={`mb-3 px-3 font-[Manrope] text-[10px] font-bold uppercase tracking-[0.16em] text-[#94a094] ${isCollapsed ? "lg:sr-only" : ""}`}>
-              Your space
-            </p>
-            {accountLinks.map(renderLink)}
-          </nav>
-        </div>
-
-        <div className="shrink-0 p-3">
-          <Link
-            href="/profile"
-            onClick={() => setIsMobileOpen(false)}
-            title={isCollapsed ? displayName : undefined}
-            className={`flex items-center gap-3 px-2 py-2.5 transition-colors hover:text-[#1d5c19] ${isCollapsed ? "lg:justify-center" : ""}`}
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full font-[Manrope] text-sm font-semibold text-[#1d5c19]">
-              {session?.user?.image ? (
-                <Image src={session.user.image} alt="" width={36} height={36} unoptimized className="h-full w-full object-cover" />
-              ) : initial}
-            </span>
-            <span className={`min-w-0 flex-1 ${isCollapsed ? "lg:sr-only" : ""}`}>
-              <span className="block truncate font-[Manrope] text-[13px] font-semibold text-[#233528]">{displayName}</span>
-              <span className="block truncate font-[Manrope] text-[11px] text-[#879187]">{email}</span>
-            </span>
-            {!isCollapsed && <ChevronRight size={15} className="shrink-0 text-[#9da79e]" aria-hidden="true" />}
-          </Link>
-          <button
-            type="button"
-            onClick={handleLogout}
-            title={isCollapsed ? "Sign out" : undefined}
-            className={`mt-1 flex h-10 w-full items-center gap-3 px-3 font-[Manrope] text-[13px] font-medium text-[#7b5555] transition-colors hover:text-[#a52a2a] focus-visible:outline-2 focus-visible:outline-[#a52a2a] ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
-          >
-            <LogOut size={18} strokeWidth={1.8} aria-hidden="true" />
-            <span className={isCollapsed ? "lg:sr-only" : ""}>Sign out</span>
-          </button>
-        </div>
-      </aside>
-    </>
+      <SidebarFooter className="gap-1 p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={<Link href="/profile" onClick={() => setOpenMobile(false)} />}
+              tooltip={name}
+              size="lg"
+              className="!h-12 !rounded-md !bg-transparent px-2 hover:!bg-transparent group-data-[collapsible=icon]:!size-10"
+            >
+              <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full font-[Manrope] text-sm font-semibold text-[#1d5c19]">
+                {session?.user?.image ? (
+                  <Image src={session.user.image} alt="" width={32} height={32} unoptimized className="size-full object-cover" />
+                ) : initial}
+              </span>
+              <span className="min-w-0 flex-1 font-[Manrope]">
+                <span className="block truncate text-[12px] font-semibold text-[#29352c]">{name}</span>
+                <span className="block truncate text-[11px] text-[#89918a]">{email}</span>
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={signOut}
+              tooltip="Sign out"
+              className="!h-10 !rounded-md !bg-transparent px-3 font-[Manrope] !text-[13px] text-[#8f6565] hover:!bg-transparent hover:!text-[#a52a2a] group-data-[collapsible=icon]:!size-10"
+            >
+              <LogOut className="!size-[18px]" />
+              <span>Sign out</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
