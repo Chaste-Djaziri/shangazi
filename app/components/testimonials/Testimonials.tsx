@@ -3,31 +3,9 @@
 import Image from "../LocalSafeImage";
 import { useState } from "react";
 
-const testimonials = [
-  {
-    quote:
-      "For a long time, I carried questions about sexual life I didn't know how to ask. Listening and engaging here helped me feel understood and less alone.",
-    name: "Mugisha Kevin",
-    role: "Student",
-    image: "/profile/1.png",
-  },
-  {
-    quote:
-      "These conversations gave me language for things I had struggled to explain for years. I left feeling calmer, clearer, and more confident.",
-    name: "Uwase Diane",
-    role: "Parent",
-    image: "/profile/2.png",
-  },
-  {
-    quote:
-      "I found practical guidance here without feeling judged. The way the topics are handled made it easier for me to ask honest questions.",
-    name: "Ndayisaba Eric",
-    role: "Teacher",
-    image: "/profile/3.png",
-  },
-];
+import type { ApprovedTestimonial } from "@/src/testimonials";
 
-export default function Testimonials() {
+export default function Testimonials({ testimonials }: { testimonials: ApprovedTestimonial[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeTestimonial = testimonials[activeIndex];
 
@@ -60,37 +38,41 @@ export default function Testimonials() {
             We are grateful to hear from people who found clarity, comfort and direction through these conversations.
           </p>
 
-          <div className="home-testimonials-card">
+          {activeTestimonial ? <div className="home-testimonials-card">
             <div className="home-testimonials-quote-wrap">
               <p className="home-testimonials-quote">“{activeTestimonial.quote}”</p>
             </div>
 
             <div className="home-testimonials-footer">
               <div className="home-testimonials-person">
-                <Image
-                  src={activeTestimonial.image}
-                  alt={activeTestimonial.name}
-                  width={60}
-                  height={60}
-                  sizes="60px"
-                  className="home-testimonials-avatar"
-                />
+                {activeTestimonial.avatar_url ? (
+                  <Image src={activeTestimonial.avatar_url} alt={activeTestimonial.name} width={60} height={60} sizes="60px" className="home-testimonials-avatar" />
+                ) : (
+                  <span className="home-testimonials-avatar flex items-center justify-center rounded-full bg-gray-100 font-bold text-gray-600" aria-hidden="true">{activeTestimonial.name?.charAt(0).toUpperCase() || "U"}</span>
+                )}
                 <div className="home-testimonials-person-copy">
                   <p className="home-testimonials-name">{activeTestimonial.name}</p>
-                  <p className="home-testimonials-role">{activeTestimonial.role}</p>
+                  
                 </div>
               </div>
 
-              <div className="home-testimonials-controls" aria-label="Testimonial controls">
+              {testimonials.length > 1 && <div className="home-testimonials-controls" aria-label="Testimonial controls">
                 <button type="button" className="home-testimonials-control" onClick={showPrevious} aria-label="Previous testimonial">
                   <span aria-hidden="true">‹</span>
                 </button>
                 <button type="button" className="home-testimonials-control" onClick={showNext} aria-label="Next testimonial">
                   <span aria-hidden="true">›</span>
                 </button>
-              </div>
+              </div>}
             </div>
-          </div>
+          </div> : (
+            <div className="home-testimonials-card">
+              <div className="home-testimonials-quote-wrap">
+                <p className="home-testimonials-quote">Community stories will appear here once submissions have been reviewed and approved.</p>
+              </div>
+              <a href="/testimonials" className="underline underline-offset-4">Share your experience</a>
+            </div>
+          )}
         </div>
       </div>
     </section>

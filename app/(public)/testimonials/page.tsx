@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import TestimonialForm from "../../components/testimonials/TestimonialForm";
 import { Star } from "lucide-react";
-import db from "@/src/db";
+import { connection } from "next/server";
+import { getApprovedTestimonials } from "@/src/testimonials";
 
 export const metadata: Metadata = {
   title: "Testimonials | Shangazi Emma Claudine",
@@ -20,53 +21,9 @@ export const metadata: Metadata = {
   ],
 };
 
-async function getApprovedTestimonials() {
-  try {
-    const res = await db.query(
-      "SELECT name, content as quote, rating, avatar_url FROM public.testimonials WHERE is_approved = true ORDER BY created_at DESC"
-    );
-    return res.rows;
-  } catch (e) {
-    return [];
-  }
-}
-
-const fallbackTestimonials = [
-  {
-    quote: "Shangazi has been a guiding light for me during my toughest times. Her honest conversations about reproductive health changed how I view my own body and future.",
-    name: "Aline M.",
-    rating: 5,
-  },
-  {
-    quote: "The courses on the SEC Portal are so deep and practical. I've learned more about healthy relationships here than anywhere else.",
-    name: "Jean-Paul K.",
-    rating: 5,
-  },
-  {
-    quote: "Her guidance is filled with wisdom and empathy. I feel safe and understood every time I watch her videos.",
-    name: "Sandra U.",
-    rating: 5,
-  },
-  {
-    quote: "Murakoze cyane Shangazi! Your impact on the youth of Rwanda is immeasurable.",
-    name: "Divine I.",
-    rating: 5,
-  },
-  {
-    quote: "The honest and transparent approach Emma Claudine takes is exactly what our generation needs today.",
-    name: "Cedric N.",
-    rating: 5,
-  },
-  {
-    quote: "Highly recommend booking a guidance session. It's life-changing.",
-    name: "Patience G.",
-    rating: 5,
-  },
-];
-
 export default async function TestimonialsPage() {
-  const approvedTestimonials = await getApprovedTestimonials();
-  const displayTestimonials = approvedTestimonials.length > 0 ? approvedTestimonials : fallbackTestimonials;
+  await connection();
+  const displayTestimonials = await getApprovedTestimonials();
   
   // Create variations for the marquee
   const marqueeA = [...displayTestimonials, ...displayTestimonials];
@@ -85,6 +42,12 @@ export default async function TestimonialsPage() {
 
       <section className="testimonials-section">
         <div className="testimonials-container">
+          {displayTestimonials.length === 0 ? (
+            <div className="mx-auto max-w-2xl rounded-3xl border border-gray-200 bg-gray-50 px-8 py-16 text-center">
+              <h2 className="font-serif text-2xl text-gray-900">Your stories will appear here</h2>
+              <p className="mt-4 font-marcellus text-gray-600">There are no approved testimonials yet. Be among the first to share your experience using the form below. Submitted stories are reviewed before publication.</p>
+            </div>
+          ) : (
           <div className="testimonials-marquee">
             <div className="testimonials-row marquee-forward">
               {marqueeA.map((item, idx) => (
@@ -150,6 +113,7 @@ export default async function TestimonialsPage() {
               ))}
             </div>
           </div>
+          )}
         </div>
       </section>
 

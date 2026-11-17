@@ -7,6 +7,8 @@ import Featured from "../components/featured/Featured";
 import Testimonials from "../components/testimonials/Testimonials";
 import Contact from "../components/contact/Contact";
 import type { Metadata } from "next";
+import { connection } from "next/server";
+import { getApprovedTestimonials } from "@/src/testimonials";
 import { client } from "@/sanity/client";
 import { HOME_POSTS_QUERY, PUBLIC_VIDEOS_QUERY } from "@/src/sanity/queries";
 
@@ -51,9 +53,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [blogs, videos] = await Promise.all([
+  await connection();
+  const [blogs, videos, testimonials] = await Promise.all([
     client.fetch(HOME_POSTS_QUERY),
     client.fetch(PUBLIC_VIDEOS_QUERY),
+    getApprovedTestimonials(),
   ]);
 
   return (
@@ -64,7 +68,7 @@ export default async function Home() {
       <Topics limit={3} showAllButton />
       <StoriesInsights blogs={blogs} />
       <Featured video={videos[0]} />
-      <Testimonials />
+      <Testimonials testimonials={testimonials} />
       <Contact />
     </main>
   );
