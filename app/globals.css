@@ -61,7 +61,7 @@
 /* The full icon rail has its own soft neutral surface, like Laterbox. */
 .sec-portal [data-slot="sidebar-inner"],
 .sec-portal [data-mobile="true"][data-slot="sidebar"] {
-  background: #f7f5ee !important;
+  background: #fafafa !important;
 }
 
 html.lenis,
