@@ -62,9 +62,9 @@ export default function MainSidebar() {
             isActive={active}
             tooltip={label}
             title={label}
-            className="!size-[52px] !rounded-2xl !p-0 !justify-center !bg-transparent !text-[#858b83] hover:!bg-transparent hover:!text-[#1d5c19] data-active:!bg-transparent data-active:!text-[#1d5c19] focus-visible:!ring-[#1d5c19]"
+            className="!size-[58px] !rounded-2xl !justify-center !p-0 !text-[#788579] !bg-transparent hover:!bg-[#f0f4ec] hover:!text-[#1d5c19] data-active:!bg-[#e5eddf] data-active:!text-[#1d5c19] focus-visible:!ring-[#1d5c19] transition-colors"
           >
-            <Icon className="!size-[26px]" strokeWidth={active ? 2.3 : 1.85} aria-hidden="true" />
+            <Icon className="!size-[30px]" strokeWidth={active ? 2.3 : 1.85} aria-hidden="true" />
             <span className="sr-only">{label}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -102,11 +102,11 @@ export default function MainSidebar() {
 
       <SidebarContent className="gap-0 px-0" data-lenis-prevent>
         <nav aria-label="Main navigation">
-          <SidebarMenu className="items-center gap-1">
+          <SidebarMenu className="items-center gap-2.5">
             {renderLinks(mainLinks)}
           </SidebarMenu>
         </nav>
-        <div className="my-3" aria-hidden="true" />
+        <div className="my-4" aria-hidden="true" />
         <nav aria-label="Account navigation">
           <SidebarMenu className="items-center gap-1">
             {renderLinks(accountLinks)}
@@ -114,14 +114,14 @@ export default function MainSidebar() {
         </nav>
       </SidebarContent>
 
-      <SidebarFooter className="items-center gap-1 px-0 pb-4">
+      <SidebarFooter className="items-center gap-2 px-0 pb-4">
         <SidebarMenu className="items-center gap-1">
           <SidebarMenuItem className="flex justify-center">
             <SidebarMenuButton
               render={<Link href="/profile" aria-label={displayName} onClick={() => setOpenMobile(false)} />}
               tooltip={displayName}
               title={displayName}
-              className="!size-[52px] !rounded-2xl !p-0 !justify-center !bg-transparent hover:!bg-transparent"
+              className="!size-[58px] !rounded-2xl !p-0 !justify-center !bg-transparent hover:!bg-[#f0f4ec]"
             >
               <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full text-[#1d5c19]">
                 {session?.user?.image ? (
@@ -136,9 +136,9 @@ export default function MainSidebar() {
               aria-label="Sign out"
               tooltip="Sign out"
               title="Sign out"
-              className="!size-[52px] !rounded-2xl !p-0 !justify-center !bg-transparent !text-[#858b83] hover:!bg-transparent hover:!text-[#a52a2a]"
+              className="!size-[58px] !rounded-2xl !p-0 !justify-center !bg-transparent !text-[#788579] hover:!bg-[#fff0f0] hover:!text-[#a52a2a]"
             >
-              <LogOut className="!size-[26px]" strokeWidth={1.85} aria-hidden="true" />
+              <LogOut className="!size-[30px]" strokeWidth={1.85} aria-hidden="true" />
               <span className="sr-only">Sign out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
