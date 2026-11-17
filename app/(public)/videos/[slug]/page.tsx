@@ -16,6 +16,84 @@ const VIDEO_DETAIL_QUERY = `*[_type == "video" && slug.current == $slug][0]{
   duration
 }`;
 
+
+type VideoMetadataRecord = {
+  title?: string;
+  description?: string;
+  videoUrl?: string;
+  thumbnail?: string;
+  isPublic?: boolean;
+};
+
+function getVideoThumbnail(video: VideoMetadataRecord): string | undefined {
+  if (video.thumbnail) return video.thumbnail;
+  if (!video.videoUrl) return undefined;
+
+  try {
+    const url = new URL(video.videoUrl);
+    const hostname = url.hostname.toLowerCase();
+    let videoId: string | null = null;
+
+    if (hostname === "youtu.be" || hostname === "www.youtu.be") {
+      videoId = url.pathname.split("/").filter(Boolean)[0] ?? null;
+    } else if (hostname === "youtube.com" || hostname === "www.youtube.com" || hostname === "m.youtube.com") {
+      videoId = url.searchParams.get("v");
+      if (!videoId && /^\/(embed|shorts|live)\//.test(url.pathname)) videoId = url.pathname.split("/")[2] ?? null;
+    }
+
+    return videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)
+      ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const video = await client.fetch<VideoMetadataRecord | null>(VIDEO_DETAIL_QUERY, { slug });
+
+  if (!video) {
+    return {
+      title: "Video not found",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = video.title?.trim() || "Shangazi Video";
+  const description = video.description?.replace(/\s+/g, " ").trim() ||
+    `Watch ${title} on Shangazi Emma Claudine.`;
+  const imageUrl = getVideoThumbnail(video);
+  const canonical = `https://shangazi.rw/videos/${encodeURIComponent(slug)}`;
+  const isPublic = video.isPublic === true;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    robots: { index: isPublic, follow: isPublic },
+    openGraph: {
+      type: "video.other",
+      url: canonical,
+      siteName: "Shangazi Emma Claudine",
+      title,
+      description,
+      ...(imageUrl ? { images: [{ url: imageUrl, alt: title }] } : {}),
+      ...(isPublic && video.videoUrl ? { videos: [{ url: video.videoUrl }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(imageUrl ? { images: [imageUrl] } : {}),
+    },
+  };
+}
+
 const buildEmbedUrl = (videoUrl?: string): string | null => {
   if (!videoUrl) return null;
   try {

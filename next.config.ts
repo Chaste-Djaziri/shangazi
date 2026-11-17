@@ -26,6 +26,9 @@ const remotePatterns: RemotePattern[] = [
 
 const nextConfig: NextConfig = {
   images: {
+    // Vercel Services currently returns 404 for /_next/image on this deployment.
+    // Let the browser request local and external image sources directly.
+    unoptimized: true,
     remotePatterns,
   },
 }
