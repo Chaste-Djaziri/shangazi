@@ -40,6 +40,19 @@ const accountLinks = [
   { href: "/settings", label: "Settings", icon: Settings2 },
 ] as const;
 
+function RailTooltip({ label }: { label: string }) {
+  return (
+    <TooltipContent
+      side="right"
+      align="center"
+      sideOffset={14}
+      className="!z-[100] !max-w-none !whitespace-nowrap !rounded-xl !bg-[#202420] !px-3.5 !py-2.5 !font-[Manrope] !text-[13px] !font-semibold !leading-none !text-white shadow-[0_8px_26px_rgba(0,0,0,0.17)]"
+    >
+      {label}
+    </TooltipContent>
+  );
+}
+
 export default function MainSidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
@@ -75,7 +88,7 @@ export default function MainSidebar() {
             }>
               <Icon className="size-[32px] shrink-0" strokeWidth={active ? 2.2 : 1.9} aria-hidden="true" />
             </TooltipTrigger>
-            <TooltipContent side="right" align="center">{label}</TooltipContent>
+            <RailTooltip label={label} />
           </Tooltip>
         </SidebarMenuItem>
       );
@@ -91,13 +104,13 @@ export default function MainSidebar() {
       className="!border-0 [&_[data-slot=sidebar-inner]]:!bg-[#fafafa] [&_[data-slot=sidebar-container]]:!border-0"
     >
       <SidebarHeader className="items-center px-0 pb-4 pt-5">
-        <Link
+        <Tooltip>
+          <TooltipTrigger render={<Link
           href="/discover"
           aria-label="Shangazi portal home"
-          title="Shangazi portal home"
           onClick={() => setOpenMobile(false)}
           className="flex size-[56px] items-center justify-center rounded-[18px] bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e71d5b]"
-        >
+        />}>
           <Image
             src="/logo/Shangazi Logo Variations-2.png"
             width={42}
@@ -107,7 +120,9 @@ export default function MainSidebar() {
             alt="Shangazi"
             className="size-[40px] object-contain"
           />
-        </Link>
+          </TooltipTrigger>
+          <RailTooltip label="Shangazi home" />
+        </Tooltip>
       </SidebarHeader>
 
       <SidebarContent className="gap-0 px-0" data-lenis-prevent>
@@ -138,7 +153,7 @@ export default function MainSidebar() {
                   ) : <span className="text-lg font-semibold">{initial}</span>}
                 </span>
               </TooltipTrigger>
-              <TooltipContent side="right">{displayName}</TooltipContent>
+              <RailTooltip label={displayName} />
             </Tooltip>
           </SidebarMenuItem>
           <SidebarMenuItem className="flex justify-center">
@@ -148,7 +163,7 @@ export default function MainSidebar() {
               }>
                 <LogOut size={32} strokeWidth={1.9} aria-hidden="true" />
               </TooltipTrigger>
-              <TooltipContent side="right">Sign out</TooltipContent>
+              <RailTooltip label="Sign out" />
             </Tooltip>
           </SidebarMenuItem>
         </SidebarMenu>

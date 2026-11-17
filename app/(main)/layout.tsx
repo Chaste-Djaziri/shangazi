@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <TooltipProvider>
+    <TooltipProvider delay={180}>
       <PortalSidebarProvider>
         <MainSidebar />
         <SidebarInset className="min-w-0 bg-white">
