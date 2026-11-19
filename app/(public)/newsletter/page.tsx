@@ -33,9 +33,7 @@ export default function NewsletterPage() {
               Sign Up For <span className="about-highlight-accent">Newsletter</span>
             </h2>
             <p className="newsletter-subtext">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. In accumsan dui at lacus egestas varius. Sed at
-              congue felis.
-            </p>
+              Subscribe for new Shangazi articles, guidance videos, and community news delivered to your inbox.\n              You can unsubscribe at any time.            </p>
           </div>
 
           <NewsletterForm />

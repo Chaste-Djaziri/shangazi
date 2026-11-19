@@ -54,7 +54,8 @@ export default function Footer() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           name: newsletterName,
-          email: newsletterEmail 
+          email: newsletterEmail,
+          consent: true 
         }),
       })
 
@@ -130,7 +131,7 @@ export default function Footer() {
             <div className="site-footer-newsletter-row">
               <div className="site-footer-newsletter-copy">
                 <h3>Subscribe Our Newsletter</h3>
-                <p>Subscribe our newsletter to get update information.</p>
+                <p>Get Shangazi articles, videos, and community updates by email.</p>
               </div>
 
               <div className="site-footer-newsletter-signup">
@@ -153,15 +154,16 @@ export default function Footer() {
                     value={newsletterEmail}
                     onChange={(event) => setNewsletterEmail(event.target.value)}
                   />
+                  <label className="flex items-start gap-2 text-xs text-white/70"><input type="checkbox" required className="mt-0.5" /> I agree to receive email updates. <Link href="/privacy" className="underline">Privacy Policy</Link></label>
                   <button type="submit" className="site-footer-newsletter-button" disabled={newsletterStatus === "loading"}>
                     <span>{newsletterStatus === "loading" ? "Subscribing..." : "Subscribe"}</span>
                     <Image src="/vectors/subscribe.svg" alt="" width={18} height={18} className="site-footer-newsletter-icon" />
                   </button>
                 </form>
                 <div className="site-footer-newsletter-status">
-                  {newsletterStatus === "success" ? <p className="site-footer-newsletter-success">Thanks for subscribing!</p> : null}
+                  {newsletterStatus === "success" ? <p className="site-footer-newsletter-success" role="status">You are subscribed!</p> : null}
                   {newsletterStatus === "error" ? (
-                    <p className="site-footer-newsletter-error">{newsletterError ?? "Unable to subscribe right now."}</p>
+                    <p className="site-footer-newsletter-error" role="alert">{newsletterError ?? "Unable to subscribe right now."}</p>
                   ) : null}
                 </div>
               </div>

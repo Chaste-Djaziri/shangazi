@@ -16,6 +16,7 @@ export default function NewsletterForm() {
     const payload = {
       name: formData.get("name"),
       email: formData.get("email"),
+      consent: formData.get("consent") === "on",
     }
 
     try {
@@ -48,11 +49,12 @@ export default function NewsletterForm() {
         <span className="sr-only">Email</span>
         <input type="email" name="email" placeholder="Email" aria-label="Email" required />
       </label>
+      <label className="flex items-start gap-2 text-sm text-gray-600"><input type="checkbox" name="consent" required className="mt-1" /> I agree to receive Shangazi emails and understand I can unsubscribe anytime. See the <a href="/privacy" className="underline">Privacy Policy</a>.</label>
       <button type="submit" className="newsletter-submit" disabled={status === "loading"}>
         {status === "loading" ? "Signing up..." : "Signup For Newsletter"}
       </button>
-      {status === "success" ? <p className="newsletter-success">Thanks for subscribing!</p> : null}
-      {error ? <p className="newsletter-error">{error}</p> : null}
+      {status === "success" ? <p className="newsletter-success" role="status">You are subscribed to Shangazi updates!</p> : null}
+      {error ? <p className="newsletter-error" role="alert">{error}</p> : null}
     </form>
   )
 }
