@@ -74,3 +74,21 @@ node --env-file=.env scripts/check-newsletter-readonly.mjs
 ```
 
 This checks the segment, segment list, first page of segment contacts, and first page of broadcasts. It does not create contacts, draft campaigns, or send mail.
+
+## Sender addresses and direct emails
+
+The Compose page has two delivery modes:
+
+- **Audience broadcast** — Select a Resend segment, choose a sender, and save a draft. The existing broadcast detail page has a separate confirmation before sending; unsubscribe placeholders remain in its email template.
+- **Direct email** — Enter one recipient, choose a sender, compose/preview the message, then type `SEND EMAIL` in a confirmation dialog. The backend uses Resend `POST /emails`, without adding the recipient to the newsletter segment. The direct-email template uses a contact footer rather than broadcast-only personalization/unsubscribe placeholders. Use direct email for person-to-person operational messages, **not** mass marketing.
+
+The sender menu defaults to `news@shangazi.rw`, `contact@shangazi.rw`, `partner@shangazi.rw`, `help@shangazi.rw`, `business@shangazi.rw`, and `comms@shangazi.rw`. To override the list set a server-side environment variable such as:
+
+```text
+# /Users/chastedjaziri/Documents/GitHub/shangazi/.env
+NEWSLETTER_SENDER_ADDRESSES=news@shangazi.rw,contact@shangazi.rw,partner@shangazi.rw,help@shangazi.rw,business@shangazi.rw
+```
+
+The server **independently checks** sender membership in the allowlist and enforces the `shangazi.rw` domain. Resend must have `shangazi.rw` verified for outgoing mail; a sender address does not automatically create an incoming mailbox for replies. The administrator should configure incoming mail/routing for the selected aliases separately.
+
+No emails or broadcasts are automatically sent by the UI when a draft is saved. Live delivery must be deliberately confirmed and was not exercised during implementation.

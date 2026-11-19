@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Bold, Italic, Link2, Image as ImageIcon, Heading2, List, ListOrdered, Quote, Eye, Save, Code2, ArrowLeft, Monitor, Smartphone } from "lucide-react";
+import { Send, Bold, Italic, Link2, Image as ImageIcon, Heading2, List, ListOrdered, Quote, Eye, Save, Code2, ArrowLeft, Monitor, Smartphone } from "lucide-react";
 import { NewsletterNotice } from "./NewsletterNotice";
 import { useNewsletterAdmin, newsletterApi, fieldClass, buttonClass, primaryClass } from "./useNewsletterAdmin";
 
@@ -18,6 +18,13 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
   const router = useRouter();
   const { data, error: loadError } = useNewsletterAdmin();
   const [segment, setSegment] = useState(selectedSegment || "");
+  const [deliveryMode, setDeliveryMode] = useState<"broadcast" | "direct">("broadcast");
+  const [sender, setSender] = useState("");
+  const [senderOptions, setSenderOptions] = useState<string[]>([]);
+  const [recipient, setRecipient] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+
   const [subject, setSubject] = useState("");
   const [title, setTitle] = useState("");
   const [previewText, setPreviewText] = useState("");
@@ -42,6 +49,15 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
 
   useEffect(() => { if (!segment && data?.segmentId) setSegment(data.segmentId); }, [data,segment]);
   useEffect(() => {
+    let active = true;
+    fetch("/api/admin/newsletter?view=senders", { cache: "no-store" })
+      .then(async (res) => { const body = await res.json(); if (!res.ok) throw new Error(body.error || "Unable to load senders"); return body.senders as string[]; })
+      .then((addresses) => { if (active) { setSenderOptions(addresses); setSender((current) => current || addresses[0] || ""); } })
+      .catch((e) => { if (active) setError(e instanceof Error ? e.message : "Unable to load senders"); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     fetch("/api/admin/newsletter?view=content", { cache: "no-store" })
       .then(async (response) => { if (!response.ok) throw new Error("Unable to load content"); return response.json(); })
@@ -60,6 +76,7 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
         if (b.status !== "draft") throw new Error("Only drafts can be edited.");
         setSubject(b.subject || ""); setTitle(b.subject || ""); setContent(b.text || "");
         setPreviewText(b.preview_text || ""); setSegment(b.segment_id || "");
+        if (b.from) setSender(String(b.from).match(/<([^>]+)>/)?.[1] || String(b.from));
         setDraftLoaded(true);
         if (!b.text) setMessage("This draft has no editable plain-text source. You can create a new version using the composer.");
       })
@@ -78,7 +95,7 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
   const preview = async () => {
     setPreviewing(true);setError("");
     try {
-      const result = await newsletterApi({ action: "preview", title: title || subject || "Shangazi newsletter", subject, content });
+      const result = await newsletterApi({ action: "preview", title: title || subject || "Shangazi newsletter", subject, content, format: deliveryMode });
       setHtml(result.html);
       setShowPreview(true);
     } catch (e) { setError(e instanceof Error ? e.message : "Preview unavailable."); }
@@ -88,16 +105,30 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
     setSaving(true);setError("");setMessage("");
     try {
       if (!segment) throw new Error("Choose an audience group.");
+      if (!sender) throw new Error("Choose a sender.");
       if (editId && !draftLoaded) throw new Error("The original draft has not been loaded.");
       const result = await newsletterApi({
         action: editId ? "update-draft" : "draft", broadcastId: editId,
-        segmentId: segment, subject, title: title || subject, previewText, content,
+        segmentId: segment, sender, subject, title: title || subject, previewText, content,
       });
       router.push(`/admin/newsletter/broadcasts/${result.id}`);
       router.refresh();
     } catch(e){setError(e instanceof Error ? e.message : "Unable to save draft.");}
     finally{setSaving(false);}
   };
+  const sendDirect = async () => {
+    setSaving(true); setError(""); setMessage("");
+    try {
+      const result = await newsletterApi({
+        action: "send-direct", confirmation: confirmText, sender,
+        recipients: recipient, subject, title: title || subject, content,
+      });
+      setMessage(result.message || "Email accepted for delivery.");
+      setConfirmOpen(false); setConfirmText("");
+    } catch (e) { setError(e instanceof Error ? e.message : "Unable to send email."); }
+    finally { setSaving(false); }
+  };
+
   const insertSanity = (item: PublishedContent) => {
     const kind = item.kind === "post" ? "blog" : item.kind === "video" ? "videos" : "courses";
     const label = item.kind === "video" ? "Watch the video" : item.kind === "course" ? "Explore the course" : "Read the article";
@@ -157,19 +188,33 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
   ];
 
   return <div className="space-y-6">
-    <header className="flex flex-wrap items-center justify-between gap-4"><div><Link href="/admin/newsletter/broadcasts" className="mb-3 inline-flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900"><ArrowLeft size={14}/> Broadcasts</Link><h2 className="font-[Fraunces] text-3xl">{editId ? "Edit broadcast draft" : "Compose broadcast"}</h2><p className="mt-2 text-sm text-gray-500">Design a responsive email and save it as an unsent Resend draft.</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => void preview()} disabled={previewing || !content} className={buttonClass}><Eye size={15}/>{previewing ? "Rendering…" : "Preview email"}</button><button type="button" onClick={() => void save()} disabled={saving || !subject || !content || !segment} className={primaryClass}><Save size={15}/>{saving ? "Saving…" : "Save draft"}</button></div></header>
+    <header className="flex flex-wrap items-center justify-between gap-4"><div><Link href="/admin/newsletter/broadcasts" className="mb-3 inline-flex items-center gap-2 text-xs text-gray-500 hover:text-gray-900"><ArrowLeft size={14}/> Broadcasts</Link><h2 className="font-[Fraunces] text-3xl">{editId ? "Edit broadcast draft" : deliveryMode === "direct" ? "Compose direct email" : "Compose broadcast"}</h2><p className="mt-2 text-sm text-gray-500">{deliveryMode === "direct" ? "Write a personal email to one recipient. Sending requires confirmation." : "Design a responsive email and save it as an unsent Resend draft."}</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => void preview()} disabled={previewing || !content} className={buttonClass}><Eye size={15}/>{previewing ? "Rendering…" : "Preview email"}</button>{deliveryMode === "broadcast" ? <button type="button" onClick={() => void save()} disabled={saving || !subject || !content || !segment || !sender} className={primaryClass}><Save size={15}/>{saving ? "Saving…" : "Save draft"}</button> : <button type="button" onClick={() => {setConfirmText("");setConfirmOpen(true);}} disabled={saving || !subject || !content || !sender || !recipient.trim()} className={primaryClass}><Send size={15}/> Review & send</button>}</div></header>
     <NewsletterNotice error={error || loadError} message={message}/>
+    {!editId && <div className="flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 p-2">
+      <button type="button" onClick={() => { setDeliveryMode("broadcast");setHtml(""); }} aria-pressed={deliveryMode==="broadcast"} className={deliveryMode==="broadcast" ? primaryClass : buttonClass}>Audience broadcast</button>
+      <button type="button" onClick={() => { setDeliveryMode("direct");setHtml(""); }} aria-pressed={deliveryMode==="direct"} className={deliveryMode==="direct" ? primaryClass : buttonClass}>Direct email</button>
+    </div>}
+
     <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#f1d7e1] bg-[#fff8fa] p-4"><span className="text-sm font-semibold text-[#863a56]">Start with a template:</span>{Object.keys(templates).map((key) => <button type="button" key={key} onClick={() => chooseTemplate(key as keyof typeof templates)} className="rounded-lg border border-[#ecd2da] bg-white px-3 py-2 text-xs font-semibold capitalize text-[#863a56] hover:bg-[#faedf2]">{key === "digest" ? "Weekly digest" : key}</button>)}</div>
     <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
       <section className="min-w-0 space-y-5 rounded-2xl border border-gray-200 p-5 sm:p-7">
-        <label className="block text-sm font-semibold">To: Audience group<select className={fieldClass+" mt-2"} value={segment} onChange={(e) => setSegment(e.target.value)} disabled={Boolean(editId)}><option value="">Select group…</option>{(data?.segments || []).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+        <label className="block text-sm font-semibold">From: Shangazi address
+          <select className={fieldClass+" mt-2"} value={sender} onChange={(e) => setSender(e.target.value)} required>
+            <option value="">Select sender…</option>
+            {senderOptions.map((address) => <option key={address} value={address}>Shangazi &lt;{address}&gt;</option>)}
+          </select>
+          <span className="mt-1 block text-xs font-normal text-gray-500">Addresses must belong to a verified sending domain in Resend.</span>
+        </label>
+        {deliveryMode === "broadcast"
+          ? <label className="block text-sm font-semibold">To: Audience group<select className={fieldClass+" mt-2"} value={segment} onChange={(e) => setSegment(e.target.value)} disabled={Boolean(editId)}><option value="">Select group…</option>{(data?.segments || []).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+          : <label className="block text-sm font-semibold">To: Recipient email<input type="email" className={fieldClass+" mt-2"} placeholder="recipient@example.com" value={recipient} onChange={(e) => setRecipient(e.target.value)} required/><span className="mt-1 block text-xs font-normal text-gray-500">One recipient per email. Direct emails are not newsletter broadcasts.</span></label>}
         <label className="block text-sm font-semibold">Subject<input className={fieldClass+" mt-2"} required maxLength={200} value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="The email subject line" /></label>
-        <label className="block text-sm font-semibold">Inbox preview text<input className={fieldClass+" mt-2"} maxLength={200} value={previewText} onChange={(e) => setPreviewText(e.target.value)} placeholder="A short teaser shown in the inbox" /></label>
+        {deliveryMode === "broadcast" && <label className="block text-sm font-semibold">Inbox preview text<input className={fieldClass+" mt-2"} maxLength={200} value={previewText} onChange={(e) => setPreviewText(e.target.value)} placeholder="A short teaser shown in the inbox" /></label>}
         <label className="block text-sm font-semibold">Email heading<input className={fieldClass+" mt-2"} maxLength={200} value={title} onChange={(e) => {setTitle(e.target.value);setHtml("");}} placeholder="Visible heading inside the email" /></label>
         <div><div className="mb-2 flex flex-wrap items-center justify-between gap-2"><label htmlFor="newsletter-body" className="text-sm font-semibold">Email body · Rich text Markdown</label><span className="inline-flex items-center gap-1 text-xs text-gray-500"><Code2 size={13}/> Markdown</span></div>
           <div className="flex flex-wrap gap-1 rounded-t-xl border border-gray-200 bg-gray-50 p-2">{toolbar.map(({label,icon:Icon,before,after,placeholder})=><button type="button" key={label} title={label} aria-label={label} onClick={() => apply(before,after,placeholder)} className="rounded-lg p-2 text-gray-600 hover:bg-white hover:text-[#a63562]"><Icon size={17}/></button>)}</div>
           <textarea id="newsletter-body" ref={input} rows={18} className={fieldClass+" resize-y !rounded-t-none !border-t-0 font-mono text-[13px] leading-7"} value={content} onChange={(e) => {setContent(e.target.value);setHtml("");}} placeholder="Write your story. Use headings, **bold text**, lists, [links](https://...), and ![images](https://...)."/>
-          <p className="mt-2 text-xs leading-5 text-gray-500">Images must use publicly accessible HTTPS URLs. Raw HTML is intentionally escaped to protect recipients. The footer always includes an unsubscribe link.</p>
+          <p className="mt-2 text-xs leading-5 text-gray-500">Images must use publicly accessible HTTPS URLs. Raw HTML is intentionally escaped to protect recipients. Broadcasts include an unsubscribe link; direct messages use a standard contact footer.</p>
         </div>
         <div className="rounded-xl border border-gray-100 bg-[#fafafa] p-4">
           <h3 className="text-sm font-semibold">Insert published Shangazi content</h3>
@@ -203,5 +248,16 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
         <div className="mt-4 text-xs text-gray-500"><p>Preview shows email-compatible styling. Personalization and unsubscribe links are replaced by Resend at delivery.</p><button type="button" onClick={() => void preview()} disabled={previewing} className="mt-3 font-semibold text-[#a63562] hover:underline">Refresh rendered preview</button></div>
       </section>
     </div>
+    {confirmOpen && <div role="dialog" aria-modal="true" aria-label="Confirm direct email" className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl">
+        <h3 className="font-[Fraunces] text-2xl">Send direct email?</h3>
+        <p className="mt-3 break-words text-sm text-gray-700"><strong>From:</strong> {sender}</p>
+        <p className="mt-1 break-words text-sm text-gray-700"><strong>To:</strong> {recipient}</p>
+        <p className="mt-1 break-words text-sm text-gray-700"><strong>Subject:</strong> {subject}</p>
+        <p className="mt-3 text-sm text-gray-500">This will send a real email through Resend. Review the preview before confirming.</p>
+        <label className="mt-5 block text-sm font-semibold">Type SEND EMAIL<input autoFocus className={fieldClass+" mt-2"} value={confirmText} onChange={(e) => setConfirmText(e.target.value)}/></label>
+        <div className="mt-5 flex justify-end gap-2"><button type="button" className={buttonClass} onClick={() => setConfirmOpen(false)}>Cancel</button><button type="button" disabled={saving || confirmText !== "SEND EMAIL"} className={primaryClass} onClick={() => void sendDirect()}>{saving ? "Sending…" : "Confirm and send"}</button></div>
+      </div>
+    </div>}
   </div>;
 }

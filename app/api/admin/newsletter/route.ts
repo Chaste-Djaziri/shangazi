@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { client } from "@/src/sanity/client";
 import { isNewsletterAdmin } from "@/src/newsletter/admin";
+import { senderAddresses, validatedSender } from "@/src/newsletter/senders";
 import { listNewsletterSubscribers, newsletterHtml, newsletterSegmentId, resendRequest, ResendApiError, type ResendBroadcast, type ResendSegment, type ResendContact } from "@/src/newsletter/resend";
 
 export const runtime = "nodejs";
@@ -23,6 +24,9 @@ export async function GET(request: Request) {
     const broadcastId = params.get("broadcastId") || "";
     const isUuid = (value: string) => /^[0-9a-f-]{36}$/i.test(value);
 
+    if (view === "senders") {
+      return NextResponse.json({ senders: senderAddresses() }, { headers: { "Cache-Control": "private, no-store" } });
+    }
     if (view === "content") {
       const published = client.withConfig({ perspective: "published", token: undefined, useCdn: false });
       const items = await published.fetch<Array<{
@@ -90,7 +94,7 @@ export async function POST(request: Request) {
   if (origin && new URL(origin).host !== new URL(request.url).host) return unauthorized();
   const body = await request.json().catch(() => null) as {
     action?: string; subject?: string; title?: string; content?: string; broadcastId?: string; previewText?: string; format?: string;
-    confirmation?: string; name?: string; segmentId?: string; email?: string;
+    confirmation?: string; name?: string; segmentId?: string; email?: string; sender?: string; recipients?: string;
   } | null;
   if (!body) return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   try {
@@ -132,6 +136,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: body.action === "add-contact" ? "Contact added to newsletter segment." : "Contact removed from newsletter segment." });
     }
     if (body.action === "draft" || body.action === "update-draft") {
+      const from = validatedSender(body.sender);
+      if (!from) return NextResponse.json({ error: "Choose an approved Shangazi sender address." }, { status: 400 });
       const subject = body.subject?.trim() || "";
       const title = body.title?.trim() || subject;
       const content = body.content?.trim() || "";
@@ -147,7 +153,7 @@ export async function POST(request: Request) {
       const payload = {
         segment_id: target,
         name: `Shangazi · ${subject}`,
-        from: process.env.RESEND_NEWSLETTER_FROM || "Shangazi <comms@shangazi.rw>",
+        from,
         subject,
         preview_text: previewText || undefined,
         html,
@@ -168,7 +174,31 @@ export async function POST(request: Request) {
       const title = (body.title || body.subject || "").trim();
       const content = body.content?.trim() || "";
       if (!title || !content || content.length > 50000) return NextResponse.json({ error: "Enter a title and message to preview." }, { status: 400 });
-      return NextResponse.json({ html: newsletterHtml(title, content) });
+      return NextResponse.json({ html: newsletterHtml(title, content, body.format === "direct" ? "direct" : "broadcast") });
+    }
+    if (body.action === "send-direct") {
+      if (body.confirmation !== "SEND EMAIL") {
+        return NextResponse.json({ error: "Type SEND EMAIL to confirm direct delivery." }, { status: 400 });
+      }
+      const from = validatedSender(body.sender);
+      const recipient = (body.recipients || "").trim().toLowerCase();
+      const subject = body.subject?.trim() || "";
+      const title = body.title?.trim() || subject;
+      const content = body.content?.trim() || "";
+      if (!from) return NextResponse.json({ error: "Choose an approved sender address." }, { status: 400 });
+      if (recipient.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+        return NextResponse.json({ error: "Enter one valid recipient email address." }, { status: 400 });
+      }
+      if (!subject || subject.length > 200 || title.length > 200 || content.length < 5 || content.length > 50000) {
+        return NextResponse.json({ error: "Enter a subject and email content." }, { status: 400 });
+      }
+      // Direct mail is restricted to one recipient to avoid accidental disclosure of recipient lists.
+      const html = newsletterHtml(title, content, "direct");
+      const result = await resendRequest<{ id?: string }>("/emails", {
+        method: "POST",
+        body: JSON.stringify({ from, to: [recipient], subject, html }),
+      });
+      return NextResponse.json({ success: true, id: result.id, message: "Email accepted by Resend for delivery." });
     }
     if (body.action === "send") {
       // Explicit typed confirmation: never send merely by saving a draft.

@@ -114,7 +114,7 @@ export async function subscribeToNewsletter(email: string, name: string) {
   }
 }
 
-export function newsletterHtml(title: string, content: string) {
+export function newsletterHtml(title: string, content: string, mode: "broadcast" | "direct" = "broadcast") {
   const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (char) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   })[char] || char);
@@ -149,6 +149,10 @@ export function newsletterHtml(title: string, content: string) {
     .replace(/<li>/g, '<li style="padding:3px 0;line-height:1.7">')
     .replace(/<blockquote>/g, '<blockquote style="border-left:3px solid #be1d51;margin:20px 0;padding:8px 18px;background:#faf4f6">');
 
+  const greeting = mode === "broadcast" ? "Hello {{{FIRST_NAME|there}}}," : "Hello,";
+  const footer = mode === "broadcast"
+    ? 'You are receiving this email because you subscribed to Shangazi updates. <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#a52d59">Unsubscribe</a>'
+    : 'Shangazi Emma Claudine · Kigali, Rwanda · <a href="https://shangazi.rw/contact" style="color:#a52d59">Contact us</a>';
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
   <body style="margin:0;padding:30px 12px;background:#f5f5f5;color:#222;font-family:Arial,Helvetica,sans-serif">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
@@ -157,10 +161,9 @@ export function newsletterHtml(title: string, content: string) {
   <tr><td style="padding:34px 32px 15px">
   <p style="margin:0 0 18px;font-size:12px;font-weight:bold;letter-spacing:2px;color:#8c3d5a">SHANGAZI EMMA CLAUDINE</p>
   <h1 style="font-size:29px;line-height:1.25;margin:0 0 20px">${escapeHtml(title)}</h1>
-  <p style="font-size:15px;line-height:1.65;margin:0 0 20px">Hello {{{FIRST_NAME|there}}},</p>
+  <p style="font-size:15px;line-height:1.65;margin:0 0 20px">${greeting}</p>
   <div style="font-size:15px;line-height:1.7">${styled}</div></td></tr>
   <tr><td style="padding:25px 32px;background:#faf7f8;border-top:1px solid #eee;color:#666;font-size:12px;line-height:1.6">
-  You are receiving this email because you subscribed to Shangazi updates.
-  <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#a52d59">Unsubscribe</a>
+  ${footer}
   </td></tr></table></td></tr></table></body></html>`;
 }
