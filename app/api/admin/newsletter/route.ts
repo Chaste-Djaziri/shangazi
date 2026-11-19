@@ -25,10 +25,28 @@ export async function GET(request: Request) {
 
     if (view === "content") {
       const published = client.withConfig({ perspective: "published", token: undefined, useCdn: false });
-      const items = await published.fetch<Array<{ id: string; title: string; slug: string; kind: string }>>(`
+      const items = await published.fetch<Array<{
+        id: string; title: string; slug: string; kind: string;
+        description?: string; image?: string; author?: string; publishedAt?: string;
+        duration?: string; instructor?: string; lessonCount?: number; videoUrl?: string;
+      }>>(`
         *[_type in ["post","video","course"] && isPublic == true && defined(slug.current)]
-        | order(_updatedAt desc)[0...30]{
-          "id": _id, title, "slug": slug.current, "kind": _type
+        | order(_updatedAt desc)[0...60] {
+          "id": _id, title, "slug": slug.current, "kind": _type,
+          "description": select(
+            _type == "post" => coalesce(pt::text(body), content, ""),
+            coalesce(description, "")
+          ),
+          "image": select(
+            _type == "post" => image.asset->url,
+            thumbnail.asset->url
+          ),
+          "author": select(_type == "post" => author, null),
+          publishedAt,
+          duration,
+          instructor,
+          "lessonCount": count(modules),
+          videoUrl
         }
       `);
       return NextResponse.json({ items }, { headers: { "Cache-Control": "private, no-store" } });

@@ -4,12 +4,14 @@ import MainSidebar from "../components/sidebar/MainSidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import PortalSidebarProvider from "./PortalSidebarProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { isNewsletterAdmin } from "@/src/newsletter/admin";
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default async function MainLayout({ children }: { children: React.ReactNode }) {
+  const newsletterAdmin = await isNewsletterAdmin();
   return (
     <TooltipProvider delay={180}>
       <PortalSidebarProvider>
-        <MainSidebar />
+        <MainSidebar newsletterAdmin={newsletterAdmin} />
         <SidebarInset className="min-w-0 bg-white">
           <header className="sticky top-0 z-30 w-full bg-white">
             <MainHeader />

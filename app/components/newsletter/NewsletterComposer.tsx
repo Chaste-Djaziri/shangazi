@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Bold, Italic, Link2, Image as ImageIcon, Heading2, List, ListOrdered, Quote, Eye, Save, Code2, ArrowLeft, Monitor, Smartphone } from "lucide-react";
 import { NewsletterNotice } from "./NewsletterNotice";
 import { useNewsletterAdmin, newsletterApi, fieldClass, buttonClass, primaryClass } from "./useNewsletterAdmin";
@@ -29,7 +30,12 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [draftLoaded, setDraftLoaded] = useState(false);
-  const [sanityItems, setSanityItems] = useState<Array<{ id:string; title:string; slug:string; kind:string }>>([]);
+  type PublishedContent = {
+    id: string; title: string; slug: string; kind: string;
+    description?: string; image?: string; author?: string; publishedAt?: string;
+    duration?: string; instructor?: string; lessonCount?: number; videoUrl?: string;
+  };
+  const [sanityItems, setSanityItems] = useState<PublishedContent[]>([]);
   const [sanitySearch, setSanitySearch] = useState("");
   const [sanityLoading, setSanityLoading] = useState(true);
   const input = useRef<HTMLTextAreaElement>(null);
@@ -92,11 +98,46 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
     } catch(e){setError(e instanceof Error ? e.message : "Unable to save draft.");}
     finally{setSaving(false);}
   };
-  const insertSanity = (item: { title:string; slug:string; kind:string }) => {
+  const insertSanity = (item: PublishedContent) => {
     const kind = item.kind === "post" ? "blog" : item.kind === "video" ? "videos" : "courses";
-    const label = item.kind === "video" ? "Watch video" : item.kind === "course" ? "Explore course" : "Read article";
+    const label = item.kind === "video" ? "Watch the video" : item.kind === "course" ? "Explore the course" : "Read the article";
+    const category = item.kind === "video" ? "GUIDANCE VIDEO" : item.kind === "course" ? "COURSE" : "ARTICLE";
     const url = `https://shangazi.rw/${kind}/${encodeURIComponent(item.slug)}`;
-    setContent((previous) => previous + `\n\n## ${item.title}\n\n[${label}](${url})\n`);
+    // Sanity image URLs are public and suitable for rendering in email clients.
+    let thumbnail = item.image || "";
+    if (!thumbnail && item.kind === "video" && item.videoUrl) {
+      try {
+        const parsed = new URL(item.videoUrl);
+        let videoId = "";
+        if (parsed.hostname === "youtu.be" || parsed.hostname === "www.youtu.be") videoId = parsed.pathname.slice(1).split("/")[0];
+        if (["youtube.com", "www.youtube.com", "m.youtube.com"].includes(parsed.hostname)) {
+          videoId = parsed.searchParams.get("v") || (parsed.pathname.startsWith("/embed/") ? parsed.pathname.split("/")[2] : "");
+        }
+        if (/^[\w-]{11}$/.test(videoId)) thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      } catch { /* Only known public video hosts are supported. */ }
+    }
+    const escapeMarkdown = (value: string) => value.replace(/[<>*_[\]\\]/g, " ").replace(/\s+/g, " ").trim();
+    const title = escapeMarkdown(item.title);
+    const description = escapeMarkdown(item.description || "").slice(0, 240);
+    const pieces = [category];
+    if (item.publishedAt && !Number.isNaN(Date.parse(item.publishedAt))) {
+      pieces.push(new Date(item.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }));
+    }
+    if (item.author) pieces.push(escapeMarkdown(item.author));
+    if (item.instructor) pieces.push(escapeMarkdown(item.instructor));
+    if (item.duration) pieces.push(escapeMarkdown(String(item.duration)));
+    if (item.kind === "course" && typeof item.lessonCount === "number") pieces.push(`${item.lessonCount} lessons`);
+
+    const block = [
+      "---",
+      thumbnail.startsWith("https://") ? `![${title}](${thumbnail})` : "",
+      `### [${title}](${url})`,
+      `*${pieces.join(" · ")}*`,
+      description,
+      `**[${label} →](${url})**`,
+      "---",
+    ].filter(Boolean).join("\n\n");
+    setContent((previous) => `${previous.trimEnd()}\n\n${block}\n`);
     setHtml("");
   };
 
@@ -134,9 +175,22 @@ export default function NewsletterComposer({ selectedSegment, editId }: { select
           <h3 className="text-sm font-semibold">Insert published Shangazi content</h3>
           <p className="mt-1 text-xs text-gray-500">Articles, videos, and courses come from Sanity. Click to insert a linked section into the email.</p>
           <input className={fieldClass+" mt-3"} placeholder="Search published content…" aria-label="Search Sanity content" value={sanitySearch} onChange={(e) => setSanitySearch(e.target.value)}/>
-          <div className="mt-3 max-h-44 space-y-1 overflow-y-auto">
-            {sanityItems.filter((item) => item.title.toLowerCase().includes(sanitySearch.toLowerCase())).slice(0,8).map((item) =>
-              <button type="button" key={item.id} onClick={() => insertSanity(item)} className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-[#f8e9ef]"><span className="line-clamp-1 text-xs font-semibold text-gray-800">{item.title}</span><span className="shrink-0 text-[10px] uppercase text-[#a63562]">{item.kind === "post" ? "article" : item.kind}</span></button>
+          <div className="mt-3 max-h-[340px] space-y-2 overflow-y-auto">
+            {sanityItems.filter((item) => [item.title, item.description, item.author, item.instructor].filter(Boolean).join(" ").toLowerCase().includes(sanitySearch.toLowerCase())).slice(0,12).map((item) =>
+              <button type="button" key={item.id} onClick={() => insertSanity(item)} className="group flex w-full items-start gap-3 rounded-xl border border-gray-100 bg-white p-2.5 text-left transition hover:border-[#e4b8c8] hover:bg-[#fff8fa]">
+                <div className="relative h-[74px] w-[105px] shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                  {item.image ? <Image src={item.image} alt="" width={210} height={148} unoptimized className="h-full w-full object-cover"/> :
+                    <div className="flex h-full items-center justify-center text-xs font-semibold text-gray-400">{item.kind === "video" ? "VIDEO" : item.kind === "post" ? "ARTICLE" : "COURSE"}</div>}
+                </div>
+                <span className="min-w-0 flex-1">
+                  <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[#a63562]">{item.kind === "post" ? "Article" : item.kind === "video" ? "Video" : "Course"}
+                    {item.duration ? ` · ${item.duration}` : ""}
+                    {item.publishedAt && !Number.isNaN(Date.parse(item.publishedAt)) ? ` · ${new Date(item.publishedAt).toLocaleDateString("en-US",{month:"short",year:"numeric"})}` : ""}
+                  </span>
+                  <span className="block line-clamp-2 text-xs font-semibold leading-5 text-gray-800">{item.title}</span>
+                  <span className="mt-1 block line-clamp-2 text-[11px] leading-4 text-gray-500">{item.description || item.instructor || item.author || "Insert this published content into the newsletter."}</span>
+                </span>
+              </button>
             )}
             {!sanityLoading && !sanityItems.length && <p className="text-xs text-gray-500">No published content available.</p>}
             {sanityLoading && <p className="text-xs text-gray-500">Loading Sanity content…</p>}

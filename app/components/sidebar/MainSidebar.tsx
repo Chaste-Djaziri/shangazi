@@ -12,6 +12,7 @@ import {
   Compass,
   GraduationCap,
   LogOut,
+  Mail,
   PlaySquare,
   Settings2,
   UserRound,
@@ -53,7 +54,7 @@ function RailTooltip({ label }: { label: string }) {
   );
 }
 
-export default function MainSidebar() {
+export default function MainSidebar({ newsletterAdmin = false }: { newsletterAdmin?: boolean }) {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
   const { setOpenMobile } = useSidebar();
@@ -67,7 +68,7 @@ export default function MainSidebar() {
 
   // Use real links for the icon rail: shadcn SidebarMenuButton enforces a
   // 32px collapsed size, which previously shrank the active background.
-  const renderLinks = (links: typeof mainLinks | typeof accountLinks) =>
+  const renderLinks = (links: ReadonlyArray<{ href: string; label: string; icon: typeof Compass }>) =>
     links.map(({ href, label, icon: Icon }) => {
       const active = pathname === href || pathname.startsWith(`${href}/`);
       return (
@@ -136,6 +137,7 @@ export default function MainSidebar() {
         <nav aria-label="Account navigation">
           <SidebarMenu className="items-center gap-2">
             {renderLinks(accountLinks)}
+            {newsletterAdmin && renderLinks([{ href: "/admin/newsletter", label: "Newsletter Studio", icon: Mail }])}
           </SidebarMenu>
         </nav>
       </SidebarContent>
