@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Shield, UserRound, ShieldAlert } from "lucide-react";
 import AccountSettings from "../../components/settings/AccountSettings";
+import { isNewsletterAdmin } from "@/src/newsletter/admin";
 
 export const metadata: Metadata = {
   title: "Account Settings | SEC Portal",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default async function SettingsPage() {
   const { user } = await neonAuth();
   if (!user) redirect("/login");
+  const canManageNewsletter = await isNewsletterAdmin();
 
   const links = [
     { href: "#profile", label: "Profile", icon: UserRound },
@@ -39,6 +41,7 @@ export default async function SettingsPage() {
         </aside>
         <div className="min-w-0 space-y-8">
           <AccountSettings name={user.name || ""} email={user.email || ""} image={user.image} />
+          {canManageNewsletter && <Link href="/admin/newsletter" className="inline-flex rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold hover:bg-gray-50">Manage newsletter subscribers & broadcasts</Link>}
           <p className="text-sm text-gray-500">For additional data or privacy requests, visit the <Link href="/privacy" className="underline hover:text-gray-900">privacy policy</Link> or <Link href="/contact" className="underline hover:text-gray-900">contact support</Link>.</p>
         </div>
       </div>
