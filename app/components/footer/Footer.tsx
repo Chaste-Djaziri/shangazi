@@ -136,29 +136,36 @@ export default function Footer() {
 
               <div className="site-footer-newsletter-signup">
                 <form className="site-footer-newsletter-form" ref={newsletterFormRef} onSubmit={handleNewsletterSubmit}>
-                  <input
-                    type="text"
-                    name="name"
-                    aria-label="Your Name"
-                    placeholder="Enter your names"
-                    required
-                    value={newsletterName}
-                    onChange={(event) => setNewsletterName(event.target.value)}
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    aria-label="Email address"
-                    placeholder="Enter your email"
-                    required
-                    value={newsletterEmail}
-                    onChange={(event) => setNewsletterEmail(event.target.value)}
-                  />
-                  <label className="flex items-start gap-2 text-xs text-white/70"><input type="checkbox" required className="mt-0.5" /> I agree to receive email updates. <Link href="/privacy" className="underline">Privacy Policy</Link></label>
-                  <button type="submit" className="site-footer-newsletter-button" disabled={newsletterStatus === "loading"}>
-                    <span>{newsletterStatus === "loading" ? "Subscribing..." : "Subscribe"}</span>
-                    <Image src="/vectors/subscribe.svg" alt="" width={18} height={18} className="site-footer-newsletter-icon" />
-                  </button>
+                  <div className="site-footer-newsletter-fields">
+                    <input
+                      type="text"
+                      name="name"
+                      aria-label="Your name"
+                      placeholder="Enter your name"
+                      autoComplete="name"
+                      required
+                      value={newsletterName}
+                      onChange={(event) => setNewsletterName(event.target.value)}
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      aria-label="Email address"
+                      placeholder="Enter your email"
+                      autoComplete="email"
+                      required
+                      value={newsletterEmail}
+                      onChange={(event) => setNewsletterEmail(event.target.value)}
+                    />
+                    <button type="submit" className="site-footer-newsletter-button" disabled={newsletterStatus === "loading"}>
+                      <span>{newsletterStatus === "loading" ? "Subscribing..." : "Subscribe"}</span>
+                      <Image src="/vectors/subscribe.svg" alt="" width={18} height={18} className="site-footer-newsletter-icon" />
+                    </button>
+                  </div>
+                  <label className="site-footer-newsletter-consent">
+                    <input type="checkbox" name="consent" required />
+                    <span>I agree to receive email updates. <Link href="/privacy" className="underline underline-offset-2">Privacy Policy</Link></span>
+                  </label>
                 </form>
                 <div className="site-footer-newsletter-status">
                   {newsletterStatus === "success" ? <p className="site-footer-newsletter-success" role="status">You are subscribed!</p> : null}
