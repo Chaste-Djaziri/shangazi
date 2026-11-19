@@ -46,3 +46,31 @@ Sign in as a configured admin and open `/admin/newsletter`, or follow the link i
 - The existing Resend key in the project was tested and returned HTTP 401: **"This API key is restricted to only send emails."** As a result, live segment creation and contact storage cannot be completed with that key.
 - The application does not currently implement double opt-in, a distributed subscription rate limiter, or separate consent-audit records. Add those before large-scale marketing use if required by your compliance policy.
 - For changes to API permissions, issue a new restricted-purpose key rather than disclosing credentials in Git, logs, or chats.
+
+## Newsletter Studio (administration)
+
+The previous long, single-page admin component has been replaced by dedicated screens:
+
+- `/admin/newsletter` — Overview: subscriber count, group count, and recent campaigns.
+- `/admin/newsletter/audience` — Audience: search, filter by subscribed status, inspect individual segments, and manage memberships of existing contacts.
+- `/admin/newsletter/segments` — Audience groups: create, rename, and remove segments; choose a segment when creating a campaign. The primary newsletter segment cannot be deleted through this app.
+- `/admin/newsletter/broadcasts` — Broadcasts: search, filter by status/audience, and open details.
+- `/admin/newsletter/broadcasts/[id]` — A single campaign: read metadata, inspect its HTML in a sandboxed desktop/mobile email frame, inspect text, edit an API-created draft, or explicitly confirm a send.
+- `/admin/newsletter/compose` — Compose: email subject, inbox preview text, audience group, visible heading, Markdown formatting toolbar, templates, and email render preview. An optional `?segmentId=...` preselects a group. `?edit=...` loads an existing draft.
+
+### Editor and content sources
+
+The composer supports Markdown headings, bold/italic text, lists, block quotes, links, and remotely hosted images. It converts Markdown into table-based, email-compatible HTML before saving an **unsent** draft in Resend, along with the plain-text source. Raw user-authored HTML is escaped. Rendered previews are displayed inside sandboxed iframes. Resend supplies per-recipient substitutions and the unsubscribe URL when a broadcast is sent.
+
+The composer can search **published Sanity posts, courses, and videos** and insert a link block. **Sanity is a content source; Resend remains the system of record for subscriber groups, broadcast drafts, and delivery.** Maintaining a second newsletter campaign database in Sanity is intentionally avoided, as it could cause version and delivery-state conflicts. A later requirement for long-form editorial approval workflows can justify a distinct Sanity newsletter-document schema with explicit publishing/sync rules.
+
+Broadcast drafts created in the Resend visual editor may not be editable or sendable through the Resend API, even when they are visible in the API list. Use the original editor for such drafts. Do not send any broadcast during testing without a deliberate user action.
+
+### Safe live check
+
+```bash
+# /Users/chastedjaziri/Documents/GitHub/shangazi
+node --env-file=.env scripts/check-newsletter-readonly.mjs
+```
+
+This checks the segment, segment list, first page of segment contacts, and first page of broadcasts. It does not create contacts, draft campaigns, or send mail.

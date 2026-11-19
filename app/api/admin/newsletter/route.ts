@@ -1,5 +1,6 @@
 // app/api/admin/newsletter/route.ts
 import { NextResponse } from "next/server";
+import { client } from "@/src/sanity/client";
 import { isNewsletterAdmin } from "@/src/newsletter/admin";
 import { listNewsletterSubscribers, newsletterHtml, newsletterSegmentId, resendRequest, ResendApiError, type ResendBroadcast, type ResendSegment, type ResendContact } from "@/src/newsletter/resend";
 
@@ -17,18 +18,40 @@ export async function GET(request: Request) {
   try {
     const segmentId = newsletterSegmentId();
     const params = new URL(request.url).searchParams;
-    const id = params.get("segmentId");
-    if (id) {
-      if (!/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ error: "Invalid segment ID." }, { status: 400 });
+    const view = params.get("view");
+    const id = params.get("segmentId") || "";
+    const broadcastId = params.get("broadcastId") || "";
+    const isUuid = (value: string) => /^[0-9a-f-]{36}$/i.test(value);
+
+    if (view === "content") {
+      const published = client.withConfig({ perspective: "published", token: undefined, useCdn: false });
+      const items = await published.fetch<Array<{ id: string; title: string; slug: string; kind: string }>>(`
+        *[_type in ["post","video","course"] && isPublic == true && defined(slug.current)]
+        | order(_updatedAt desc)[0...30]{
+          "id": _id, title, "slug": slug.current, "kind": _type
+        }
+      `);
+      return NextResponse.json({ items }, { headers: { "Cache-Control": "private, no-store" } });
+    }
+    if (view === "segment" && isUuid(id)) {
       const segment = await resendRequest<ResendSegment>(`/segments/${id}`);
       return NextResponse.json({ segment }, { headers: { "Cache-Control": "private, no-store" } });
     }
-    const memberEmail = params.get("contactEmail");
-    if (memberEmail) {
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(memberEmail)) return NextResponse.json({ error: "Invalid contact email." }, { status: 400 });
-      const result = await resendRequest<{ data: ResendSegment[] }>(`/contacts/${encodeURIComponent(memberEmail)}/segments`);
+    if (view === "contacts" && isUuid(id)) {
+      const contacts = await listNewsletterSubscribers(id);
+      return NextResponse.json({ contacts }, { headers: { "Cache-Control": "private, no-store" } });
+    }
+    if (view === "broadcast" && isUuid(broadcastId)) {
+      const broadcast = await resendRequest<ResendBroadcast>(`/broadcasts/${broadcastId}`);
+      return NextResponse.json({ broadcast }, { headers: { "Cache-Control": "private, no-store" } });
+    }
+    if (view === "contact-segments") {
+      const email = params.get("contactEmail") || "";
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return NextResponse.json({ error: "Invalid contact email." }, { status: 400 });
+      const result = await resendRequest<{ data: ResendSegment[] }>(`/contacts/${encodeURIComponent(email)}/segments`);
       return NextResponse.json({ segments: result.data || [] }, { headers: { "Cache-Control": "private, no-store" } });
     }
+    if (view || id || broadcastId) return NextResponse.json({ error: "Invalid view or identifier." }, { status: 400 });
     const [segments, contacts, broadcasts] = await Promise.all([
       resendRequest<{ data: ResendSegment[] }>("/segments?limit=100"),
       listNewsletterSubscribers(segmentId),
@@ -48,7 +71,7 @@ export async function POST(request: Request) {
   const origin = request.headers.get("origin");
   if (origin && new URL(origin).host !== new URL(request.url).host) return unauthorized();
   const body = await request.json().catch(() => null) as {
-    action?: string; subject?: string; title?: string; content?: string; broadcastId?: string;
+    action?: string; subject?: string; title?: string; content?: string; broadcastId?: string; previewText?: string; format?: string;
     confirmation?: string; name?: string; segmentId?: string; email?: string;
   } | null;
   if (!body) return NextResponse.json({ error: "Invalid request." }, { status: 400 });
@@ -90,24 +113,44 @@ export async function POST(request: Request) {
       });
       return NextResponse.json({ success: true, message: body.action === "add-contact" ? "Contact added to newsletter segment." : "Contact removed from newsletter segment." });
     }
-    if (body.action === "draft") {
+    if (body.action === "draft" || body.action === "update-draft") {
       const subject = body.subject?.trim() || "";
       const title = body.title?.trim() || subject;
       const content = body.content?.trim() || "";
-      if (!subject || subject.length > 200 || !title || title.length > 200 || content.length < 5 || content.length > 25000) {
-        return NextResponse.json({ error: "Provide a subject, title and newsletter content." }, { status: 400 });
+      const previewText = body.previewText?.trim() || "";
+      const target = body.segmentId || segmentId;
+      if (!isUuid(target)) return NextResponse.json({ error: "Select a valid audience group." }, { status: 400 });
+      if (!subject || subject.length > 200 || title.length > 200 || content.length < 5 || content.length > 50000 || previewText.length > 200) {
+        return NextResponse.json({ error: "Enter a subject and valid message content." }, { status: 400 });
       }
-      const created = await resendRequest<{ id: string }>("/broadcasts", {
-        method: "POST",
-        body: JSON.stringify({
-          segment_id: segmentId,
-          name: `Shangazi · ${subject}`,
-          from: process.env.RESEND_NEWSLETTER_FROM || "Shangazi <comms@shangazi.rw>",
-          subject,
-          html: newsletterHtml(title, content),
-        }),
-      });
-      return NextResponse.json({ success: true, id: created.id, message: "Draft saved in Resend. No emails were sent." });
+      // Confirm the selected group exists on this account.
+      await resendRequest<ResendSegment>(`/segments/${target}`);
+      const html = newsletterHtml(title, content);
+      const payload = {
+        segment_id: target,
+        name: `Shangazi · ${subject}`,
+        from: process.env.RESEND_NEWSLETTER_FROM || "Shangazi <comms@shangazi.rw>",
+        subject,
+        preview_text: previewText || undefined,
+        html,
+        text: content,
+      };
+      if (body.action === "update-draft") {
+        if (!isUuid(body.broadcastId)) return NextResponse.json({ error: "Invalid broadcast ID." }, { status: 400 });
+        const existing = await resendRequest<ResendBroadcast>(`/broadcasts/${body.broadcastId}`);
+        if (existing.status !== "draft") return NextResponse.json({ error: "Only draft broadcasts can be edited." }, { status: 409 });
+        if (existing.segment_id && existing.segment_id !== target) return NextResponse.json({ error: "Changing the audience of an existing draft is not supported. Start a new broadcast." }, { status: 409 });
+        await resendRequest(`/broadcasts/${body.broadcastId}`, { method: "PATCH", body: JSON.stringify(payload) });
+        return NextResponse.json({ success: true, id: body.broadcastId, message: "Broadcast draft updated in Resend." });
+      }
+      const created = await resendRequest<{ id: string }>("/broadcasts", { method: "POST", body: JSON.stringify(payload) });
+      return NextResponse.json({ success: true, id: created.id, message: "Broadcast draft saved in Resend. No emails were sent." });
+    }
+    if (body.action === "preview") {
+      const title = (body.title || body.subject || "").trim();
+      const content = body.content?.trim() || "";
+      if (!title || !content || content.length > 50000) return NextResponse.json({ error: "Enter a title and message to preview." }, { status: 400 });
+      return NextResponse.json({ html: newsletterHtml(title, content) });
     }
     if (body.action === "send") {
       // Explicit typed confirmation: never send merely by saving a draft.
@@ -116,9 +159,10 @@ export async function POST(request: Request) {
       }
       // Verify it belongs to our newsletter segment, is still a draft and cannot target another list.
       const broadcast = await resendRequest<{ id: string; segment_id?: string; status?: string }>(`/broadcasts/${body.broadcastId}`);
-      if (broadcast.segment_id !== segmentId || broadcast.status !== "draft") {
+      if (broadcast.status !== "draft" || !broadcast.segment_id) {
         return NextResponse.json({ error: "Only draft broadcasts targeting the newsletter segment can be sent." }, { status: 409 });
       }
+      await resendRequest<ResendSegment>(`/segments/${broadcast.segment_id}`);
       await resendRequest(`/broadcasts/${body.broadcastId}/send`, { method: "POST", body: "{}" });
       return NextResponse.json({ success: true, message: "Resend accepted the broadcast for delivery." });
     }
