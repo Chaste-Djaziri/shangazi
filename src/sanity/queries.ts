@@ -37,7 +37,9 @@ export const PORTAL_VIDEOS_QUERY = `*[_type == "video"] | order(_createdAt desc)
   duration
 }`;
 
-export const PUBLIC_VIDEOS_QUERY = `*[_type == "video" && isPublic == true] | order(_createdAt desc) [0...6] {
+// Public directory previews all published videos; non-public videos display a Premium lock.
+// Do not cap the directory to six entries (that limit only applies to dashboard previews).
+export const PUBLIC_VIDEOS_QUERY = `*[_type == "video" && defined(slug.current)] | order(_createdAt desc) {
   _id,
   title,
   "slug": slug.current,

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { client } from "@/sanity/client";
-import { PORTAL_VIDEOS_QUERY } from "@/sanity/queries";
+import { PUBLIC_VIDEOS_QUERY } from "@/sanity/queries";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, Clock, ChevronRight, Lock } from "lucide-react";
+import { Play, Clock, Lock } from "lucide-react";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "Guidance Videos | Shangazi Emma Claudine",
@@ -28,7 +29,10 @@ function getYouTubeThumbnail(url: string | null) {
 }
 
 export default async function VideosListingPage() {
-  const videos = await client.fetch(PORTAL_VIDEOS_QUERY);
+  // Fetch current published content per request instead of a build-time static snapshot.
+  await connection();
+  const publishedClient = client.withConfig({ perspective: "published", token: undefined, useCdn: false });
+  const videos = await publishedClient.fetch(PUBLIC_VIDEOS_QUERY);
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-20">
